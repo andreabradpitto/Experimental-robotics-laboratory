@@ -14,6 +14,7 @@
 
 
 ros::Publisher pub; //Publisher for sending velocity commands
+ros::ServiceClient client;
 float xt,yt;
 
 float dist(float x, float y, float xt, float yt){
@@ -34,23 +35,23 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr& msg){
 
 		*/
 		pos_server::pos_service srv;
-		client.call();
+		client.call(srv);
+		xt = srv.response.x;
+		yt = srv.response.y;
 	}
 	//Simple proportional position control
 	else{
 		
-		if(fabs(x-xt)>thr/2){
-			vel.linear.x=-(x-xt);
+		if(fabs(x - xt)>thr/2){
+			vel.linear.x = - (x - xt);
 		}
-		if(fabs(y-yt)>thr/2){
-			vel.linear.y=-(y-yt);
+		if(fabs(y - yt)>thr/2){
+			vel.linear.y = - (y - yt);
 		}
 	}
 	/*publish the velocity
 
 	*/
-	vel.linear.x = srv.response.x;
-	vel.linear.y = srv.response.y;
 	pub.publish(vel);
 }
 
@@ -65,8 +66,9 @@ int main (int argc, char **argv){
 	/* Define a client for asking a new target, a publisher for publishing the velocity, and a subscriber for reading the position
 
 	*/
-	ros::ServiceClient client = nh.serviceClient<pos_server::pos_service>("random_pos");
-	
+	//ros::ServiceClient client = nh.serviceClient<pos_server::pos_service>("random_pos");
+	client = nh.serviceClient<pos_server::pos_service>("random_pos");
+
 	pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
 
 	ros::Subscriber sub = nh.subscribe("/odom", 1, odomCallback);
