@@ -2,6 +2,7 @@
 /*If needed, add some headers
 
 */
+#include "pos_server/pos_service.h"
 
 #define min_x -3.0
 #define max_x 7.0
@@ -33,8 +34,6 @@ bool posCallback (pos_server::pos_service::Request& req, pos_server::pos_service
 	res.y = RandomFloat(min_y, max_y);
 	return true;
 }
-
-
 
 
 int main (int argc, char **argv){

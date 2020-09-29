@@ -284,6 +284,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "custom_messages/CMakeFiles/std_msgs_generate_messages_lisp.dir/DependInfo.cmake"
   "custom_messages/CMakeFiles/custom_messages_generate_messages.dir/DependInfo.cmake"
   "custom_messages/CMakeFiles/custom_messages_gencpp.dir/DependInfo.cmake"
+  "pos_server/CMakeFiles/position_server.dir/DependInfo.cmake"
   "pos_server/CMakeFiles/pos_server_generate_messages_py.dir/DependInfo.cmake"
   "pos_server/CMakeFiles/pos_server_gencpp.dir/DependInfo.cmake"
   "pos_server/CMakeFiles/_pos_server_generate_messages_check_deps_pos_service.dir/DependInfo.cmake"

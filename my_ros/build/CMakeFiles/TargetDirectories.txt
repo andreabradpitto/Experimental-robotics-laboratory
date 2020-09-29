@@ -64,12 +64,13 @@
 /home/my_ros/build/custom_messages/CMakeFiles/std_msgs_generate_messages_lisp.dir
 /home/my_ros/build/custom_messages/CMakeFiles/custom_messages_generate_messages.dir
 /home/my_ros/build/custom_messages/CMakeFiles/custom_messages_gencpp.dir
-/home/my_ros/build/pos_server/CMakeFiles/rebuild_cache.dir
 /home/my_ros/build/pos_server/CMakeFiles/edit_cache.dir
 /home/my_ros/build/pos_server/CMakeFiles/test.dir
 /home/my_ros/build/pos_server/CMakeFiles/install/local.dir
 /home/my_ros/build/pos_server/CMakeFiles/list_install_components.dir
 /home/my_ros/build/pos_server/CMakeFiles/install/strip.dir
+/home/my_ros/build/pos_server/CMakeFiles/rebuild_cache.dir
+/home/my_ros/build/pos_server/CMakeFiles/position_server.dir
 /home/my_ros/build/pos_server/CMakeFiles/pos_server_generate_messages_py.dir
 /home/my_ros/build/pos_server/CMakeFiles/pos_server_gencpp.dir
 /home/my_ros/build/pos_server/CMakeFiles/install.dir

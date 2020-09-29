@@ -1383,11 +1383,13 @@ clean: custom_messages/CMakeFiles/custom_messages_gencpp.dir/clean
 # Directory level rules for directory pos_server
 
 # Convenience name for "all" pass in the directory.
+pos_server/all: pos_server/CMakeFiles/position_server.dir/all
 pos_server/all: pos_server/CMakeFiles/pos_server_generate_messages.dir/all
 
 .PHONY : pos_server/all
 
 # Convenience name for "clean" pass in the directory.
+pos_server/clean: pos_server/CMakeFiles/position_server.dir/clean
 pos_server/clean: pos_server/CMakeFiles/pos_server_generate_messages_py.dir/clean
 pos_server/clean: pos_server/CMakeFiles/pos_server_gencpp.dir/clean
 pos_server/clean: pos_server/CMakeFiles/_pos_server_generate_messages_check_deps_pos_service.dir/clean
@@ -1407,6 +1409,58 @@ pos_server/clean: pos_server/CMakeFiles/pos_server_gennodejs.dir/clean
 pos_server/preinstall:
 
 .PHONY : pos_server/preinstall
+
+#=============================================================================
+# Target rules for target pos_server/CMakeFiles/position_server.dir
+
+# All Build rule for target.
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/roscpp_generate_messages_py.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/roscpp_generate_messages_eus.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/roscpp_generate_messages_cpp.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/_catkin_empty_exported_target.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/roscpp_generate_messages_nodejs.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/std_msgs_generate_messages_py.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/roscpp_generate_messages_lisp.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/std_msgs_generate_messages_eus.dir/all
+pos_server/CMakeFiles/position_server.dir/all: custom_messages/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+	$(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/depend
+	$(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/my_ros/build/CMakeFiles --progress-num=36,37 "Built target position_server"
+.PHONY : pos_server/CMakeFiles/position_server.dir/all
+
+# Include target in all.
+all: pos_server/CMakeFiles/position_server.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+pos_server/CMakeFiles/position_server.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/my_ros/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 pos_server/CMakeFiles/position_server.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/my_ros/build/CMakeFiles 0
+.PHONY : pos_server/CMakeFiles/position_server.dir/rule
+
+# Convenience name for target.
+position_server: pos_server/CMakeFiles/position_server.dir/rule
+
+.PHONY : position_server
+
+# clean rule for target.
+pos_server/CMakeFiles/position_server.dir/clean:
+	$(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/clean
+.PHONY : pos_server/CMakeFiles/position_server.dir/clean
+
+# clean rule for target.
+clean: pos_server/CMakeFiles/position_server.dir/clean
+
+.PHONY : clean
 
 #=============================================================================
 # Target rules for target pos_server/CMakeFiles/pos_server_generate_messages_py.dir

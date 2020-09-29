@@ -660,6 +660,19 @@ custom_messages_gencpp/fast:
 .PHONY : custom_messages_gencpp/fast
 
 #=============================================================================
+# Target rules for targets named position_server
+
+# Build rule for target.
+position_server: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 position_server
+.PHONY : position_server
+
+# fast build rule for target.
+position_server/fast:
+	$(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/build
+.PHONY : position_server/fast
+
+#=============================================================================
 # Target rules for targets named pos_server_generate_messages_py
 
 # Build rule for target.
@@ -1217,6 +1230,7 @@ help:
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... custom_messages_generate_messages"
 	@echo "... custom_messages_gencpp"
+	@echo "... position_server"
 	@echo "... pos_server_generate_messages_py"
 	@echo "... pos_server_gencpp"
 	@echo "... _pos_server_generate_messages_check_deps_pos_service"

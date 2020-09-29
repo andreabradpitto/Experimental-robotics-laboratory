@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/my_ros/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -121,6 +110,17 @@ install/strip/fast: install/strip
 
 .PHONY : install/strip/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -164,6 +164,21 @@ preinstall/fast:
 depend:
 	cd /home/my_ros/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+# Convenience name for target.
+pos_server/CMakeFiles/position_server.dir/rule:
+	cd /home/my_ros/build && $(MAKE) -f CMakeFiles/Makefile2 pos_server/CMakeFiles/position_server.dir/rule
+.PHONY : pos_server/CMakeFiles/position_server.dir/rule
+
+# Convenience name for target.
+position_server: pos_server/CMakeFiles/position_server.dir/rule
+
+.PHONY : position_server
+
+# fast build rule for target.
+position_server/fast:
+	cd /home/my_ros/build && $(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/build
+.PHONY : position_server/fast
 
 # Convenience name for target.
 pos_server/CMakeFiles/pos_server_generate_messages_py.dir/rule:
@@ -345,18 +360,46 @@ pos_server_gennodejs/fast:
 	cd /home/my_ros/build && $(MAKE) -f pos_server/CMakeFiles/pos_server_gennodejs.dir/build.make pos_server/CMakeFiles/pos_server_gennodejs.dir/build
 .PHONY : pos_server_gennodejs/fast
 
+src/PositionServer.o: src/PositionServer.cpp.o
+
+.PHONY : src/PositionServer.o
+
+# target to build an object file
+src/PositionServer.cpp.o:
+	cd /home/my_ros/build && $(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/src/PositionServer.cpp.o
+.PHONY : src/PositionServer.cpp.o
+
+src/PositionServer.i: src/PositionServer.cpp.i
+
+.PHONY : src/PositionServer.i
+
+# target to preprocess a source file
+src/PositionServer.cpp.i:
+	cd /home/my_ros/build && $(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/src/PositionServer.cpp.i
+.PHONY : src/PositionServer.cpp.i
+
+src/PositionServer.s: src/PositionServer.cpp.s
+
+.PHONY : src/PositionServer.s
+
+# target to generate assembly for a file
+src/PositionServer.cpp.s:
+	cd /home/my_ros/build && $(MAKE) -f pos_server/CMakeFiles/position_server.dir/build.make pos_server/CMakeFiles/position_server.dir/src/PositionServer.cpp.s
+.PHONY : src/PositionServer.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test"
 	@echo "... install/local"
 	@echo "... list_install_components"
 	@echo "... install/strip"
+	@echo "... rebuild_cache"
+	@echo "... position_server"
 	@echo "... pos_server_generate_messages_py"
 	@echo "... pos_server_gencpp"
 	@echo "... install"
@@ -370,6 +413,9 @@ help:
 	@echo "... pos_server_generate_messages_nodejs"
 	@echo "... pos_server_generate_messages_cpp"
 	@echo "... pos_server_gennodejs"
+	@echo "... src/PositionServer.o"
+	@echo "... src/PositionServer.i"
+	@echo "... src/PositionServer.s"
 .PHONY : help
 
 
