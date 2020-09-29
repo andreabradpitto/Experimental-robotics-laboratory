@@ -1,5 +1,5 @@
 # Andrea Pitto's Experimental robotics laboratory exercises
-This is the repository for all the exercises I have performed of the Robotics engineering class "Experimental robotics laboratory"
+This is the repository for all the exercises I have performed of the Robotics engineering class "Experimental robotics laboratory" 2020/2021, held in the University of Genoa
 
 ## Instructions
 
