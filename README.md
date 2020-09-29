@@ -4,7 +4,7 @@ This is the repository for all the exercises I have performed of the Robotics en
 ## Instructions
 
 ### Exercise 1
-To run the code please launch ROS, then type in a terminal
+Involved packages: **first_package**, **pos_server**. To run the code please launch ROS, then type in a terminal
 ```
 rosrun stage_ros stageros $(rospack find exercise1)/world/exercise.world
 rosrun exercise1 exercise1 _xt:=2.0 _yt:=3.0
