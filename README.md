@@ -1,4 +1,4 @@
-# Experimental robotics laboratory
+# Andrea Pitto's Experimental robotics laboratory exercises
 This is the repository for the exercises of the Robotics engineering class Experimental robotics laboratory
 
 ## Instructions
