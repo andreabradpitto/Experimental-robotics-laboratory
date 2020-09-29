@@ -1,0 +1,2 @@
+custom_messages:exercise1:first_package:pos_server
+-DCATKIN_DEVEL_PREFIX=/home/my_ros/devel -DCMAKE_INSTALL_PREFIX=/home/my_ros/install -G Unix Makefiles
