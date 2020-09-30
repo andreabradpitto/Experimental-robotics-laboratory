@@ -8,6 +8,7 @@ Involved packages: **first_package**, **pos_server**. To run the code please lau
 ```
 rosrun stage_ros stageros $(rospack find exercise1)/world/exercise.world
 rosrun exercise1 exercise1 _xt:=2.0 _yt:=3.0
+rosrun pos_server position_server
 ```
 <ins>[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise)</ins> is the official text for the assignment
 
