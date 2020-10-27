@@ -12,8 +12,8 @@ rosrun pos_server position_server
 ```
 <ins>[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise)</ins> is the official text for the assignment
 
-### Exercise 2
-Coming soon...
+### Assignment 1
+Please refer to the readme and the documentation inside the folder
 
 ## Authors
 The exercise can be found <ins>[here](https://github.com/CarmineD8/exp-lab-exercises)</ins>. All the code in this repository was edited by me. Not that I have much to be proud about!
