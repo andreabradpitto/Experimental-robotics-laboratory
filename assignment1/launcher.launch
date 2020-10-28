@@ -1,0 +1,10 @@
+<launch>
+    <!-- prova -->
+    <!--param name="map_x" type="int" value="20" />
+    <param name="map_y" type="int" value="20" /-->
+
+    <!--node pkg="/assignment1/src/perception" type="perception.py" name="perception_node" respawn="true"/-->
+    <node pkg="control" type="control.py" name="control_node" respawn="true" output="screen"/>
+    <node pkg="com_manager" type="command_manager.py" name="miro_fsm_node" respawn="true" output="screen"/>
+
+</launch>

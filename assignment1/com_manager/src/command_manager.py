@@ -18,6 +18,8 @@ class Sleep(smach.State):
                              outcomes=['wake_up'],
                              input_keys=['fsm_robot_in', 'fsm_home_in'],
                              output_keys=['fsm_robot_out'])
+        #global sub
+        sub = rospy.Subscriber('motion_over_topic', String, self.sleep_callback)
 
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
@@ -25,13 +27,13 @@ class Sleep(smach.State):
         rospy.loginfo('MiRo: I am going to spleep!')
         pub = rospy.Publisher('control_topic', String, queue_size=10)
         pub.publish("home position")
-        rospy.Subscriber('motion_over_topic', String, self.sleep_callback)
         time.sleep(random.randint(1, 5)) # MiRo is sleeping
         rospy.loginfo('MiRo: Good morning!')
         return 'wake_up'
 
     def sleep_callback(self, data):
         rospy.loginfo('MiRo: home position reached!')
+        #sub.unregister()
 
 
 # define state Normal
@@ -42,6 +44,8 @@ class Normal(smach.State):
                              outcomes=['go_play','go_sleep'],
                              input_keys=['fsm_robot_in'],
                              output_keys=['fsm_robot_out'])
+        #sub = rospy.Subscriber('motion_over_topic', String, self.normal_callback)
+        #sub2 = rospy.Subscriber('play_topic', String, self.normal_callback_2)
         
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
@@ -58,7 +62,7 @@ class Normal(smach.State):
                 userdata.fsm_robot_out = new_pos
                 pub = rospy.Publisher('control_topic', String, queue_size=10)
                 pub.publish(position)
-                rospy.Subscriber('motion_over_topic', String, self.normal_callback)
+                #rospy.Subscriber('motion_over_topic', String, self.normal_callback)
                 time.sleep(2)
                 #rospy.Subscriber('play_topic', String, self.normal_callback_2)
             if sleep_timer == 0:
@@ -68,10 +72,12 @@ class Normal(smach.State):
     def normal_callback(self, data):
         rospy.loginfo('MiRo: target position reached!')
         self.motion_check = 0
+        #sub.unregister()
 
     def normal_callback_2(self, data):
         rospy.loginfo('MiRo: let\'s play')
         return 'go_play'
+        #sub2.unregister()
 
 
 # define state Play
@@ -95,7 +101,7 @@ class Play(smach.State):
 
         
 def main():
-    rospy.init_node('miro_fsm')
+    rospy.init_node('miro_fsm_node')
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['container_interface'])

@@ -43,7 +43,7 @@ from std_msgs.msg import String
 
 def perception():
     pub = rospy.Publisher('play_topic', String, queue_size=10)
-    rospy.init_node('perception', anonymous=True)
+    rospy.init_node('perception_node', anonymous=True)
     rate = rospy.Rate(0.1)
     play_str = "User: <<Play>>"
     while not rospy.is_shutdown():
