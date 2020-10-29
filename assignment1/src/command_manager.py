@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+## @package command_manager
+# Emulates the robot's finite state machine internal architecture
+# The implemented states are Sleep, Normal, Play.
+
 import roslib
 import rospy
 import smach
@@ -21,6 +25,7 @@ home_y = rospy.get_param('home/y')
 person_x = rospy.get_param('person/x')
 person_y = rospy.get_param('person/y')
 
+## parameter used to let the fsm behave differently for the very first state only
 first_iteration = 1
 
 # define state Sleep

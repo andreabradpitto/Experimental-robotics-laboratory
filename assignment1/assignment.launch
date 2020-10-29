@@ -1,19 +1,31 @@
 <launch>
 
     <!-- parameters -->
+    <!-- parameter specifying robot current state -->
     <param name='state' type='string' value='sleep'/>
+    <!-- parameter specifying robot current position (x coordinate) -->
     <param name='MiRo/x' type='int' value='0'/>
+    <!-- parameter specifying robot current position (y coordinate) -->
     <param name='MiRo/y' type='int' value='0'/>
+    <!-- parameter specifying the maximum x-axis value for the map -->
     <param name='map/x_max' type='int' value='10'/>
+    <!-- parameter specifying the maximum y-axis value for the map -->
     <param name='map/y_max' type='int' value='10' />
+    <!-- parameter specifying robot home position (x coordinate) -->
     <param name='home/x' type='int' value='3'/>
+    <!-- parameter specifying robot home position (y coordinate) -->
     <param name='home/y' type='int' value='6'/>
+    <!-- parameter specifying user's position (x coordinate) -->
     <param name='person/x' type='int' value='4'/>
+    <!-- parameter specifying user's position (y coordinate) -->
     <param name='person/y' type='int' value='4'/>
 
     <!-- nodes -->
+    <!-- node used to simulate reception and processing of incoming voice commands and pointing gestures -->
     <!--node pkg='assignment1' type='perception.py' name='perception_node' respawn='true' output='screen'/-->
+    <!-- node used to handle the robot's finite state machine internal architecture -->
     <node pkg='assignment1' type='control.py' name='control_node' respawn='true'/>
+    <!-- node used to emulate physical delays relative to robot travelling and position reaching -->
     <node pkg='assignment1' type='command_manager.py' name='miro_fsm_node' respawn='true' output='screen'/>
 
 </launch>
