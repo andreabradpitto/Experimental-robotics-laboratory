@@ -40,16 +40,25 @@ import rospy
 import time
 import random
 from std_msgs.msg import String
+from assignment1.msg import Coordinates
+
+## Acquire map size parameters from launch file
+map_x_max = rospy.get_param("map/x_max")
+map_y_max = rospy.get_param("map/y_max")
+
+## Acquire person's position parameters from launch file
+person_x = rospy.get_param("person/x")
+person_y = rospy.get_param("person/y")
 
 def perception():
-    voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
-    gesture_pub = rospy.Publisher('play_topic', String, queue_size=10)
     rospy.init_node('perception_node', anonymous=True)
-    rate = rospy.Rate(1)
+    voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
+    gesture_pub = rospy.Publisher('gesture_topic', Coordinates, queue_size=10)
+    rate = rospy.Rate(200)
     #play_str = "User: <<Play>>"
     while not rospy.is_shutdown():
         #time.sleep(random.randint(2, 10))
-        time.sleep(8)
+        time.sleep(random.randint(7, 8))
         #new_pos = [random.randint(0, 10), random.randint(0, 10)]
         #command_str = "Robot, go to: %i" %new_pos
         #rospy.loginfo(command_str)
@@ -59,7 +68,10 @@ def perception():
         if choice == 1:
             voice_pub.publish("play")
         else:
-            gesture_pub.publish('???')
+            pos = Coordinates()
+            pos.x = random.randint(0, map_x_max)
+            pos.y = random.randint(0, map_y_max)
+            gesture_pub.publish(pos)
         rate.sleep()
 
 if __name__ == '__main__':

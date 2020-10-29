@@ -22,6 +22,7 @@ person_x = rospy.get_param("person/x")
 person_y = rospy.get_param("person/y")
 
 miro_state = 0 # 0 = sleep, 1 = normal, 2 = play
+sleep_flag = True
 
 # define state Sleep
 class Sleep(smach.State):
@@ -35,8 +36,11 @@ class Sleep(smach.State):
 
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
+        self.rate = rospy.Rate(200) #200
         global miro_state
         miro_state = 0
+        global sleep_flag
+        sleep_flag = True
         pos = Coordinates()
         pos.x = userdata.home_x_in # reach home position
         pos.y = userdata.home_y_in # reach home position
@@ -45,14 +49,21 @@ class Sleep(smach.State):
         userdata.y_out = pos.y
         pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
         pub.publish(pos)
-        time.sleep(random.randint(1, 5)) # MiRo is sleeping
-        rospy.loginfo('MiRo: Good morning!')
+        while (sleep_flag and not rospy.is_shutdown()):
+            rospy.wait_for_message('motion_over_topic', Coordinates)
+            #time.sleep(random.randint(1, 5)) # MiRo is sleeping
+            #rospy.loginfo('MiRo: Good morning!')
+            self.rate.sleep
         return 'wake_up'
 
     def sleep_callback(self, data):
         global miro_state
+        global sleep_flag
         if miro_state == 0:
             rospy.loginfo('MiRo: home position reached!')
+            time.sleep(random.randint(1, 5)) # MiRo is sleeping
+            rospy.loginfo('MiRo: Good morning!')
+            sleep_flag = False
 
 
 # define state Normal
@@ -74,7 +85,7 @@ class Normal(smach.State):
         miro_state = 1
         pos = Coordinates()
         while (sleep_timer != 0 and not rospy.is_shutdown()):
-            sleep_timer = sleep_timer - 1
+            sleep_timer = sleep_timer - 1     
             pos.x = random.randint(0, userdata.map_x_max_in)
             pos.y = random.randint(0, userdata.map_y_max_in)
             userdata.x_out = pos.x #e un problema se vengo interrotto tra que e sopra

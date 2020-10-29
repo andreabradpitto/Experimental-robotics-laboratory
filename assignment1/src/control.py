@@ -40,15 +40,16 @@ import rospy
 import random
 import time
 from std_msgs.msg import String
+from assignment1.msg import Coordinates
 
-def callback(data):
+def control_cb(data):
     #rospy.loginfo(rospy.get_caller_id() + 'Moving to %s', data.data)
-    pub = rospy.Publisher('motion_over_topic', String, queue_size=10)
+    pub = rospy.Publisher('motion_over_topic', Coordinates, queue_size=10)
     #time.sleep(random.randint(1, 3))
     time.sleep(2)
     #motion_str = "MiRo: I have reached target position"
     #rospy.loginfo(motion_str)
-    pub.publish(data.data)
+    pub.publish(data)
 
 def manager_listener():
 
@@ -58,7 +59,7 @@ def manager_listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('control_node', anonymous=True)
-    rospy.Subscriber('control_topic', String, callback)
+    rospy.Subscriber('control_topic', Coordinates, control_cb)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
