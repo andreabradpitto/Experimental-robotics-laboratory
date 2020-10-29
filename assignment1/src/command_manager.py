@@ -10,49 +10,52 @@ from std_msgs.msg import String
 from assignment1.msg import Coordinates
 
 ## Acquire map size parameters from launch file
-map_x_max = rospy.get_param("map/x_max")
-map_y_max = rospy.get_param("map/y_max")
+map_x_max = rospy.get_param('map/x_max')
+map_y_max = rospy.get_param('map/y_max')
 
 ## Acquire home position parameters from launch file
-home_x = rospy.get_param("home/x")
-home_y = rospy.get_param("home/y")
+home_x = rospy.get_param('home/x')
+home_y = rospy.get_param('home/y')
 
 ## Acquire person's position parameters from launch file
-person_x = rospy.get_param("person/x")
-person_y = rospy.get_param("person/y")
+person_x = rospy.get_param('person/x')
+person_y = rospy.get_param('person/y')
 
-miro_state = 0 # 0 = sleep, 1 = normal, 2 = play
+first_iteration = 1
 
 # define state Sleep
 class Sleep(smach.State):
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['wake_up'],
-                             input_keys=['x_in','y_in','home_x_in','home_y_in'],
-                             output_keys=['x_out','y_out'])
+                             outcomes=['wake_up'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.sleep_callback)
 
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        global miro_state
-        miro_state = 0
+        global first_iteration
+        rospy.set_param('state', 'sleep')
         pos = Coordinates()
-        pos.x = userdata.home_x_in # reach home position
-        pos.y = userdata.home_y_in # reach home position
-        rospy.loginfo('MiRo: I am going to spleep!')
-        userdata.x_out = pos.x
-        userdata.y_out = pos.y
+        pos.x = home_x # reach home position
+        pos.y = home_y # reach home position
+        if first_iteration == 0:
+            rospy.loginfo('MiRo: I am going to spleep!')
+        first_iteration = 0
         pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
         pub.publish(pos)
-        time.sleep(random.randint(1, 5)) # MiRo is sleeping
+        if first_iteration == 1:
+            rospy.wait_for_message('motion_over_topic', Coordinates)
+        time.sleep(random.randint(2, 5)) # MiRo is sleeping
         rospy.loginfo('MiRo: Good morning!')
         return 'wake_up'
 
     def sleep_callback(self, data):
-        global miro_state
-        if miro_state == 0:
+        global home_x
+        global home_y
+        if rospy.get_param('state') == 'sleep':
             rospy.loginfo('MiRo: home position reached!')
+            rospy.set_param('MiRo/x', home_x)
+            rospy.set_param('MiRo/y', home_y)
 
 
 # define state Normal
@@ -60,44 +63,39 @@ class Normal(smach.State):
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['go_play','go_sleep'],
-                             input_keys=['x_in','y_in','map_x_max_in','map_y_max_in'],
-                             output_keys=['x_out','y_out'])
-        rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback)
-        #rospy.Subscriber('play_topic', Coordinates, self.normal_callback_2)
+                             outcomes=['go_play','go_sleep'])
+        rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback_motion)
+        rospy.Subscriber('play_topic', String, self.normal_callback_play)
         
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         sleep_timer = random.randint(2, 10)
-        self.rate = rospy.Rate(200) #200
-        global miro_state
-        miro_state = 1
+        self.rate = rospy.Rate(200)
+        rospy.set_param('state', 'normal')
         pos = Coordinates()
-        while (sleep_timer != 0 and not rospy.is_shutdown()):
+        while (sleep_timer != 0 and not rospy.is_shutdown() and rospy.get_param('state') == 'normal'):
             sleep_timer = sleep_timer - 1
-            pos.x = random.randint(0, userdata.map_x_max_in)
-            pos.y = random.randint(0, userdata.map_y_max_in)
-            userdata.x_out = pos.x #e un problema se vengo interrotto tra que e sopra
-            userdata.y_out = pos.y
-            #position = ' '.join([str(elem) for elem in pos]) 
+            pos.x = random.randint(0, map_x_max)
+            pos.y = random.randint(0, map_y_max)
             rospy.loginfo('MiRo: I am moving to %i %i', pos.x, pos.y)	
             pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
             pub.publish(pos)
             rospy.wait_for_message('motion_over_topic', Coordinates)
+            rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
+            rospy.set_param('MiRo/y', pos.y)
+            time.sleep(2)
             if sleep_timer == 0:
                 return 'go_sleep'
             self.rate.sleep
 
-    def normal_callback(self, data):
-        global miro_state
-        if miro_state == 1:
+    def normal_callback_motion(self, data):
+        if rospy.get_param('state') == 'normal':
             rospy.loginfo('MiRo: target position reached!')
 
-    def normal_callback_2(self, data):
-        global miro_state
-        if miro_state == 1:        
-            rospy.loginfo('MiRo: let\'s play')
-        return 'go_play'
+    def normal_callback_play(self, data):
+        if rospy.get_param('state') == 'normal':        
+            rospy.loginfo('MiRo: Ok, let\'s play!')
+            return 'go_play'
 
 
 # define state Play
@@ -105,9 +103,9 @@ class Play(smach.State):
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['go_sleep','game_over'],
-                             input_keys=['x_in','y_in','person_x_in','person_y_in'],
-                             output_keys=['x_out','y_out'])
+                             outcomes=['go_sleep','game_over'])
+        rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
+        rospy.Subscriber('gesture_topic', Coordinates, self.play_callback_gesture)
         
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
@@ -115,10 +113,33 @@ class Play(smach.State):
         # ask, then reach pointed or told position
         # do it for some time
         # in the end go to normal,but also here we need sleep timer too
-        miro_state = 2
-        rospy.loginfo('MiRo: I am going to spleep!')
-        time.sleep(random.randint(1, 5))
-        return 'go_sleep'
+        normal_timer = random.randint(4, 10)
+        self.rate = rospy.Rate(200)
+        rospy.set_param('state', 'play')
+        pos = Coordinates()
+        while (normal_timer != 0 and not rospy.is_shutdown() and rospy.get_param('state') == 'play'):
+            normal_timer = normal_timer - 1
+            rospy.loginfo('MiRo: I am coming to you!')
+            pos.x = rospy.get_param('person/x')
+            pos.y = rospy.get_param('person/y')
+            pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+            pub.publish(pos)
+            rospy.wait_for_message('motion_over_topic', Coordinates) # mi sa che devo cambiare topic per ogni state
+            time.sleep(2)
+            if normal_timer == 0:
+                return 'go_sleep'
+            self.rate.sleep
+
+    def play_callback_motion(self, data):
+        if rospy.get_param('state') == 'play':
+            rospy.loginfo('MiRo: target position reached!')
+
+    def play_callback_gesture(self, data):
+        if rospy.get_param('state') == 'play':
+            rospy.loginfo('MiRo: I am moving to getured %i %i', data.x, data.y)
+            pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+            pub.publish(data)
+            rospy.wait_for_message('motion_over_topic', Coordinates)
 
         
 def main():
@@ -126,44 +147,17 @@ def main():
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['container_interface'])
-    sm.userdata.x = 0 # current robot position
-    sm.userdata.y = 0 # current robot position
-    sm.userdata.map_x_max = map_x_max # grid size
-    sm.userdata.map_y_max = map_y_max # grid size
-    sm.userdata.home_x = home_x # home position
-    sm.userdata.home_y = home_y # home position
-    sm.userdata.person_x = person_x # user position
-    sm.userdata.person_y = person_y # user position
-
     # Open the container
     with sm:
         # Add states to the container
         smach.StateMachine.add('SLEEP', Sleep(), 
-                               transitions={'wake_up':'NORMAL'},
-                               remapping={'x_in':'x', 
-                                          'x_out':'x',
-                                          'y_in':'y',
-                                          'y_out':'y',
-                                          'home_x_in':'home_x',
-                                          'home_y_in':'home_y'})
+                               transitions={'wake_up':'NORMAL'})
         smach.StateMachine.add('NORMAL', Normal(), 
                                transitions={'go_play':'PLAY', 
-                                            'go_sleep':'SLEEP'},
-                               remapping={'x_in':'x', 
-                                          'x_out':'x',
-                                          'y_in':'y',
-                                          'y_out':'y',
-                                          'map_x_max_in':'map_x_max',
-                                          'map_y_max_in':'map_y_max'})
+                                            'go_sleep':'SLEEP'})
         smach.StateMachine.add('PLAY', Play(), 
                                transitions={'go_sleep':'SLEEP', 
-                                            'game_over':'NORMAL'},
-                               remapping={'x_in':'x', 
-                                          'x_out':'x',
-                                          'y_in':'y',
-                                          'y_out':'y',
-                                          'person_x_in':'person_x',
-                                          'person_y_in':'person_y'})
+                                            'game_over':'NORMAL'})
 
 
     # Create and start the introspection server for visualization
