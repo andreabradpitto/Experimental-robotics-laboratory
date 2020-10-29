@@ -41,22 +41,13 @@ import random
 import time
 from std_msgs.msg import String
 
-#def control():
-#    pub = rospy.Publisher('motion_over_topic', String, queue_size=10)
-#    rospy.init_node('control', anonymous=True)
-#    while not rospy.is_shutdown():
-#        rate = rospy.Rate(random.randint(1, 3))
-#        motion_str = "MiRo: I have reached position ???"
-#        rospy.loginfo(motion_str)
-#        pub.publish('1')
-#        rate.sleep()
-
 def callback(data):
-    rospy.loginfo(rospy.get_caller_id() + 'Moving to %s', data.data)
+    #rospy.loginfo(rospy.get_caller_id() + 'Moving to %s', data.data)
     pub = rospy.Publisher('motion_over_topic', String, queue_size=10)
-    time.sleep(random.randint(1, 3))
-    motion_str = "MiRo: I have reached target position"
-    rospy.loginfo(motion_str)
+    #time.sleep(random.randint(1, 3))
+    time.sleep(2)
+    #motion_str = "MiRo: I have reached target position"
+    #rospy.loginfo(motion_str)
     pub.publish(data.data)
 
 def manager_listener():

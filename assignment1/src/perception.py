@@ -42,18 +42,24 @@ import random
 from std_msgs.msg import String
 
 def perception():
-    pub = rospy.Publisher('play_topic', String, queue_size=10)
+    voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
+    gesture_pub = rospy.Publisher('play_topic', String, queue_size=10)
     rospy.init_node('perception_node', anonymous=True)
-    rate = rospy.Rate(0.1)
-    play_str = "User: <<Play>>"
+    rate = rospy.Rate(1)
+    #play_str = "User: <<Play>>"
     while not rospy.is_shutdown():
-        time.sleep(random.randint(2, 10))
+        #time.sleep(random.randint(2, 10))
+        time.sleep(8)
         #new_pos = [random.randint(0, 10), random.randint(0, 10)]
         #command_str = "Robot, go to: %i" %new_pos
         #rospy.loginfo(command_str)
         #pub.publish(new_pos)
-        rospy.loginfo(play_str)
-        pub.publish("play")
+        #rospy.loginfo(play_str)
+        choice = random.randint(1, 2)
+        if choice == 1:
+            voice_pub.publish("play")
+        else:
+            gesture_pub.publish('???')
         rate.sleep()
 
 if __name__ == '__main__':

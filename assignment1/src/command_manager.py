@@ -19,7 +19,8 @@ class Sleep(smach.State):
                              input_keys=['fsm_robot_in', 'fsm_home_in'],
                              output_keys=['fsm_robot_out'])
         #global sub
-        sub = rospy.Subscriber('motion_over_topic', String, self.sleep_callback)
+        #sub = rospy.Subscriber('motion_over_topic', String, self.sleep_callback)
+        rospy.Subscriber('motion_over_topic', String, self.sleep_callback)
 
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
@@ -45,7 +46,9 @@ class Normal(smach.State):
                              input_keys=['fsm_robot_in'],
                              output_keys=['fsm_robot_out'])
         #sub = rospy.Subscriber('motion_over_topic', String, self.normal_callback)
+        rospy.Subscriber('motion_over_topic', String, self.normal_callback)
         #sub2 = rospy.Subscriber('play_topic', String, self.normal_callback_2)
+        #rospy.Subscriber('play_topic', String, self.normal_callback_2)
         
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
