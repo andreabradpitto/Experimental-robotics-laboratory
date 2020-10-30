@@ -72,7 +72,7 @@ This will launch all the three nodes with the parameters defined in the launche 
 
 ## Extra
 
-<ins>[This](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.)</ins> is the that has been shown us during the assignment presentation, and that we would probably have used if we could have worked in the University. Sadly, due time is still inside a COVID-19 outbreak.
+<ins>[This](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.)</ins> is the robot that has been shown us during the assignment presentation, and that we would probably have used if we could have worked in the University. Sadly, due time is still inside a COVID-19 outbreak.
 
 ## Cose da fare
 1. Brief introduction (couple of sentences)
