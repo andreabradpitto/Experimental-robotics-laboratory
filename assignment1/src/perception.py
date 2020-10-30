@@ -38,13 +38,14 @@ def perception():
             choice.y = random.randint(0, map_y_max)
             gesture_pub.publish(choice)
             rospy.loginfo('*The user points to %i %i*', choice.x, choice.y)
-            time.sleep(3  / sim_scale)
+            time.sleep(random.randint(3, 4) / sim_scale)
             while rospy.get_param('state') == 'play':
                 if rospy.get_param('MiRo/x') == rospy.get_param('person/x') and \
                     rospy.get_param('MiRo/y') == rospy.get_param('person/y'):
                     choice.x = random.randint(0, map_x_max)
                     choice.y = random.randint(0, map_y_max)
                     gesture_pub.publish(choice)
+                    time.sleep(random.randint(3, 4) / sim_scale)
         rate.sleep()
 
 if __name__ == '__main__':
