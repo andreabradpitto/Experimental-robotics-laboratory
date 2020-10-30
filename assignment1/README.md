@@ -31,6 +31,19 @@ rosrun pos_server position_server
 ```
 <ins>[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise)</ins> is the official text for the assignment
 
+## Cose da fare
+1. Brief introduction (couple of sentences)
+2. Software architecture and states diagrams
+(a paragraph of description each, plus a list describing ROS
+messages and parameters)
+3. Packages and file list (to navigate the repository based on 2)
+4. Installation and running procedure
+(including all the steps to display the robot’s behavior)
+5. Working hypothesis and environment (1 or 2 paragraph)
+6. System’s features (1 or 2 paragraph)
+7. System’s limitations (1 or 2 paragraph)
+8. Possible technical Improvements (1 or 2 paragraph)
+9. Authors and contacts (at least the email)
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).
