@@ -95,4 +95,4 @@ messages and parameters)
 9. Authors and contacts (at least the email)
 
 ## Authors
-All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto) - <ins>[s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it)</ins>.
+All the files in this repository belong to <ins>[Andrea Pitto](https://github.com/andreabradpitto)</ins> - <ins>[s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it)</ins>.
