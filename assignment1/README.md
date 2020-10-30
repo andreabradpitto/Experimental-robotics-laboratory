@@ -54,12 +54,6 @@ sim_scale   // parameter used to scale simulation velocity
 ```
 All of these, as already pointed out, can be adjusted before runtime.
 
-## Assumptions
-In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in **Normal** state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a longer movement, distance-wise, takes a greater amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the <<**play**>> keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in **Play** behavior, and to point only after the voice command.
-
-## Limitations
-Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no control over input parameters (e.g. one can set a starting robot position outside of the playing field), DA FINIRE
-
 ## Instructions
 
 In order to run the code, simply open a terminal, move to the *assignment1* directory (which should be put in a catkin workspace), and type:
@@ -69,6 +63,12 @@ roslaunch assignment.launch
 ```
 
 This will launch all the three nodes with the parameters defined in the launche file itself, with the addition of the SMACH viewer tool, which is useful to visually keep track of the FSM state transitions. The parameters inside the launch file can be adjusted as desired.
+
+## Assumptions
+In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in **Normal** state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a longer movement, distance-wise, takes a greater amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the <<**play**>> keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in **Play** behavior, and to point only after the voice command.
+
+## Limitations
+Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no control over input parameters (e.g. one can set a starting robot position outside of the playing field), DA FINIRE
 
 ## Extra
 
