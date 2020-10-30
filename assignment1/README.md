@@ -13,7 +13,7 @@ The architecture is made of three components:
 - **Control**: it is implemented by [control.py](src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
 
 <div align="center">
-  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture%20and%20topics.png">
 </div>
 
 The first one simulates a person interacting with MiRo; the user can say <<**play**>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.<br/>
