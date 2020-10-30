@@ -10,7 +10,7 @@ The theme is based on a robot (MiRo), which wanders around and plays with the us
 The architecture is made of three components:
 - **Person**: it is implemented by [perception.py](src/perception.py), which is used to simulate reception and processing of incoming voice commands and pointing gestures
 - **Command manager**: it is implemented by [command_manager.py](src/command_manager.py), which is used to handle the robot's finite state machine internal architecture
-- **Control**: it is implemented by [control.py](/src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
+- **Control**: it is implemented by [control.py](src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
 
 <div align="center">
   <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture.png">
