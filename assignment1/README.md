@@ -26,19 +26,15 @@ This is the intenal structure of the finite state machine:
 MiRo starts in the **Sleep** state.<br/>
 Topics involved:
 
-```
-control_topic
-gesture_topic
-motion_over_topic
-play_topic
-```
+- `control_topic`: topic used vy the FSM to order the **Control** component to start simulating a movement
+- `gesture_topic`: used to send the pointed location by the user to the FSM
+- `motion_over_topic`: topic whose duty is to inform the FSM when the simulated motion is assumed to be over
+- `play_topic`: topic used to inform the FSM whenever the user says <<**play**>>
 
 The message types used are:
 
-```
-std_msgs/String
-assignment1/Coordinates
-```
+- `std_msgs/String`:"stock" message type, composed by a simple string
+- `assignment1/Coordinates`: message made of two integers **x** and **y**
 
 The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br/>
 Finally, here are all the parameters loaded in the ROS parameter server:
@@ -85,20 +81,6 @@ Most, if not all, of the assumptions descripted above are indeed limits of the i
 
 ## Extra
 [MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Sadly, due time is still inside a COVID-19 outbreak, so no chance to use it.
-
-## Cose da fare
-1. Brief introduction (couple of sentences)
-2. Software architecture and states diagrams
-(a paragraph of description each, plus a list describing ROS
-messages and parameters)
-3. Packages and file list (to navigate the repository based on 2)
-4. Installation and running procedure
-(including all the steps to display the robot’s behavior)
-5. Working hypothesis and environment (1 or 2 paragraph)
-6. System’s features (1 or 2 paragraph)
-7. System’s limitations (1 or 2 paragraph)
-8. Possible technical Improvements (1 or 2 paragraph)
-9. Authors and contacts (at least the email)
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto) - [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it).
