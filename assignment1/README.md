@@ -78,7 +78,7 @@ Most, if not all, of the assumptions descripted above are indeed limits of the i
 
 ## Extra
 
-<ins>[MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.)</ins> is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Sadly, due time is still inside a COVID-19 outbreak, so no chance to use it.
+[MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Sadly, due time is still inside a COVID-19 outbreak, so no chance to use it.
 
 ## Cose da fare
 1. Brief introduction (couple of sentences)
@@ -95,4 +95,4 @@ messages and parameters)
 9. Authors and contacts (at least the email)
 
 ## Authors
-All the files in this repository belong to <ins>[Andrea Pitto](https://github.com/andreabradpitto)</ins> - <ins>[s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it)</ins>.
+All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto) - [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it).
