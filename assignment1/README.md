@@ -17,7 +17,7 @@ The first one simulates a person interacting with MiRo; the user can say <<play>
 This is the intenal structure of the finite state machine:
   
 <div align="center">
-  <img height="500" width="500" src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/fsm%20states.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/fsm%20states.png">
 </div>
 
 MiRo starts in the **Sleep** state.
