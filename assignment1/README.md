@@ -37,7 +37,7 @@ std_msgs/String
 assignment1/Coordinates
 ```
 
-The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment. <\br>
+The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br/>
 Finally, here are all the parameters loaded in the ROS parameter server:
 
 ```
