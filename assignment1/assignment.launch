@@ -19,6 +19,9 @@
     <param name='person/x' type='int' value='4'/>
     <!-- parameter specifying user's position (y coordinate) -->
     <param name='person/y' type='int' value='4'/>
+    <!-- parameter used to scale simulation velocity -->
+    <param name='sim_speed' type='int' value='1'/>
+
 
     <!-- nodes -->
     <!-- node used to simulate reception and processing of incoming voice commands and pointing gestures -->

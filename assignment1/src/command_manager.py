@@ -28,6 +28,9 @@ person_x = rospy.get_param('person/x')
 ## Acquire person's y-axis position parameter from launch file
 person_y = rospy.get_param('person/y')
 
+## Acquire simulation speed scaling factor from launch file
+sim_speed = rospy.get_param('sim_speed')
+
 ## parameter used to let the fsm behave differently for the very first state only
 first_iteration = 1
 
@@ -56,7 +59,7 @@ class Sleep(smach.State):
         pub.publish(pos)
         if first_iteration == 1:
             rospy.wait_for_message('motion_over_topic', Coordinates)
-        time.sleep(random.randint(2, 5)) # MiRo is sleeping
+        time.sleep(random.randint(2, 5) * sim_speed) # MiRo is sleeping
         rospy.loginfo('MiRo: Good morning!')
         return 'wake_up'
 
@@ -99,7 +102,7 @@ class Normal(smach.State):
             rospy.wait_for_message('motion_over_topic', Coordinates)
             rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
             rospy.set_param('MiRo/y', pos.y)
-            time.sleep(2)
+            time.sleep(2 * sim_speed)
             if sleep_timer == 0:
                 return 'go_sleep'
             self.rate.sleep
@@ -149,7 +152,7 @@ class Play(smach.State):
             pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
             pub.publish(pos)
             rospy.wait_for_message('motion_over_topic', Coordinates)
-            time.sleep(2)
+            time.sleep(2 * sim_speed)
             if normal_timer == 0:
                 return 'go_sleep'
             self.rate.sleep

@@ -10,11 +10,14 @@ import time
 from std_msgs.msg import String
 from assignment1.msg import Coordinates
 
+## Acquire simulation speed scaling factor from launch file
+sim_speed = rospy.get_param('sim_speed')
+
 ## control_topic callback. It waits for a random amount of time, simulating
 # robot movement delays, then publishes the reached position on the 
 # motion_over_topic
 def control_cb(data):
-    time.sleep(random.randint(2, 3))
+    time.sleep(random.randint(2, 3) * sim_speed)
     pub = rospy.Publisher('motion_over_topic', Coordinates, queue_size=10)
     pub.publish(data)
 

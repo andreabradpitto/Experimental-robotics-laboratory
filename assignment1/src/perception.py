@@ -15,6 +15,9 @@ map_x_max = rospy.get_param('map/x_max')
 ## Acquire maximum y-axis parameter from launch file
 map_y_max = rospy.get_param('map/y_max')
 
+## Acquire simulation speed scaling factor from launch file
+sim_speed = rospy.get_param('sim_speed')
+
 ## Simulate the sensors capturing user's <<play>> requests and subsequent
 # pointing gestures. The user is assumed to be aware of the robot's current
 # state (e.g. via LEDs on the robot itself) and asks to <<play>> only if
@@ -26,16 +29,16 @@ def perception():
     rate = rospy.Rate(200)
     choice = Coordinates()
     while not rospy.is_shutdown():
-        time.sleep(random.randint(5, 8))
+        time.sleep(random.randint(5, 8) * sim_speed)
         voice_pub.publish('play')
         rospy.loginfo('User: I want to play')
-        time.sleep(random.randint(1, 3))
+        time.sleep(random.randint(1, 3) * sim_speed)
         if rospy.get_param('state') == 'normal':
             choice.x = random.randint(0, map_x_max)
             choice.y = random.randint(0, map_y_max)
             gesture_pub.publish(choice)
             rospy.loginfo('*The user points to %i %i*', choice.x, choice.y)
-            time.sleep(3)
+            time.sleep(3  * sim_speed)
             while rospy.get_param('state') == 'play':
                 if rospy.get_param('MiRo/x') == rospy.get_param('person/x') and \
                     rospy.get_param('MiRo/y') == rospy.get_param('person/y'):
