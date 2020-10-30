@@ -1,15 +1,24 @@
 #!/usr/bin/env python
 
+## @package perception
+# Emulates an user's voice command and pointing gestures.
+# The user randomly asks the robot to <<play>> and issues a location to reach
+
 import rospy
 import time
 import random
 from std_msgs.msg import String
 from assignment1.msg import Coordinates
 
-## Acquire map size parameters from launch file
+## Acquire maximum x-axis parameter from launch file
 map_x_max = rospy.get_param('map/x_max')
+## Acquire maximum y-axis parameter from launch file
 map_y_max = rospy.get_param('map/y_max')
 
+## Simulate the sensors capturing user's <<play>> requests and subsequent
+# pointing gestures. The user is assumed to be aware of the robot's current
+# state (e.g. via LEDs on the robot itself) and asks to <<play>> only if
+# MiRo is not sleeping or already playing, i.e. it is in Normal state
 def perception():
     rospy.init_node('perception_node', anonymous=True)
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
@@ -25,6 +34,7 @@ def perception():
             choice.x = random.randint(0, map_x_max)
             choice.y = random.randint(0, map_y_max)
             gesture_pub.publish(choice)
+            rospy.loginfo('*The user points to %i %i*', choice.x, choice.y)
             time.sleep(3)
             while rospy.get_param('state') == 'play':
                 if rospy.get_param('MiRo/x') == rospy.get_param('person/x') and \
