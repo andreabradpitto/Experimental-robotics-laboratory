@@ -10,7 +10,7 @@ The theme is based on a robot (MiRo), which wanders around and plays with the us
 The architecture is made of three components: Person, Command manager and Control:
 
 <div align="center">
-  <img height="500" width="500" src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture.png">
 </div>
 
 The first one simulates a person interacting with MiRo; the user can say <<play>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.
