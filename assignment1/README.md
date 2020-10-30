@@ -13,7 +13,7 @@ The architecture is made of three components: **Person**, **Command manager** an
   <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment1/images/architecture.png">
 </div>
 
-The first one simulates a person interacting with MiRo; the user can say <<**play**>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.
+The first one simulates a person interacting with MiRo; the user can say <<**play**>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.<br/>
 This is the intenal structure of the finite state machine:
   
 <div align="center">
@@ -56,6 +56,12 @@ All of these, as already pointed out, can be adjusted before runtime.
 
 ## Instructions
 
+It might be needed to make all the nodes executable, before actually being able to run them. So, after reaching this assignment's folder via a terminal, type:
+
+```
+chmod +x src/*
+```
+
 In order to run the code, simply open a terminal, move to the *assignment1* directory (which should be put in a catkin workspace), and type:
 
 ```
@@ -89,4 +95,4 @@ messages and parameters)
 9. Authors and contacts (at least the email)
 
 ## Authors
-All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).
+All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto) - <ins>[s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it)</ins>.
