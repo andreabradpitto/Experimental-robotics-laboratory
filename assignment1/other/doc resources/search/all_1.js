@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['andrea_20pitto_27s_20experimental_20robotics_20laboratory_20exercises_1',['Andrea Pitto&apos;s Experimental robotics laboratory exercises',['../index.html',1,'']]]
+  ['command_5fmanager_1',['command_manager',['../namespacecommand__manager.html',1,'']]],
+  ['control_2',['control',['../namespacecontrol.html',1,'']]],
+  ['control_5fcb_3',['control_cb',['../namespacecontrol.html#a8980913ce156293cfaf7d4568b88a70e',1,'control']]]
 ];

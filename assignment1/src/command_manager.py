@@ -29,10 +29,13 @@ person_x = rospy.get_param('person/x')
 person_y = rospy.get_param('person/y')
 
 ## Acquire simulation speed scaling factor from launch file
-sim_speed = rospy.get_param('sim_speed')
+sim_scale = rospy.get_param('sim_scale')
 
-## parameter used to let the fsm behave differently for the very first state only
+## variable used to let the fsm behave differently for the very first state only
 first_iteration = 1
+
+## variable used in Normal state to flag when it is time to play
+playtime = 0
 
 ## Sleep state definition
 class Sleep(smach.State):
@@ -59,7 +62,7 @@ class Sleep(smach.State):
         pub.publish(pos)
         if first_iteration == 1:
             rospy.wait_for_message('motion_over_topic', Coordinates)
-        time.sleep(random.randint(2, 5) * sim_speed) # MiRo is sleeping
+        time.sleep(random.randint(2, 5) / sim_scale) # MiRo is sleeping
         rospy.loginfo('MiRo: Good morning!')
         return 'wake_up'
 
@@ -88,11 +91,14 @@ class Normal(smach.State):
     # user <<play>> requests and for going to sleep
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
+        global playtime
+        playtime = 0
         sleep_timer = random.randint(2, 10)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'normal')
         pos = Coordinates()
-        while (sleep_timer != 0 and not rospy.is_shutdown() and rospy.get_param('state') == 'normal'):
+        while (sleep_timer != 0 and not rospy.is_shutdown() and \
+            rospy.get_param('state') == 'normal' and playtime == 0):
             sleep_timer = sleep_timer - 1
             pos.x = random.randint(0, map_x_max)
             pos.y = random.randint(0, map_y_max)
@@ -102,10 +108,11 @@ class Normal(smach.State):
             rospy.wait_for_message('motion_over_topic', Coordinates)
             rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
             rospy.set_param('MiRo/y', pos.y)
-            time.sleep(2 * sim_speed)
+            time.sleep(2 / sim_scale)
             if sleep_timer == 0:
                 return 'go_sleep'
             self.rate.sleep
+        return 'go_play'
 
     ## Normal state callback that prints a string once the random target
     # position has been reached
@@ -116,9 +123,10 @@ class Normal(smach.State):
     ## Normal state callback that prints a string once the robot acknowledges
     # the user's <<play>> request
     def normal_callback_play(self, data):
+        global playtime
         if rospy.get_param('state') == 'normal':        
             rospy.loginfo('MiRo: Ok, let\'s play!')
-            return 'go_play'
+            playtime = 1
 
 ## Play state definition
 class Play(smach.State):
@@ -140,11 +148,12 @@ class Play(smach.State):
         # ask, then reach pointed or told position
         # do it for some time
         # in the end go to normal,but also here we need sleep timer too
-        normal_timer = random.randint(4, 10)
+        normal_timer = random.randint(5, 10)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'play')
         pos = Coordinates()
-        while (normal_timer != 0 and not rospy.is_shutdown() and rospy.get_param('state') == 'play'):
+        while (normal_timer != 0 and not rospy.is_shutdown() and \
+            rospy.get_param('state') == 'play'):
             normal_timer = normal_timer - 1
             rospy.loginfo('MiRo: I am coming to you!')
             pos.x = rospy.get_param('person/x')
@@ -152,9 +161,15 @@ class Play(smach.State):
             pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
             pub.publish(pos)
             rospy.wait_for_message('motion_over_topic', Coordinates)
-            time.sleep(2 * sim_speed)
+            time.sleep(2 / sim_scale) # new
+            rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep) # new
+            rospy.set_param('MiRo/y', pos.y) # new
+            time.sleep(2 / sim_scale) # new
+            rospy.wait_for_message('motion_over_topic', Coordinates) # new
+            rospy.loginfo('MiRo: pointed position reached!') # new
+            time.sleep(2 / sim_scale)
             if normal_timer == 0:
-                return 'go_sleep'
+                return 'game_over'
             self.rate.sleep
 
     ## Play state callback that prints a string once the pointed target
@@ -193,18 +208,19 @@ def main():
                                transitions={'go_sleep':'SLEEP', 
                                             'game_over':'NORMAL'})
 
-
     # Create and start the introspection server for visualization
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()
 
     # Execute the state machine
-    outcome = sm.execute()
+    # outcome = sm.execute() # an output variable is to be used if
+                             # this finite state machine is nested
+                             # inside another one
+    sm.execute()
 
     # Wait for ctrl-c to stop the application
     rospy.spin()
     sis.stop()
-
 
 if __name__ == '__main__':
     main()

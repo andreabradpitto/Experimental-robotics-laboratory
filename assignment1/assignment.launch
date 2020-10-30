@@ -20,15 +20,16 @@
     <!-- parameter specifying user's position (y coordinate) -->
     <param name='person/y' type='int' value='4'/>
     <!-- parameter used to scale simulation velocity -->
-    <param name='sim_speed' type='int' value='1'/>
-
+    <param name='sim_scale' type='int' value='1'/>
 
     <!-- nodes -->
     <!-- node used to simulate reception and processing of incoming voice commands and pointing gestures -->
-    <!--node pkg='assignment1' type='perception.py' name='perception_node' respawn='true' output='screen'/-->
+    <node pkg='assignment1' type='perception.py' name='perception_node' respawn='true' output='screen'/>
     <!-- node used to handle the robot's finite state machine internal architecture -->
     <node pkg='assignment1' type='control.py' name='control_node' respawn='true'/>
     <!-- node used to emulate physical delays relative to robot travelling and position reaching -->
     <node pkg='assignment1' type='command_manager.py' name='miro_fsm_node' respawn='true' output='screen'/>
+    <!-- node used to start the SMACH viewer -->
+    <node pkg='smach_viewer' type='smach_viewer.py' name='smach_viewer_node'/>
 
 </launch>

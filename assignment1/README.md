@@ -1,5 +1,5 @@
-# Andrea Pitto's Experimental robotics laboratory exercises
-This is the repository for all the exercises I have performed of the Robotics engineering class "Experimental robotics laboratory" 2020/2021, held in the University of Genoa
+# Experimental robotics laboratory - Assignment 1
+This is the repository for the first assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa
 
 ## Instructions
 
@@ -12,8 +12,6 @@ rosrun pos_server position_server
 ```
 <ins>[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise)</ins> is the official text for the assignment
 
-### Exercise 2
-Coming soon...
 
 ## Authors
 The exercise can be found <ins>[here](https://github.com/CarmineD8/exp-lab-exercises)</ins>. All the code in this repository was edited by me. Not that I have much to be proud about!

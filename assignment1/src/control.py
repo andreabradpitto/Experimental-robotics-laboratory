@@ -11,14 +11,17 @@ from std_msgs.msg import String
 from assignment1.msg import Coordinates
 
 ## Acquire simulation speed scaling factor from launch file
-sim_speed = rospy.get_param('sim_speed')
+sim_scale = rospy.get_param('sim_scale')
 
 ## control_topic callback. It waits for a random amount of time, simulating
 # robot movement delays, then publishes the reached position on the 
 # motion_over_topic
 def control_cb(data):
-    time.sleep(random.randint(2, 3) * sim_speed)
+    #time.sleep(random.randint(2, 3) / sim_scale)
     pub = rospy.Publisher('motion_over_topic', Coordinates, queue_size=10)
+    time.sleep(random.randint(2, 3) / sim_scale) # I do not understand why it works
+                                                 # only if I put a wait here,
+                                                 # but it does
     pub.publish(data)
 
 ## Initializes the control_node and subscribes to the control_topic. manager_listener
