@@ -80,7 +80,7 @@ In order to simplify the problem, it is assumed that the user is aware of the ro
 Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no control over input parameters (e.g. one can set a starting robot position outside of the playing field).
 
 ## Extra
-[MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Unfortunately, since due time still lies inside a COVID-19 outbreak, there is no chanche we will use it.
+[MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Unfortunately, since the project's deadline still falls inside a high peak COVID-19 outbreak phase, there is no chanche we will use it.
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto) - [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it).
