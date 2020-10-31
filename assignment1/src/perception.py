@@ -29,11 +29,11 @@ def perception():
     rate = rospy.Rate(200)
     choice = Coordinates()
     while not rospy.is_shutdown():
-        time.sleep(random.randint(18, 20) / sim_scale)
+        time.sleep(random.randint(15, 20) / sim_scale)
         if rospy.get_param('state') == 'normal':
             voice_pub.publish('play')
             rospy.loginfo('User: I want to play')
-            time.sleep(random.randint(5, 8) / sim_scale)
+            time.sleep(random.randint(6, 8) / sim_scale)
             while rospy.get_param('state') == 'play':
                 if rospy.get_param('MiRo/x') == rospy.get_param('person/x') and \
                     rospy.get_param('MiRo/y') == rospy.get_param('person/y'):

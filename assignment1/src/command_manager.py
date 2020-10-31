@@ -45,7 +45,7 @@ gestured_point.y = 0
 ## Sleep state definition
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes and subscribe to the
-    # motion_over_topic
+    # motion_over_topic topic
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
@@ -84,7 +84,7 @@ class Sleep(smach.State):
 ## Normal state definition
 class Normal(smach.State):
     ## Normal state initialization: set the outcomes and subscribe to the
-    # play_topic and the motion_over_topic
+    # play_topic and the motion_over_topic topics
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
@@ -111,7 +111,7 @@ class Normal(smach.State):
             rospy.loginfo('MiRo: I am moving to %i %i', pos.x, pos.y)	
             pub.publish(pos)
             if(rospy.wait_for_message('motion_over_topic', Coordinates)):
-                rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
+                rospy.set_param('MiRo/x', pos.x)
                 rospy.set_param('MiRo/y', pos.y)
                 time.sleep(2 / sim_scale)
                 if sleep_timer == 0:
@@ -136,11 +136,11 @@ class Normal(smach.State):
 ## Play state definition
 class Play(smach.State):
     ## Play state initialization: set the outcomes and subscribe to the
-    # gesture_topic and the motion_over_topic
+    # gesture_topic and the motion_over_topic topics
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['go_sleep','game_over'])
+                             outcomes=['game_over'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
         rospy.Subscriber('gesture_topic', Coordinates, self.play_callback_gesture)
 
@@ -149,10 +149,6 @@ class Play(smach.State):
     # it gets back to the Normal state
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        # reach user position
-        # ask, then reach pointed or told position
-        # do it for some time
-        # in the end go to normal,but also here we need sleep timer too
         global gestured_point
         normal_timer = random.randint(5, 10)
         self.rate = rospy.Rate(200)
@@ -199,7 +195,6 @@ class Play(smach.State):
     # heading towards the pointed location, and then also prints a string when
     # that location has been reached
     def play_callback_gesture(self, data):
-        #pos = Coordinates()
         global gestured_point
         if rospy.get_param('state') == 'play':
             rospy.loginfo('MiRo: I am moving to gestured %i %i', data.x, data.y)
@@ -207,15 +202,6 @@ class Play(smach.State):
             pub.publish(data)
             gestured_point.x = data.x
             gestured_point.y = data.y
-            #rospy.wait_for_message('motion_over_topic', Coordinates)
-            #rospy.set_param('MiRo/x', data.x)
-            #rospy.set_param('MiRo/y', data.y)
-            #time.sleep(2 / sim_scale)
-            #rospy.loginfo('MiRo: I am coming to you!')
-            #pos.x = rospy.get_param('person/x')
-            #pos.y = rospy.get_param('person/y')        
-            #pub.publish(pos)
-            #rospy.wait_for_message('motion_over_topic', Coordinates)
 
 ## Finite state machine's (fsm) main. It initializes the miro_fsm_node and setups
 # a SMACH state machine along with all the three possible states
@@ -233,8 +219,7 @@ def main():
                                transitions={'go_play':'PLAY', 
                                             'go_sleep':'SLEEP'})
         smach.StateMachine.add('PLAY', Play(), 
-                               transitions={'go_sleep':'SLEEP', 
-                                            'game_over':'NORMAL'})
+                               transitions={'game_over':'NORMAL'})
 
     # Create and start the introspection server for visualization
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
