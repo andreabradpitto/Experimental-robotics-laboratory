@@ -17,7 +17,7 @@ The architecture is made of three components:
 The first one simulates a person interacting with MiRo; the user can say <<**play**>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.<br/>
 This is the intenal structure of the finite state machine:
   
-\image html "fsm states.png"
+\image html "fsm.png"
 
 MiRo starts in the **Sleep** state.<br/>
 Topics involved:
@@ -70,10 +70,10 @@ roslaunch assignment.launch
 This will launch all the three nodes with the parameters defined in the launche file itself, with the addition of the SMACH viewer tool, which is useful to visually keep track of the FSM state transitions. The parameters inside the launch file can be adjusted as desired.
 
 ## Assumptions
-In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in **Normal** state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a longer movement, distance-wise, takes a greater amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the <<**play**>> keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in **Play** behavior, and to point only after the voice command.
+In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in **Normal** state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a greater distance-wise movement, takes a bigger amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the <<**play**>> keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in **Play** behavior, and to point to a location only after the voice command.
 
 ## Limitations
-Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no control over input parameters (e.g. one can set a starting robot position outside of the playing field).
+Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no integrity checking over input parameters (e.g. one can set a starting robot position outside of the playing field). Also, the user is not moving from its starting position.
 
 ## Extra
 [MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Unfortunately, since the project's deadline still falls inside a high peak COVID-19 outbreak phase, there is no chanche we will use it.
