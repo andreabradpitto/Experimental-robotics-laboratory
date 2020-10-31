@@ -10,10 +10,10 @@ rosrun stage_ros stageros $(rospack find exercise1)/world/exercise.world
 rosrun exercise1 exercise1 _xt:=2.0 _yt:=3.0
 rosrun pos_server position_server
 ```
-<ins>[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise)</ins> is the official text for the assignment
+[This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise) is the official text for the assignment
 
 ### Assignment 1
-Please refer to the readme and the documentation inside the folder
+Please refer to the readme and the documentation inside [its folder](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1)
 
 ## Authors
-The exercise can be found <ins>[here](https://github.com/CarmineD8/exp-lab-exercises)</ins>. All the code in this repository was edited by me. Not that I have much to be proud about!
+The exercises folder can be found [here](https://github.com/CarmineD8/exp-lab-exercises). All the code in this repository was edited by me. Not that I have much to be proud about!
