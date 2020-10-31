@@ -98,7 +98,7 @@ class Normal(smach.State):
         # function called when exiting from the node, it can be blocking
         global playtime
         playtime = 0
-        sleep_timer = random.randint(2, 10)
+        sleep_timer = random.randint(2, 7)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'normal')
         pos = Coordinates()
@@ -150,7 +150,7 @@ class Play(smach.State):
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global gestured_point
-        normal_timer = random.randint(5, 10)
+        normal_timer = random.randint(4, 6)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'play')
         pos = Coordinates()
