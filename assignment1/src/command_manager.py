@@ -37,6 +37,11 @@ first_iteration = 1
 ## variable used in Normal state to flag when it is time to play
 playtime = 0
 
+## vairable used to store the gestured point coordinates
+gestured_point = Coordinates()
+gestured_point.x = 0
+gestured_point.y = 0
+
 ## Sleep state definition
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes and subscribe to the
@@ -97,20 +102,20 @@ class Normal(smach.State):
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'normal')
         pos = Coordinates()
+        pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
         while (sleep_timer != 0 and not rospy.is_shutdown() and \
             rospy.get_param('state') == 'normal' and playtime == 0):
             sleep_timer = sleep_timer - 1
             pos.x = random.randint(0, map_x_max)
             pos.y = random.randint(0, map_y_max)
             rospy.loginfo('MiRo: I am moving to %i %i', pos.x, pos.y)	
-            pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
             pub.publish(pos)
-            rospy.wait_for_message('motion_over_topic', Coordinates)
-            rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
-            rospy.set_param('MiRo/y', pos.y)
-            time.sleep(2 / sim_scale)
-            if sleep_timer == 0:
-                return 'go_sleep'
+            if(rospy.wait_for_message('motion_over_topic', Coordinates)):
+                rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep)
+                rospy.set_param('MiRo/y', pos.y)
+                time.sleep(2 / sim_scale)
+                if sleep_timer == 0:
+                    return 'go_sleep'
             self.rate.sleep
         return 'go_play'
 
@@ -118,7 +123,7 @@ class Normal(smach.State):
     # position has been reached
     def normal_callback_motion(self, data):
         if rospy.get_param('state') == 'normal':
-            rospy.loginfo('MiRo: target position reached!')
+            rospy.loginfo('MiRo: %i %i position reached!', data.x, data.y)
 
     ## Normal state callback that prints a string once the robot acknowledges
     # the user's <<play>> request
@@ -148,46 +153,69 @@ class Play(smach.State):
         # ask, then reach pointed or told position
         # do it for some time
         # in the end go to normal,but also here we need sleep timer too
+        global gestured_point
         normal_timer = random.randint(5, 10)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'play')
         pos = Coordinates()
+        pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+        rospy.loginfo('MiRo: I am coming to you!')
+        pos.x = rospy.get_param('person/x')
+        pos.y = rospy.get_param('person/y')        
+        pub.publish(pos)
+        rospy.wait_for_message('motion_over_topic', Coordinates)
+        rospy.set_param('MiRo/x', pos.x)
+        rospy.set_param('MiRo/y', pos.y)
         while (normal_timer != 0 and not rospy.is_shutdown() and \
             rospy.get_param('state') == 'play'):
             normal_timer = normal_timer - 1
+            rospy.wait_for_message('gesture_topic', Coordinates)
+            rospy.wait_for_message('motion_over_topic', Coordinates)
+            rospy.set_param('MiRo/x', gestured_point.x)
+            rospy.set_param('MiRo/y', gestured_point.y)
+            time.sleep(3 / sim_scale)
             rospy.loginfo('MiRo: I am coming to you!')
             pos.x = rospy.get_param('person/x')
-            pos.y = rospy.get_param('person/y')
-            pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+            pos.y = rospy.get_param('person/y')        
             pub.publish(pos)
             rospy.wait_for_message('motion_over_topic', Coordinates)
-            time.sleep(2 / sim_scale) # new
-            rospy.set_param('MiRo/x', pos.x) # not ideal (unlike in sleep) # new
-            rospy.set_param('MiRo/y', pos.y) # new
-            time.sleep(2 / sim_scale) # new
-            rospy.wait_for_message('motion_over_topic', Coordinates) # new
-            rospy.loginfo('MiRo: pointed position reached!') # new
-            time.sleep(2 / sim_scale)
-            if normal_timer == 0:
-                return 'game_over'
+            rospy.set_param('MiRo/x', pos.x)
+            rospy.set_param('MiRo/y', pos.y)
             self.rate.sleep
+        if normal_timer == 0:
+            return 'game_over'
 
-    ## Play state callback that prints a string once the pointed target
+    ## Play state callback that prints a string once the user
     # position has been reached
     def play_callback_motion(self, data):
         if rospy.get_param('state') == 'play':
-            rospy.loginfo('MiRo: target position reached!')
+            if data.x == rospy.get_param('person/x') and \
+             data.y == rospy.get_param('person/y'):
+                rospy.loginfo('MiRo: user position reached!')
+            else:
+                rospy.loginfo('MiRo: pointed %i %i position reached!', data.x, data.y)
 
     ## Play state callback that prints a string informing that the robot is
     # heading towards the pointed location, and then also prints a string when
     # that location has been reached
     def play_callback_gesture(self, data):
+        #pos = Coordinates()
+        global gestured_point
         if rospy.get_param('state') == 'play':
             rospy.loginfo('MiRo: I am moving to gestured %i %i', data.x, data.y)
             pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
             pub.publish(data)
-            rospy.wait_for_message('motion_over_topic', Coordinates)
-            rospy.loginfo('MiRo: pointed position reached!')
+            gestured_point.x = data.x
+            gestured_point.y = data.y
+            #rospy.wait_for_message('motion_over_topic', Coordinates)
+            #rospy.set_param('MiRo/x', data.x)
+            #rospy.set_param('MiRo/y', data.y)
+            #time.sleep(2 / sim_scale)
+            #rospy.loginfo('MiRo: I am coming to you!')
+            #pos.x = rospy.get_param('person/x')
+            #pos.y = rospy.get_param('person/y')        
+            #pub.publish(pos)
+            #rospy.wait_for_message('motion_over_topic', Coordinates)
 
 ## Finite state machine's (fsm) main. It initializes the miro_fsm_node and setups
 # a SMACH state machine along with all the three possible states

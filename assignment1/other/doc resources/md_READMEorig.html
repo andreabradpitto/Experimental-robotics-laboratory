@@ -46,7 +46,6 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,19 +60,19 @@ $(function() {
 </iframe>
 </div>
 
+</div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
 <div class="title">Experimental robotics laboratory - Assignment 1 </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> </p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md11"></a>
 Introduction</h1>
 <p>This is the repository for the first assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with <a href="https://www.python.org/download/releases/2.7/">Python 2.7</a> and it has been tested on <a href="http://wiki.ros.org/kinetic">ROS Kinetic</a>.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Setting</h1>
 <p>The theme is based on a robot (MiRo), which wanders around and plays with the user. Given a configurable 2D playing ground, MiRo moves randomly around, until it decides to go to sleep in his house (a configurable predetermined location). Then he wakes up and starts its normal behaviour again (i.e. wandering). An user can interact with the robot, asking him to &lt;&lt;<b>play</b>&gt;&gt; a simple game: if MiRo is awake, it will reach the user location (yet another configurable parameter) and then wait for him to send him to a random point via a pointing geture. After some time MiRo gets bored, and goes back to its normal state.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Architecture</h1>
 <p>The architecture is made of three components:</p><ul>
 <li><b>Person</b>: it is implemented by <a href="src/perception.py">perception.py</a>, which is used to simulate reception and processing of incoming voice commands and pointing gestures</li>
@@ -110,35 +109,35 @@ Architecture</h1>
 <li><code>sim_scale</code>: parameter used to scale simulation velocity</li>
 </ul>
 <p>All of these, as already pointed out, can be adjusted before runtime.</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 Requirements</h1>
 <p>In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):</p><ul>
 <li><a href="http://wiki.ros.org/kinetic">ROS Kinetic</a></li>
 <li><a href="http://wiki.ros.org/smach">SMACH</a></li>
 <li>A <a href="https://www.python.org/">Python</a> interpreter</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Instructions</h1>
 <p>It might be needed to make all the nodes executable, before actually being able to run them. So, after reaching this assignment's folder via a terminal, type:</p>
 <div class="fragment"><div class="line">chmod +x src/* </div>
 </div><!-- fragment --><p>In order to run the code, simply open a terminal, move to the <em>assignment1</em> directory (which should be put in a catkin workspace), and type:</p>
 <div class="fragment"><div class="line">roslaunch assignment.launch </div>
 </div><!-- fragment --><p>This will launch all the three nodes with the parameters defined in the launche file itself, with the addition of the SMACH viewer tool, which is useful to visually keep track of the FSM state transitions. The parameters inside the launch file can be adjusted as desired.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Assumptions</h1>
 <p>In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in <b>Normal</b> state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a longer movement, distance-wise, takes a greater amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the &lt;&lt;<b>play</b>&gt;&gt; keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in <b>Play</b> behavior, and to point only after the voice command.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Limitations</h1>
 <p>Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no control over input parameters (e.g. one can set a starting robot position outside of the playing field).</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 Extra</h1>
 <p><a href="http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.">MiRo</a> is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Unfortunately, since the project's deadline still falls inside a high peak COVID-19 outbreak phase, there is no chanche we will use it.</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Authors</h1>
 <p>All the files in this repository belong to <a href="https://github.com/andreabradpitto">Andrea Pitto</a>.<br  />
  Contact: <a href="#" onclick="location.href='mai'+'lto:'+'s39'+'42'+'710'+'@s'+'tud'+'en'+'ti.'+'un'+'ige'+'.i'+'t'; return false;">s3942710@studenti.unige.it</a>. </p>
-</div></div><!-- PageDoc -->
-</div><!-- contents -->
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.0

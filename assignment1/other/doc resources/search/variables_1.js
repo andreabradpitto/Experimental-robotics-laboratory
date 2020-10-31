@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['home_5fx_43',['home_x',['../namespacecommand__manager.html#a21b2f1101805b3e55244bcf223b2d9b5',1,'command_manager']]],
-  ['home_5fy_44',['home_y',['../namespacecommand__manager.html#a061f84aa332303e5511c4c8160f1b9f9',1,'command_manager']]]
+  ['gestured_5fpoint_45',['gestured_point',['../namespacecommand__manager.html#afbaed75f592fb32c0e2edc4fb27b68b4',1,'command_manager']]]
 ];
