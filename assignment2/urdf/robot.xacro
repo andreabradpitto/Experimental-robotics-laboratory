@@ -90,7 +90,7 @@
     <visual name="link_right_wheel_visual">
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
       <xacro:wheel_geometry />
-      <material name="red"/>
+      <material name="orange"/>
     </visual>
   </link>
 
@@ -103,44 +103,58 @@
     <visual name="link_left_wheel_visual">
       <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
       <xacro:wheel_geometry />
-      <material name="red"/>
+      <material name="orange"/>
     </visual>
   </link>
 
+  <link name="link_neck">
+    <xacro:default_inertial mass="0.2"/>
+    <collision name="link_neck_collision">
+      <origin rpy="1.5707 1.5707 0" xyz="0 0.05 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.04"/>
+      </geometry>
+    </collision>
+    <visual name="link_neck_visual">
+      <origin rpy="1.5707 1.5707 0" xyz="0 0.05 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.04"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
 
-  <joint name="joint_right_wheel" type="continuous">
-    <origin rpy="0 0 0" xyz="-0.05 0.15 0"/>
-    <child link="link_right_wheel"/>
-    <parent link="link_chassis"/>
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <limit effort="10000" velocity="1000"/>
-    <joint_properties damping="1.0" friction="1.0"/>
-  </joint>
-  
-  
-  <joint name="joint_left_wheel" type="continuous">
-    <origin rpy="0 0 0" xyz="-0.05 -0.15 0"/>
-    <child link="link_left_wheel"/>
-    <parent link="link_chassis"/>
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <limit effort="10000" velocity="1000"/>
-    <joint_properties damping="1.0" friction="1.0"/>
-  </joint>
-  
+  <link name="link_head">
+    <xacro:default_inertial mass="0.2"/>
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 0 0"/>
+	      <geometry>
+		      <box size="0.1 0.1 0.2"/>
+	      </geometry>
+	    </collision>
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 0 0"/>
+	      <geometry>
+		      <box size="0.1 0.1 0.2"/>
+	      </geometry>
+	      <material name="orange">
+	      </material>
+	    </visual>
+  </link>
+
   <link name="camera_link">
 	    <collision>
-	      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+	      <origin xyz="0 0 0" rpy="0 0 0"/>
 	      <geometry>
 		<box size="0.05 0.05 0.05"/>
 	      </geometry>
 	    </collision>
 	    <visual>
-	      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+	      <origin xyz="0 0 0" rpy="0 0 0"/>
 	      <geometry>
 		<box size="0.05 0.05 0.05"/>
 	      </geometry>
-	      <material name="red">
-		<color rgba="1 0 0 1"/>
+	      <material name="white">
 	      </material>
 	    </visual>
 	    <inertial>
@@ -149,14 +163,77 @@
 	      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
 	    </inertial> 
   </link>
+
+  <!--<link name="link_mouth">
+    <xacro:default_inertial mass="0.2"/>
+    <collision name="link_mouth_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.03 0.01"/>
+      </geometry>
+    </collision>
+    <visual name="link_mouth_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.03 0.01"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>-->
+
+
+
+  <joint name="joint_neck" type="fixed">
+    <origin rpy="1.5707 0 0" xyz="0 0 0.035"/>
+    <child link="link_neck"/>
+    <parent link="link_chassis"/>
+    <!-- <axis rpy="0 0 0" xyz="0 1 0"/> -->
+    <axis rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
+  <joint name="joint_right_wheel" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.05 0.17 0"/>
+    <child link="link_right_wheel"/>
+    <parent link="link_chassis"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
   
-  <joint name="camera_joint" type="fixed">
-	    <axis xyz="0 1 0" />
-	    <origin xyz="0.23 0 0.0" rpy="0 0 0"/>
-	    <parent link="link_chassis"/>
-	    <child link="camera_link"/> 
+  <joint name="joint_left_wheel" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.05 -0.17 0"/>
+    <child link="link_left_wheel"/>
+    <parent link="link_chassis"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+  
+  <joint name="head_joint" type="continuous">
+      <axis xyz="0 1 0"/>
+	    <origin xyz="0 0.15 0" rpy="0 0 0"/>
+	    <parent link="link_neck"/>
+	    <child link="link_head"/>
+      <!-- <limit effort="10000" lower="-1.8" upper="1.8" velocity="1000"/> -->
+      <limit effort="10000" velocity="1000"/>
+      <joint_properties damping="1.0" friction="1.0"/>
 	 </joint>
 
+    <joint name="camera_joint" type="fixed">
+      <axis xyz="0 0 1"/>
+      <!-- <axis xyz="0 0 1"/> -->
+	    <origin xyz="0.05 0 0" rpy="0 0 0"/>
+	    <parent link="link_head"/>
+	    <child link="camera_link"/>
+	 </joint>
 
+  <!--<joint name="joint_mouth" type="continuous">
+    <origin rpy="0 0 0" xyz="0 0.05 0"/>
+    <child link="camera_link"/>
+    <parent link="link_mouth"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>-->
 
 </robot>
