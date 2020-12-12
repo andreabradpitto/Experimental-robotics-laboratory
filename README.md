@@ -6,6 +6,9 @@ This is the repository for all the exercises I have performed of the Robotics en
 ### Assignment 1
 Please refer to the readme and the documentation inside [its folder](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1)
 
+### Assignment 2
+Please refer to the readme and the documentation inside [its folder](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment2)
+
 ### Exercise 1
 Involved packages: **first_package**, **pos_server**. To run the code please launch ROS, then type in a terminal
 ```
