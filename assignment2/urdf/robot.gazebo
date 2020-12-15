@@ -21,10 +21,7 @@
   <gazebo reference="camera_link">
     <material>Gazebo/White</material>
   </gazebo>
-  <!--<gazebo reference="link_mouth">
-    <material>Gazebo/Blue</material>
-  </gazebo>-->
-
+  
   <gazebo>
     <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
       <legacyMode>true</legacyMode>

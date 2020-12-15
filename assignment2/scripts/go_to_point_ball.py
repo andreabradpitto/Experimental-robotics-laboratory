@@ -1,15 +1,15 @@
 #! /usr/bin/env python
 # import ros stuff
 import rospy
+import math
+import actionlib
+import actionlib.msg
+import assignment2.msg
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist, Point, Pose
 from nav_msgs.msg import Odometry
 from gazebo_msgs.msg import LinkState
 from tf import transformations
-import math
-import actionlib
-import actionlib.msg
-import assignment2.msg
 
 # robot state variables
 position_ = Point()
@@ -53,7 +53,7 @@ def clbk_odom(msg):
 def change_state(state):
     global state_
     state_ = state
-    print ('State changed to [%s]' % state_)
+    #print ('State changed to [%s]' % state_)
 
 
 def go_straight_ahead(des_pos):
@@ -87,7 +87,7 @@ def go_straight_ahead(des_pos):
         pub.publish(twist_msg)
 
     else:
-        print ('Position error: [%s]' % err_pos)
+        #print ('Position error: [%s]' % err_pos)
         change_state(1)
 
 
@@ -121,12 +121,12 @@ def planning(goal):
             success = False
             break
         elif state_ == 0:
-            feedback.stat = "Reaching the goal"
+            #feedback.stat = "Reaching the goal"
             feedback.position = pose_
             act_s.publish_feedback(feedback)
             go_straight_ahead(desired_position_)
         elif state_ == 1:
-            feedback.stat = "Target reached!"
+            #feedback.stat = "Target reached!"
             feedback.position = pose_
             act_s.publish_feedback(feedback)
             done()
@@ -136,7 +136,7 @@ def planning(goal):
 
         rate.sleep()
     if success:
-        rospy.loginfo('Goal: Succeeded!')
+        #rospy.loginfo('Goal: Succeeded!')
         act_s.set_succeeded(result)
 
 
@@ -147,7 +147,7 @@ def main():
     pubz = rospy.Publisher('/gazebo/set_link_state', LinkState, queue_size=1)
     sub_odom = rospy.Subscriber('odom', Odometry, clbk_odom)
     act_s = actionlib.SimpleActionServer(
-        '/reaching_goal', assignment2.msg.PlanningAction, planning, auto_start=False)
+        'reaching_goal', assignment2.msg.PlanningAction, planning, auto_start=False)
     act_s.start()
 
     rate = rospy.Rate(20)

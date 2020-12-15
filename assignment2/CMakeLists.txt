@@ -56,11 +56,12 @@ find_package (OpenCV REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+  FILES
+  Coordinates.msg
 #   Message1.msg
 #   Message2.msg
-# )
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -115,7 +116,7 @@ find_package (OpenCV REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES bridge_example
-#  CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs
+  CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs geometry_msgs rospy std_msgs message_runtime
   DEPENDS OpenCV
 )
 
@@ -176,7 +177,7 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  install(PROGRAMS
-   scripts/go_to_point_ball.py
+   scripts/go_to_point_ball.py scripts/perception.py scripts/command_manager.py scripts/control.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

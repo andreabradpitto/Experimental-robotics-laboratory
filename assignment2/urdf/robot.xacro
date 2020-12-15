@@ -45,7 +45,7 @@
     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
 
-	  <link name="link_chassis">
+	<link name="link_chassis">
     <!-- pose and inertial -->
     <pose>0 0 0.1 0 0 0</pose>
     <inertial>
@@ -164,23 +164,6 @@
 	    </inertial> 
   </link>
 
-  <!--<link name="link_mouth">
-    <xacro:default_inertial mass="0.2"/>
-    <collision name="link_mouth_collision">
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="0.01 0.03 0.01"/>
-      </geometry>
-    </collision>
-    <visual name="link_mouth_visual">
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="0.01 0.03 0.01"/>
-      </geometry>
-      <material name="blue"/>
-    </visual>
-  </link>-->
-
 
 
   <joint name="joint_neck" type="fixed">
@@ -209,31 +192,32 @@
     <joint_properties damping="1.0" friction="1.0"/>
   </joint>
   
-  <joint name="head_joint" type="continuous">
+  <joint name="head_joint" type="revolute">
       <axis xyz="0 1 0"/>
 	    <origin xyz="0 0.15 0" rpy="0 0 0"/>
 	    <parent link="link_neck"/>
 	    <child link="link_head"/>
-      <!-- <limit effort="10000" lower="-1.8" upper="1.8" velocity="1000"/> -->
-      <limit effort="10000" velocity="1000"/>
+      <limit effort="10000" lower="0.7854" upper="0.7854" velocity="1000"/>
       <joint_properties damping="1.0" friction="1.0"/>
 	 </joint>
 
-    <joint name="camera_joint" type="fixed">
+  <joint name="camera_joint" type="fixed">
       <axis xyz="0 0 1"/>
       <!-- <axis xyz="0 0 1"/> -->
 	    <origin xyz="0.05 0 0" rpy="0 0 0"/>
 	    <parent link="link_head"/>
 	    <child link="camera_link"/>
-	 </joint>
+	</joint>
 
-  <!--<joint name="joint_mouth" type="continuous">
-    <origin rpy="0 0 0" xyz="0 0.05 0"/>
-    <child link="camera_link"/>
-    <parent link="link_mouth"/>
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <limit effort="10000" velocity="1000"/>
-    <joint_properties damping="1.0" friction="1.0"/>
-  </joint>-->
+  <transmission name="head_joint_trans">
+	  <type>transmission_interface/SimpleTransmission</type>
+	  <joint name="head_joint">
+		  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+	  </joint>
+	  <actuator name="motor1">
+		  <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+		  <mechanicalInterface>1</mechanicalInterface>
+	  </actuator>
+  </transmission>
 
 </robot>

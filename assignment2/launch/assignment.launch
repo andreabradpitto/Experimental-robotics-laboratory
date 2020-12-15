@@ -8,8 +8,10 @@
   <arg name="gui" default="true"/>
   <arg name="recording" default="false"/>
   <arg name="world" default="world_assignment" />
-  <!-- Note that 'headless' is currently non-functional.  See gazebo_ros_pkgs issue #491 (-r arg does not disable
-       rendering, but instead enables recording). The arg definition has been left here to prevent breaking downstream
+  <!-- Note that 'headless' is currently non-functional.
+       See gazebo_ros_pkgs issue #491 (-r arg does not disable
+       rendering, but instead enables recording). The arg definition
+       has been left here to prevent breaking downstream
        launch files, but it does nothing. -->
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
@@ -37,12 +39,15 @@
   <group if="$(arg use_clock_frequency)">
     <param name="gazebo/pub_clock_frequency" value="$(arg pub_clock_frequency)" />
   </group>
-  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="$(arg respawn_gazebo)" output="screen"
-	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)" />
+  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" 
+    respawn="$(arg respawn_gazebo)" output="screen"
+	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics)
+    $(arg extra_gazebo_args) $(arg world_name)" />
 	
   <!-- start gazebo client -->
   <group if="$(arg gui)">
-    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient"
+      respawn="false" output="screen"/>
   </group>
 
   <arg name="ns1" value="robot"/>
@@ -55,18 +60,69 @@
 	
 	 <param name="human_description1" textfile="$(find assignment2)/urdf/human.urdf" />
       
-  <node name="urdf_spawner_human1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-        args="-urdf -model human1 -param human_description1 -x -7 -y 7 -z 0.34 -R 0 -P 0 -Y 0"/>
+  <node name="urdf_spawner_human1" pkg="gazebo_ros" type="spawn_model"
+    respawn="false" output="screen"
+  args="-urdf -model human1 -param human_description1 -x -7 -y 7 -z 0.34 -R 0 -P 0 -Y 0"/>
 
   <group ns="$(arg ns1)">
-  	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model $(arg ns1) -param robot_description -x -5 -y 7 -Y 3.14 -z 0.05"/>
+
+    <!-- parameters -->
+    <!-- parameter specifying robot current state -->
+    <param name='state' type='string' value='sleep'/>
+    <!-- parameter specifying robot current position (x coordinate) -->
+    <param name='dog/x' type='int' value='0'/>
+    <!-- parameter specifying robot current position (y coordinate) -->
+    <param name='dog/y' type='int' value='0'/>
+    <!-- parameter specifying the maximum x-axis value for the map -->
+    <param name='map/x_max' type='int' value='8'/>
+    <!-- parameter specifying the maximum y-axis value for the map -->
+    <param name='map/y_max' type='int' value='8'/>
+    <!-- parameter specifying the minimum x-axis value for the map -->
+    <param name='map/x_min' type='int' value='-8'/>
+    <!-- parameter specifying the minimum y-axis value for the map -->
+    <param name='map/y_min' type='int' value='-8'/>
+    <!-- parameter specifying robot home position (x coordinate) -->
+    <param name='home/x' type='int' value='-5'/>
+    <!-- parameter specifying robot home position (y coordinate) -->
+    <param name='home/y' type='int' value='7'/>
+    <!-- parameter specifying user's position (x coordinate) -->
+    <param name='person/x' type='int' value='-7'/>
+    <!-- parameter specifying user's position (y coordinate) -->
+    <param name='person/y' type='int' value='7'/>
+    <!-- parameter used to scale simulation velocity -->
+    <param name='sim_scale' type='int' value='1'/>
+    <!-- parameter used to specify head angle -->
+    <param name='dog/head' type='double' value='0'/>
+
+  	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+      respawn="false" output="screen"
+	  args="-urdf -model $(arg ns1) -param robot_description -x -5 -y 7 -Y 3.14 -z 0.05"/>
+
+    <!-- node used to simulate reception and processing of incoming
+         voice commands and pointing gestures -->
+    <node pkg='assignment2' type='perception.py'
+      name='perception_node' output='screen' respawn="false"/>
+    <!-- node used to handle the robot's finite state machine internal architecture -->
+    <node pkg='assignment2' type='control.py'
+      name='control_node' output='screen' respawn="false"/>
+    <!-- node used to emulate physical delays relative to robot
+         travelling and position reaching -->
+    <node pkg='assignment2' type='command_manager.py'
+      name='dog_fsm_node' output='screen' respawn="false"/>
+
+    <rosparam file="$(find assignment2)/config/motor_config.yaml" command="load"/>
+    <node name="controller_spawner_node" pkg="controller_manager" type="spawner"
+      output="screen" args="joint_state_controller joint_position_controller
+        --shutdown-timeout 3">
+    </node>
   </group>
   
   <group ns="$(arg ns2)">
-  	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model $(arg ns2) -param ball_description -x -7 -y 6 -z 0.25"/>
-	<node name="position_server" pkg="assignment2" type="go_to_point_ball.py" output="screen" />
+  	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+      respawn="false" output="screen"
+	  args="-urdf -model $(arg ns2) -param ball_description -x -7 -y 6 -z 0.25"/>
+	  <node name="position_server" pkg="assignment2"
+      type="go_to_point_ball.py" output="screen"/>
   </group>
 
 </launch>
