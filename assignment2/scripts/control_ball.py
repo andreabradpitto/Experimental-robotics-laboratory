@@ -23,29 +23,36 @@ from geometry_msgs.msg import Twist
 
 VERBOSE = False
 
-## questa e la cosa che deve fare quando e in play topic, al posto di control.py
-# ma forse devo tenrlo attivo anche prima per vedere se vedo sta belin di palla ed
-# entrare nel play state
+#detect = 0
 
 class image_feature:
 
     def __init__(self):
         '''Initialize ros publisher, ros subscriber'''
         rospy.init_node('image_feature', anonymous=True)
-     # topic where we publish
-        self.image_pub = rospy.Publisher("/output/image_raw/compressed",
+        # topic where we publish
+        self.image_pub = rospy.Publisher("output/image_raw/compressed",
                                          CompressedImage, queue_size=1)
-        self.vel_pub = rospy.Publisher("/cmd_vel",
+        self.vel_pub = rospy.Publisher("cmd_vel",
                                        Twist, queue_size=1)
 
         # subscribed Topic
-        self.subscriber = rospy.Subscriber("/camera1/image_raw/compressed",
-                                           CompressedImage, self.callback,  queue_size=1)
+        self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
+                                           CompressedImage, self.img_cb,  queue_size=1)
 
+        self.ball_pub = rospy.Publisher("ball_detection", int, queue_size=1)
+        self.ball_sub = rospy.Subscriber("ball_detection", int, self.detect_cb,  queue_size=1)
 
-    def callback(self, ros_data):
+    def detect_cb(self, ros_data):
+        #global detect
+        # qui metto un flag per il quale img_cb puo proseguire
+        #detect = 1
+        rospy.set_param('dog/detect', 1)
+
+    def img_cb(self, ros_data):
         '''Callback function of subscribed topic. 
         Here images get converted and features detected'''
+        #global detect
         if VERBOSE:
             print ('received image of type: "%s"' % ros_data.format)
 
@@ -85,6 +92,11 @@ class image_feature:
                 cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                 vel = Twist()
                 vel.angular.z = -0.002*(center[0]-400)
+                vel.linear.x = -0.01*(radius-100)
+                self.vel_pub.publish(vel)
+            else:
+                vel = Twist()
+                vel.linear.x = 0.5
                 self.vel_pub.publish(vel)
 
         else:

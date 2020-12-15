@@ -93,6 +93,8 @@
     <param name='sim_scale' type='int' value='1'/>
     <!-- parameter used to specify head angle -->
     <param name='dog/head' type='double' value='0'/>
+    <!-- parameter used to specify whetehr the ball is detected or not -->
+    <!--<param name='dog/detect' type='int' value='0'/>-->
 
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
@@ -109,6 +111,10 @@
          travelling and position reaching -->
     <node pkg='assignment2' type='command_manager.py'
       name='dog_fsm_node' output='screen' respawn="false"/>
+
+    <!-- node used to .....................................
+    <node pkg='assignment2' type='control_ball.py'
+      name='control_ball_node' output='screen' respawn="false"/> -->
 
     <rosparam file="$(find assignment2)/config/motor_config.yaml" command="load"/>
     <node name="controller_spawner_node" pkg="controller_manager" type="spawner"

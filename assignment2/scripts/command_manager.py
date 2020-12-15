@@ -39,13 +39,7 @@ sim_scale = rospy.get_param('sim_scale')
 ## variable used to let the fsm behave differently for the very first state only
 first_iteration = 1
 
-## variable used in Normal state to flag when it is time to play
 playtime = 0
-
-## vairable used to store the gestured point coordinates
-gestured_point = Coordinates()
-gestured_point.x = 0
-gestured_point.y = 0
 
 ## Sleep state definition
 class Sleep(smach.State):
@@ -105,7 +99,8 @@ class Normal(smach.State):
         smach.State.__init__(self, 
                              outcomes=['go_play','go_sleep'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback_motion)
-        #rospy.Subscriber('play_topic', String, self.normal_callback_play)
+        rospy.Subscriber('ball_control_topic', int, self.normal_callback_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
         # qua devo mettere un suscriber per quando viene vista la palla
         # in quel caso metto playtime = 1 nella callback e cosi
@@ -118,7 +113,6 @@ class Normal(smach.State):
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global playtime
-        playtime = 0
         sleep_timer = random.randint(2, 7)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'normal')
@@ -135,10 +129,17 @@ class Normal(smach.State):
                 rospy.set_param('dog/x', pos.x)
                 rospy.set_param('dog/y', pos.y)
                 #time.sleep(2 / sim_scale)
-                if sleep_timer == 0:
-                    return 'go_sleep'
             self.rate.sleep
-        return 'go_play'
+#                if sleep_timer == 0:
+#                    return 'go_sleep'
+#            self.rate.sleep
+#        return 'go_play'
+
+        if sleep_timer == 0:
+            return 'go_sleep'
+
+        elif playtime == 1:
+            return 'go_play'
 
     ## Normal state callback that prints a string once the random target
     # position has been reached
@@ -148,81 +149,56 @@ class Normal(smach.State):
 
     ## Normal state callback that prints a string once the robot acknowledges
     # the user's <<play>> request
-    #def normal_callback_play(self, data):
-    #    global playtime
-    #    if rospy.get_param('state') == 'normal':        
-    #        rospy.loginfo('dog: Ok, let\'s play!')
-    #        playtime = 1
+    def normal_callback_ball(self, data):
+        global playtime
+        if (rospy.get_param('state') == 'normal' and data == 1):
+       #if rospy.get_param('state') == 'normal':     
+            rospy.loginfo('dog: I have seen the ball! Woof!')
+            playtime = 1
 
 ## Play state definition
 class Play(smach.State):
     ## Play state initialization: set the outcomes and subscribe to the
-    # gesture_topic and the motion_over_topic topics
+    # ball_detection and the motion_over_topic topics
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['game_over'])
-        rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
-        #rospy.Subscriber('gesture_topic', Coordinates, self.play_callback_gesture)
+        #rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
+        rospy.Subscriber('ball_control_topic', int, self.play_callback_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
     ## Play state execution: the robot reaches the users, then goes to the
     # pointed location, then comes back to the user and so on. After some time
     # it gets back to the Normal state
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        global gestured_point
-        normal_timer = random.randint(4, 6)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'play')
-        pos = Coordinates()
-        pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
-        rospy.loginfo('dog: I am coming to you!')
-        pos.x = rospy.get_param('person/x')
-        pos.y = rospy.get_param('person/y')        
-        pub.publish(pos)
-        rospy.wait_for_message('motion_over_topic', Coordinates)
-        rospy.set_param('dog/x', pos.x)
-        rospy.set_param('dog/y', pos.y)
-        while (normal_timer != 0 and not rospy.is_shutdown() and \
-            rospy.get_param('state') == 'play'):
-            normal_timer = normal_timer - 1
-            #rospy.wait_for_message('gesture_topic', Coordinates)
-            rospy.wait_for_message('motion_over_topic', Coordinates)
-            rospy.set_param('dog/x', gestured_point.x)
-            rospy.set_param('dog/y', gestured_point.y)
-            time.sleep(3 / sim_scale)
-            rospy.loginfo('dog: I am coming to you!')
-            pos.x = rospy.get_param('person/x')
-            pos.y = rospy.get_param('person/y')        
-            pub.publish(pos)
-            rospy.wait_for_message('motion_over_topic', Coordinates)
-            rospy.set_param('dog/x', pos.x)
-            rospy.set_param('dog/y', pos.y)
+        while (not rospy.is_shutdown() and playtime == 1 \
+            and rospy.get_param('state') == 'play'):
+            #rospy.wait_for_message('ball_detection', Coordinates)
+            rospy.wait_for_message('ball_control_topic', Coordinates) #magari da commentare
+            #magari metto qui il giramento di testa. o forse meglio di no
             self.rate.sleep
-        if normal_timer == 0:
-            return 'game_over'
+        return 'game_over'
 
     ## Play state callback that prints a string once the user
     # position has been reached
-    def play_callback_motion(self, data):
-        if rospy.get_param('state') == 'play':
-            if data.x == rospy.get_param('person/x') and \
-             data.y == rospy.get_param('person/y'):
-                rospy.loginfo('dog: user position reached!')
-            else:
-                rospy.loginfo('dog: pointed %i %i position reached!', data.x, data.y)
-
-    ## Play state callback that prints a string informing that the robot is
-    # heading towards the pointed location, and then also prints a string when
-    # that location has been reached
-    #def play_callback_gesture(self, data):
-    #    global gestured_point
+    #def play_callback_motion(self, data):
     #    if rospy.get_param('state') == 'play':
-    #        rospy.loginfo('dog: I am moving to gestured %i %i', data.x, data.y)
-    #        pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
-    #        pub.publish(data)
-    #        gestured_point.x = data.x
-    #        gestured_point.y = data.y
+    #        if data.x == rospy.get_param('person/x') and \
+    #         data.y == rospy.get_param('person/y'):
+    #            rospy.loginfo('dog: user position reached!')
+    #        else:
+    #            rospy.loginfo('dog: pointed %i %i position reached!', data.x, data.y)
+
+    def play_callback_ball(self, data):
+        global playtime
+        if (rospy.get_param('state') == 'play' and data == 2):
+       #if rospy.get_param('state') == 'play':     
+            rospy.loginfo('dog: I have lost the ball :(')
+            playtime = 0
 
 ## Finite state machine's (fsm) main. It initializes the dog_fsm_node and setups
 # a SMACH state machine along with all the three possible states
