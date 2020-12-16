@@ -168,7 +168,7 @@ def control_cb(data):
 
     state_ = 0
     rate = rospy.Rate(20)
-    while not (state_ == 3 or rospy.get_param('state') == 'normal'): # magari ridondante
+    while not (state_ == 3 or rospy.get_param('state') == 'play'): # magari ridondante
         if state_ == 0:
             fix_yaw(desired_position_)
         elif state_ == 1:

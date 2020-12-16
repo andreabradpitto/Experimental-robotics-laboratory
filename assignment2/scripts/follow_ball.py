@@ -84,6 +84,7 @@ class image_feature:
                     cv2.circle(image_np, (int(x), int(y)), int(radius),
                             (0, 255, 255), 2)
                     cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                    image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE) 
                     if rospy.get_param('state') == 'play':
                         vel = Twist()
                         vel.angular.z = -0.002*(center[0]-400)
@@ -108,7 +109,7 @@ class image_feature:
                 self.vel_pub.publish(vel)
                 find_counter = find_counter + 1
             elif (rospy.get_param('state') == 'play' and find_counter >= 14):
-                self.ball_pub.publish(2)           
+                self.ball_pub.publish(2)          
 
             cv2.imshow('window', image_np)
             cv2.waitKey(2)
