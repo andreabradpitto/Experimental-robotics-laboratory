@@ -112,9 +112,9 @@
     <node pkg='assignment2' type='command_manager.py'
       name='dog_fsm_node' output='screen' respawn="false"/>
 
-    <!-- node used to .....................................
-    <node pkg='assignment2' type='control_ball.py'
-      name='control_ball_node' output='screen' respawn="false"/> -->
+    <!-- node used to ..................................... -->
+    <node pkg='assignment2' type='follow_ball.py'
+      name='follow_ball_node' output='screen' respawn="false"/>
 
     <rosparam file="$(find assignment2)/config/motor_config.yaml" command="load"/>
     <node name="controller_spawner_node" pkg="controller_manager" type="spawner"

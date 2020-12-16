@@ -100,6 +100,13 @@ class Normal(smach.State):
                              outcomes=['go_play','go_sleep'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback_motion)
         rospy.Subscriber('ball_control_topic', Int64, self.normal_callback_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
+
+        # qua devo mettere un suscriber per quando viene vista la palla
+        # in quel caso metto playtime = 1 nella callback e cosi
+        # vai in play state. devo capire chi e che controlla e come
+        # quando sta palal viene vista
+        #per forza qualche controllo nelnormal state...
     
     ## Normal state execution: the robot wanders randomly, while waiting for
     # user <<play>> requests and for going to sleep
@@ -157,7 +164,9 @@ class Play(smach.State):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['game_over'])
+        #rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
         rospy.Subscriber('ball_control_topic', Int64, self.play_callback_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
     ## Play state execution: the robot reaches the users, then goes to the
     # pointed location, then comes back to the user and so on. After some time
@@ -168,13 +177,26 @@ class Play(smach.State):
         rospy.set_param('state', 'play')
         while (not rospy.is_shutdown() and playtime == 1 \
             and rospy.get_param('state') == 'play'):
+            #rospy.wait_for_message('ball_detection', Coordinates)
+            rospy.wait_for_message('ball_control_topic', Coordinates) #magari da commentare
             #magari metto qui il giramento di testa. o forse meglio di no
             self.rate.sleep
         return 'game_over'
 
+    ## Play state callback that prints a string once the user
+    # position has been reached
+    #def play_callback_motion(self, data):
+    #    if rospy.get_param('state') == 'play':
+    #        if data.x == rospy.get_param('person/x') and \
+    #         data.y == rospy.get_param('person/y'):
+    #            rospy.loginfo('dog: user position reached!')
+    #        else:
+    #            rospy.loginfo('dog: pointed %i %i position reached!', data.x, data.y)
+
     def play_callback_ball(self, data):
         global playtime
         if (rospy.get_param('state') == 'play' and data == 2):
+       #if rospy.get_param('state') == 'play':     
             rospy.loginfo('dog: I have lost the ball :(')
             playtime = 0
 

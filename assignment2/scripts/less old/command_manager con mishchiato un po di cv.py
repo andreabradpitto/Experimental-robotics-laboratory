@@ -41,6 +41,8 @@ first_iteration = 1
 
 playtime = 0
 
+cnts = 0
+
 ## Sleep state definition
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes and subscribe to the
@@ -99,20 +101,43 @@ class Normal(smach.State):
         smach.State.__init__(self, 
                              outcomes=['go_play','go_sleep'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback_motion)
-        rospy.Subscriber('ball_control_topic', Int64, self.normal_callback_ball)
+        rospy.Subscriber("output/image_raw/compressed", CompressedImage, self.normal_cb_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
+
+        # qua devo mettere un suscriber per quando viene vista la palla
+        # in quel caso metto playtime = 1 nella callback e cosi
+        # vai in play state. devo capire chi e che controlla e come
+        # quando sta palal viene vista
+        #per forza qualche controllo nelnormal state...
     
     ## Normal state execution: the robot wanders randomly, while waiting for
     # user <<play>> requests and for going to sleep
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        global playtime
+        global playtime, cnts
         sleep_timer = random.randint(2, 7)
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'normal')
         pos = Coordinates()
         pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+        image_pub = rospy.Publisher("output/image_raw/compressed",
+                                     CompressedImage, queue_size=1)
         while (sleep_timer != 0 and not rospy.is_shutdown() and \
             rospy.get_param('state') == 'normal' and playtime == 0):
+
+            np_arr = np.fromstring(ros_data.data, np.uint8)
+            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+            greenLower = (50, 50, 20)
+            greenUpper = (70, 255, 255)
+            blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
+            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+            mask = cv2.inRange(hsv, greenLower, greenUpper)
+            mask = cv2.erode(mask, None, iterations=2)
+            mask = cv2.dilate(mask, None, iterations=2)
+            cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cnts = imutils.grab_contours(cnts)
+            center = None
+            
             sleep_timer = sleep_timer - 1
             pos.x = random.randint(map_x_min, map_x_max)
             pos.y = random.randint(map_y_min, map_y_max)
@@ -142,10 +167,9 @@ class Normal(smach.State):
 
     ## Normal state callback that prints a string once the robot acknowledges
     # the user's <<play>> request
-    def normal_callback_ball(self, data):
-        global playtime
-        if (rospy.get_param('state') == 'normal' and data == 1):
-       #if rospy.get_param('state') == 'normal':     
+    def normal_cb_ball(self, data):
+        global playtime, cnts
+        if rospy.get_param('state') == 'normal' and len(cnts) > 0:
             rospy.loginfo('dog: I have seen the ball! Woof!')
             playtime = 1
 
@@ -157,7 +181,9 @@ class Play(smach.State):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['game_over'])
-        rospy.Subscriber('ball_control_topic', Int64, self.play_callback_ball)
+        #rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
+        rospy.Subscriber("output/image_raw/compressed", CompressedImage, self.play_cb_ball)
+        #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
     ## Play state execution: the robot reaches the users, then goes to the
     # pointed location, then comes back to the user and so on. After some time
@@ -168,15 +194,112 @@ class Play(smach.State):
         rospy.set_param('state', 'play')
         while (not rospy.is_shutdown() and playtime == 1 \
             and rospy.get_param('state') == 'play'):
+            #rospy.wait_for_message('ball_detection', Coordinates)
+            rospy.wait_for_message('ball_control_topic', Coordinates) #magari da commentare
             #magari metto qui il giramento di testa. o forse meglio di no
             self.rate.sleep
         return 'game_over'
 
-    def play_callback_ball(self, data):
+    ## Play state callback that prints a string once the user
+    # position has been reached
+    #def play_callback_motion(self, data):
+    #    if rospy.get_param('state') == 'play':
+    #        if data.x == rospy.get_param('person/x') and \
+    #         data.y == rospy.get_param('person/y'):
+    #            rospy.loginfo('dog: user position reached!')
+    #        else:
+    #            rospy.loginfo('dog: pointed %i %i position reached!', data.x, data.y)
+
+    def play_cb_ball(self, data):
         global playtime
         if (rospy.get_param('state') == 'play' and data == 2):
+       #if rospy.get_param('state') == 'play':     
             rospy.loginfo('dog: I have lost the ball :(')
             playtime = 0
+
+
+
+def img_cb(ros_data):
+    '''Callback function of subscribed topic. 
+    Here images get converted and features detected'''
+    global cnts
+
+    find_counter = 0
+
+    image_pub = rospy.Publisher("output/image_raw/compressed",
+                                     CompressedImage, queue_size=1)
+    vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=1)
+
+    #### direct conversion to CV2 ####
+    np_arr = np.fromstring(ros_data.data, np.uint8)
+    image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+
+    greenLower = (50, 50, 20)
+    greenUpper = (70, 255, 255)
+
+    blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
+    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, greenLower, greenUpper)
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+    #cv2.imshow('mask', mask)
+    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+                            cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    center = None
+    # only proceed if at least one contour was found
+    if len(cnts) > 0:
+        #rospy.set_param('state', 'play')
+        ball_pub.publish(1)
+        #qua sopra devo mandare qualcosa su un topic poi in normal metto il set
+        find_counter = 0
+        # find the largest contour in the mask, then use
+        # it to compute the minimum enclosing circle and
+        # centroid
+        c = max(cnts, key=cv2.contourArea)
+        ((x, y), radius) = cv2.minEnclosingCircle(c)
+        M = cv2.moments(c)
+        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+        # only proceed if the radius meets a minimum size
+        if radius > 10:
+            # draw the circle and centroid on the frame,
+            # then update the list of tracked points
+            cv2.circle(image_np, (int(x), int(y)), int(radius),
+                       (0, 255, 255), 2)
+            cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+            vel = Twist()
+            vel.angular.z = -0.002*(center[0]-400)
+            vel.linear.x = -0.01*(radius-100)
+            vel_pub.publish(vel)
+        elif radius < 10:
+            vel = Twist()
+            vel.linear.x = 0.5
+            vel_pub.publish(vel)
+        else:
+            print('qui devo mettere che gira la testa!')
+            #poi devo metterlo come if head_moved == 0 printa quello e metti
+            # head_move = 1. negli altri due casi sopra metti come primo
+            # instruction head_moved = 0. e devo metterlo anche a inizio i len(cnts)
+            # per non avere problemi. su questa ultiam cosa bisogna vedere dove si
+            # potrebbe mettere (perche forse non e il posto migliore), ma dovrebbe
+            # andare cosi
+
+    elif (rospy.get_param('state') == 'play' and find_counter < 14): # per niente sicuro di questo
+        vel = Twist()
+        vel.angular.z = 0.5
+        vel_pub.publish(vel)
+        find_counter = find_counter + 1
+
+    elif (rospy.get_param('state') == 'play' and find_counter >= 14):
+        #rospy.set_param('state', 'normal')
+        ball_pub.publish(2)
+
+    # update the points queue
+    # pts.appendleft(center)
+    cv2.imshow('window', image_np)
+    cv2.waitKey(2)
+
 
 ## Finite state machine's (fsm) main. It initializes the dog_fsm_node and setups
 # a SMACH state machine along with all the three possible states
