@@ -11,7 +11,7 @@ import smach_ros
 import time
 import random
 import assignment2
-from std_msgs.msg import String
+from std_msgs.msg import String, Int64
 from assignment2.msg import Coordinates
 
 ## Acquire maximum x-axis parameter from launch file
@@ -99,7 +99,7 @@ class Normal(smach.State):
         smach.State.__init__(self, 
                              outcomes=['go_play','go_sleep'])
         rospy.Subscriber('motion_over_topic', Coordinates, self.normal_callback_motion)
-        rospy.Subscriber('ball_control_topic', int, self.normal_callback_ball)
+        rospy.Subscriber('ball_control_topic', Int64, self.normal_callback_ball)
         #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
         # qua devo mettere un suscriber per quando viene vista la palla
@@ -165,7 +165,7 @@ class Play(smach.State):
         smach.State.__init__(self, 
                              outcomes=['game_over'])
         #rospy.Subscriber('motion_over_topic', Coordinates, self.play_callback_motion)
-        rospy.Subscriber('ball_control_topic', int, self.play_callback_ball)
+        rospy.Subscriber('ball_control_topic', Int64, self.play_callback_ball)
         #rospy.Subscriber('ball_detection', Coordinates, self.play_callback_gesture)
 
     ## Play state execution: the robot reaches the users, then goes to the

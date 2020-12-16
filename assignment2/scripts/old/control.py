@@ -23,6 +23,8 @@ from tf import transformations
 #from std_msgs.msg import Float64
 from std_msgs.msg import Int64
 
+VERBOSE = False
+
 # robot state variables
 position_ = Point()
 final_position = Point()
@@ -193,87 +195,101 @@ def control_cb(data):
 # una volta tornati in normal state
 
 
-def img_cb(ros_data):
-    '''Callback function of subscribed topic. 
-    Here images get converted and features detected'''
-    global cnts
+class image_feature:
 
-    find_counter = 0
+    def __init__(self):
+        '''Initialize ros publisher, ros subscriber'''
+        rospy.init_node('image_feature', anonymous=True)
+        # topic where we publish
+        self.image_pub = rospy.Publisher("output/image_raw/compressed",
+                                         CompressedImage, queue_size=1)
+        self.vel_pub = rospy.Publisher("cmd_vel",
+                                       Twist, queue_size=1)
+        self.ball_pub = rospy.Publisher("ball_control_topic",
+                                       Int64, queue_size=1)                     
 
-    image_pub = rospy.Publisher("output/image_raw/compressed",
-                                     CompressedImage, queue_size=1)
-    vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=1)
-    ball_pub = rospy.Publisher("ball_control_topic", Int64, queue_size=1)   
+        # subscribed Topic
+        self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
+                                           CompressedImage, self.img_cb,  queue_size=1)
 
-    #### direct conversion to CV2 ####
-    np_arr = np.fromstring(ros_data.data, np.uint8)
-    image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+    def img_cb(self, ros_data):
+        '''Callback function of subscribed topic. 
+        Here images get converted and features detected'''
+        global cnts
+        if VERBOSE:
+            print ('received image of type: "%s"' % ros_data.format)
 
-    greenLower = (50, 50, 20)
-    greenUpper = (70, 255, 255)
-
-    blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
-    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, greenLower, greenUpper)
-    mask = cv2.erode(mask, None, iterations=2)
-    mask = cv2.dilate(mask, None, iterations=2)
-    #cv2.imshow('mask', mask)
-    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-                            cv2.CHAIN_APPROX_SIMPLE)
-    cnts = imutils.grab_contours(cnts)
-    center = None
-    # only proceed if at least one contour was found
-    if len(cnts) > 0:
-        #rospy.set_param('state', 'play')
-        ball_pub.publish(1)
-        #qua sopra devo mandare qualcosa su un topic poi in normal metto il set
         find_counter = 0
-        # find the largest contour in the mask, then use
-        # it to compute the minimum enclosing circle and
-        # centroid
-        c = max(cnts, key=cv2.contourArea)
-        ((x, y), radius) = cv2.minEnclosingCircle(c)
-        M = cv2.moments(c)
-        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
-        # only proceed if the radius meets a minimum size
-        if radius > 10:
-            # draw the circle and centroid on the frame,
-            # then update the list of tracked points
-            cv2.circle(image_np, (int(x), int(y)), int(radius),
-                       (0, 255, 255), 2)
-            cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+        #### direct conversion to CV2 ####
+        np_arr = np.fromstring(ros_data.data, np.uint8)
+        image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+
+        greenLower = (50, 50, 20)
+        greenUpper = (70, 255, 255)
+
+        blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
+        hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, greenLower, greenUpper)
+        mask = cv2.erode(mask, None, iterations=2)
+        mask = cv2.dilate(mask, None, iterations=2)
+        #cv2.imshow('mask', mask)
+        cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+                                cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        center = None
+        # only proceed if at least one contour was found
+        if len(cnts) > 0:
+            #rospy.set_param('state', 'play')
+            self.ball_pub.publish(1)
+            #qua sopra devo mandare qualcosa su un topic poi in normal metto il set
+            find_counter = 0
+            # find the largest contour in the mask, then use
+            # it to compute the minimum enclosing circle and
+            # centroid
+            c = max(cnts, key=cv2.contourArea)
+            ((x, y), radius) = cv2.minEnclosingCircle(c)
+            M = cv2.moments(c)
+            center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+            # only proceed if the radius meets a minimum size
+            if radius > 10:
+                # draw the circle and centroid on the frame,
+                # then update the list of tracked points
+                cv2.circle(image_np, (int(x), int(y)), int(radius),
+                           (0, 255, 255), 2)
+                cv2.circle(image_np, center, 5, (0, 0, 255), -1)
+                vel = Twist()
+                vel.angular.z = -0.002*(center[0]-400)
+                vel.linear.x = -0.01*(radius-100)
+                self.vel_pub.publish(vel)
+            elif radius < 10:
+                vel = Twist()
+                vel.linear.x = 0.5
+                self.vel_pub.publish(vel)
+            else:
+                print('qui devo mettere che gira la testa!')
+                #poi devo metterlo come if head_moved == 0 printa quello e metti
+                # head_move = 1. negli altri due casi sopra metti come primo
+                # instruction head_moved = 0. e devo metterlo anche a inizio i len(cnts)
+                # per non avere problemi. su questa ultiam cosa bisogna vedere dove si
+                # potrebbe mettere (perche forse non e il posto migliore), ma dovrebbe
+                # andare cosi
+
+        elif (rospy.get_param('state') == 'play' and find_counter < 14): # per niente sicuro di questo
             vel = Twist()
-            vel.angular.z = -0.002*(center[0]-400)
-            vel.linear.x = -0.01*(radius-100)
-            vel_pub.publish(vel)
-        elif radius < 10:
-            vel = Twist()
-            vel.linear.x = 0.5
-            vel_pub.publish(vel)
-        else:
-            print('qui devo mettere che gira la testa!')
-            #poi devo metterlo come if head_moved == 0 printa quello e metti
-            # head_move = 1. negli altri due casi sopra metti come primo
-            # instruction head_moved = 0. e devo metterlo anche a inizio i len(cnts)
-            # per non avere problemi. su questa ultiam cosa bisogna vedere dove si
-            # potrebbe mettere (perche forse non e il posto migliore), ma dovrebbe
-            # andare cosi
+            vel.angular.z = 0.5
+            self.vel_pub.publish(vel)
+            find_counter = find_counter + 1
 
-    elif (rospy.get_param('state') == 'play' and find_counter < 14): # per niente sicuro di questo
-        vel = Twist()
-        vel.angular.z = 0.5
-        vel_pub.publish(vel)
-        find_counter = find_counter + 1
+        elif (rospy.get_param('state') == 'play' and find_counter >= 14):
+            #rospy.set_param('state', 'normal')
+            self.ball_pub.publish(2)
 
-    elif (rospy.get_param('state') == 'play' and find_counter >= 14):
-        #rospy.set_param('state', 'normal')
-        ball_pub.publish(2)
-
-    # update the points queue
-    # pts.appendleft(center)
-    cv2.imshow('window', image_np)
-    cv2.waitKey(2)
+        # update the points queue
+        # pts.appendleft(center)
+        cv2.imshow('window', image_np)
+        cv2.waitKey(2)
 
 
 ## Initializes the control_node and subscribes to the control_topic. manager_listener
@@ -281,21 +297,14 @@ def img_cb(ros_data):
 def manager_listener():
 
     rospy.init_node('control_node', anonymous=True)
-    sub1 = rospy.Subscriber('control_topic', Coordinates, control_cb)
-    while(not rospy.is_shutdown):
-        if(rospy.get_param('state') == 'play'):
-            sub1.unregister()
-            sub2 = rospy.Subscriber("camera1/image_raw/compressed",
-                                                   CompressedImage, img_cb,  queue_size=1)
-        if(rospy.get_param('state') == 'normal' or rospy.get_param('state') == 'sleep'):
-            sub2.unregister()
-            sub1 = rospy.Subscriber('control_topic', Coordinates, control_cb)
+    rospy.Subscriber('control_topic', Coordinates, control_cb)
 
-        rospy.spin()
+    rospy.spin()
 
 
 if __name__ == '__main__':
     try:
+        ic = image_feature() # forse da mettere dentro manager_listener
         manager_listener()
     except rospy.ROSInterruptException:
         pass
