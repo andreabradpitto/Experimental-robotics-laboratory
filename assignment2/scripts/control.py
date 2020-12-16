@@ -6,15 +6,15 @@
 
 import sys
 import numpy as np
-from scipy.ndimage import filters
-import imutils
-import cv2
+#from scipy.ndimage import filters
+#import imutils
+#import cv2
 import rospy
 import roslib
 import random
 import time
 import math
-from sensor_msgs.msg import CompressedImage
+#from sensor_msgs.msg import CompressedImage
 import assignment2.msg
 from assignment2.msg import Coordinates
 from geometry_msgs.msg import Twist, Point
@@ -83,7 +83,7 @@ def normalize_angle(angle):
 
 
 def fix_yaw(des_pos):
-    global yaw_, pub, yaw_precision_2_, state_
+    global yaw_, pub, yaw_precision_2_, state_, pub_over
     desired_yaw = math.atan2(des_pos.y - position_.y, des_pos.x - position_.x)
     err_yaw = normalize_angle(desired_yaw - yaw_)
     #rospy.loginfo(err_yaw)
@@ -97,8 +97,23 @@ def fix_yaw(des_pos):
             twist_msg.angular.z = ub_a
         elif twist_msg.angular.z < lb_a:
             twist_msg.angular.z = lb_a
+    #print('control 1')
+    if rospy.get_param('ball_detected') == 0:
+        pub.publish(twist_msg)
 
-    pub.publish(twist_msg)
+        # state change conditions
+        if math.fabs(err_yaw) <= yaw_precision_2_:
+            #print ('Yaw error: [%s]' % err_yaw)
+            change_state(1)
+    else:
+        #twist_msg.angular.z = 0
+        #pub.publish(twist_msg)
+
+        #final_coords = Coordinates()
+        #final_coords.x = position_.x
+        #final_coords.y = position_.y
+        #pub_over.publish(final_coords)
+        change_state(2)
     #qua metti giramento anche della testa (attento che mi sa che e un angle)
     #poi ci vuole un if sia qui che in move ahead se viene vista la palla verde 
 
@@ -107,40 +122,41 @@ def fix_yaw(des_pos):
     #pub_head.publish(head_angle)
 
 
-    # state change conditions
-    if math.fabs(err_yaw) <= yaw_precision_2_:
-        #print ('Yaw error: [%s]' % err_yaw)
-        change_state(1)
-
-
 def go_straight_ahead(des_pos):
-    global yaw_, pub, yaw_precision_, state_, final_position
+    global yaw_, pub, yaw_precision_, state_, final_position, pub_over
     desired_yaw = math.atan2(des_pos.y - position_.y, des_pos.x - position_.x)
     err_yaw = desired_yaw - yaw_
     err_pos = math.sqrt(pow(des_pos.y - position_.y, 2) +
                         pow(des_pos.x - position_.x, 2))
     err_yaw = normalize_angle(desired_yaw - yaw_)
     #rospy.loginfo(err_yaw)
+    #print('control 2')
+    if rospy.get_param('ball_detected') == 0:
+        if err_pos > dist_precision_:
+            twist_msg = Twist()
+            twist_msg.linear.x = 0.3
+            if twist_msg.linear.x > ub_d:
+                twist_msg.linear.x = ub_d
 
-    if err_pos > dist_precision_:
-        twist_msg = Twist()
-        twist_msg.linear.x = 0.3
-        if twist_msg.linear.x > ub_d:
-            twist_msg.linear.x = ub_d
+            twist_msg.angular.z = kp_a*err_yaw
+            pub.publish(twist_msg)
+        else:
+            #print ('Position error: [%s]' % err_pos)
+            final_position.x = round(position_.x)
+            final_position.y = round(position_.y)
+            change_state(2)
 
-        twist_msg.angular.z = kp_a*err_yaw
-        pub.publish(twist_msg)
+        # state change conditions
+        if math.fabs(err_yaw) > yaw_precision_:
+            #print ('Yaw error: [%s]' % err_yaw)
+            change_state(0)
+
     else:
-        #print ('Position error: [%s]' % err_pos)
-        final_position.x = round(position_.x)
-        final_position.y = round(position_.y)
+        #final_coords = Coordinates()
+        #final_coords.x = position_.x
+        #final_coords.y = position_.y
+        #pub_over.publish(final_coords)
         change_state(2)
-
-    # state change conditions
-    if math.fabs(err_yaw) > yaw_precision_:
-        #print ('Yaw error: [%s]' % err_yaw)
-        change_state(0)
-
 
 def done():
     twist_msg = Twist()
@@ -148,12 +164,11 @@ def done():
     twist_msg.angular.z = 0
     pub.publish(twist_msg)
 
-
 ## control_topic callback. It waits for a random amount of time, simulating
 # robot movement delays, then publishes the reached position on the 
 # motion_over_topic
 def control_cb(data):
-    global pub, state_, desired_position, final_position
+    global pub, state_, desired_position, final_position, pub_over
     #global active_
 
     desired_position_.x = data.x
@@ -168,17 +183,19 @@ def control_cb(data):
 
     state_ = 0
     rate = rospy.Rate(20)
-    while not (state_ == 3 or rospy.get_param('state') == 'play'): # magari ridondante
+    while not (state_ == 3 or rospy.get_param('state') == 'play'):
+        #if (state_ == 0 and rospy.get_param('ball_detected') == 0):
         if state_ == 0:
             fix_yaw(desired_position_)
+        #elif (state_ == 1 and rospy.get_param('ball_detected') == 0):
         elif state_ == 1:
             go_straight_ahead(desired_position_)
         elif state_ == 2:
             done()
-            state_ = 3
             final_coords.x = final_position.x
             final_coords.y = final_position.y
             pub_over.publish(final_coords)
+            state_ = 3
         else:
             rospy.logerr('Unknown state!')
 

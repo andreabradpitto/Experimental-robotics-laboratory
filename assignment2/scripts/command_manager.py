@@ -66,7 +66,7 @@ class Sleep(smach.State):
         else:
             time.sleep(2)
         timer = 1
-        while (timer != 0 and not rospy.is_shutdown() and \
+        while (timer != 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'sleep'):   
             pub_sleep.publish(pos)
             if(rospy.wait_for_message('motion_over_topic', Coordinates)):
@@ -111,15 +111,15 @@ class Normal(smach.State):
         rospy.set_param('state', 'normal')
         pos = Coordinates()
         pub = rospy.Publisher('control_topic', Coordinates, queue_size=10)
-        while (sleep_timer != 0 and not rospy.is_shutdown() and \
+        while (sleep_timer != 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'normal' and playtime == 0):
             sleep_timer = sleep_timer - 1
             pos.x = random.randint(map_x_min, map_x_max)
             pos.y = random.randint(map_y_min, map_y_max)
             rospy.loginfo('dog: I am moving to %i %i', pos.x, pos.y)	
             pub.publish(pos)
-            if(rospy.wait_for_message('motion_over_topic', Coordinates)):
-                rospy.set_param('dog/x', pos.x)
+            if(rospy.wait_for_message('motion_over_topic', Coordinates) or playtime == 1):
+                rospy.set_param('dog/x', pos.x) # questo e scorretto se vede la palla
                 rospy.set_param('dog/y', pos.y)
                 #time.sleep(2 / sim_scale)
             self.rate.sleep
@@ -137,15 +137,14 @@ class Normal(smach.State):
     ## Normal state callback that prints a string once the random target
     # position has been reached
     def normal_callback_motion(self, data):
-        if rospy.get_param('state') == 'normal':
+        if (rospy.get_param('state') == 'normal' and rospy.get_param('ball_detected') == 0):
             rospy.loginfo('dog: %i %i position reached!', data.x, data.y)
 
     ## Normal state callback that prints a string once the robot acknowledges
     # the user's <<play>> request
     def normal_callback_ball(self, data):
         global playtime
-        if (rospy.get_param('state') == 'normal' and data == 1):
-       #if rospy.get_param('state') == 'normal':     
+        if (rospy.get_param('state') == 'normal'):
             rospy.loginfo('dog: I have seen the ball! Woof!')
             playtime = 1
 
@@ -166,15 +165,16 @@ class Play(smach.State):
         # function called when exiting from the node, it can be blocking
         self.rate = rospy.Rate(200)
         rospy.set_param('state', 'play')
-        while (not rospy.is_shutdown() and playtime == 1 \
+        while ((not rospy.is_shutdown()) and playtime == 1 \
             and rospy.get_param('state') == 'play'):
             #magari metto qui il giramento di testa. o forse meglio di no
+            time.sleep(random.randint(2, 5) / sim_scale) # the dog is sleeping
             self.rate.sleep
         return 'game_over'
 
     def play_callback_ball(self, data):
         global playtime
-        if (rospy.get_param('state') == 'play' and data == 2):
+        if (rospy.get_param('state') == 'play'): #ho rimosso qui e sopra and data == 2 o 1
             rospy.loginfo('dog: I have lost the ball :(')
             playtime = 0
 

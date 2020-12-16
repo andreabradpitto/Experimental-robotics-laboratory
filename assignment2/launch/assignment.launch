@@ -94,7 +94,7 @@
     <!-- parameter used to specify head angle -->
     <param name='dog/head' type='double' value='0'/>
     <!-- parameter used to specify whetehr the ball is detected or not -->
-    <!--<param name='dog/detect' type='int' value='0'/>-->
+    <param name='ball_detected' type='int' value='0'/>
 
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"

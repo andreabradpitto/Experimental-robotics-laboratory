@@ -37,17 +37,17 @@ def perception():
     ball_choice = PoseStamped()
     # raggio sfera 0.5: quando va sotto deve andare a -0.5
     while not rospy.is_shutdown():
-        time.sleep(random.randint(60, 65) / sim_scale)
+        time.sleep(random.randint(6, 7) / sim_scale)
         if rospy.get_param('state') == 'normal':
             human_moves_timer = random.randint(2, 4)
             while (rospy.get_param('state') != 'sleep' and human_moves_timer != 0):
                 ball_choice.pose.position.x = random.randint(map_x_min, map_x_max)
                 ball_choice.pose.position.y = random.randint(map_y_min, map_y_max)
-                hide_variable = random.randint(0, 1)
+                hide_variable = random.randint(0, 0) # 0 0 per test, 0 1 default!
                 if hide_variable == 0:
-                    ball_choice.pose.position.z = 0.25
+                    ball_choice.pose.position.z = 0.5
                     rospy.loginfo('*The human moves the ball to: %i %i*', \
-                      ball_choice.pose.position.x, ball_choice.pose.position.y)                
+                      ball_choice.pose.position.x, ball_choice.pose.position.y)             
                     ball_goal = assignment2.msg.PlanningGoal(target_pose = ball_choice)
                     ball_action_client.send_goal(ball_goal)
                     ball_action_client.wait_for_result()
