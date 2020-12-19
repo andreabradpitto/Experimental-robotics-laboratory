@@ -70,7 +70,12 @@ Finally, here are all the parameters loaded in the ROS parameter server:
 - `sim_scale`: parameter used to scale simulation velocity
 - `ball_detected`: parameter used to specify whether the ball is detected or not
 
-All of these, as already pointed out, can be adjusted before runtime.
+All of these, as already pointed out, can be adjusted before runtime.<br/>
+Finally, here is the list of all the files and folders featured in this package:
+
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png">
+</div>
 
 ## Requirements
 In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):

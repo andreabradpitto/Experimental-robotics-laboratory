@@ -74,11 +74,11 @@ Setting</h1>
 <div class="image">
 <img src="playing field.png" alt=""/>
 </div>
-<p>The robotic dog can have 3 states. The first one is <b>Sleep</b>, which triggers after a certain amount of time while being in <b>Normal</b> state: the dog will simply get back home and sleep for a bit. <b>Normal</b> is the state in which the robot wanders over the playing field. Finally, the <b>Play</b> state triggers from <b>Normal</b> when the dog sees a ball: it then start following it. The robo-dog will adjust its distance with respect to the sphere in order not to collide. If the dog sees the ball stading still (i.e. the throw effect by the human is over), it starts moving the head from left to right, and then starts following the ball again. As the human can hide the ball from time to time, If the robot loses track of the ball for long enough, it will get back to the normal state. This is the model of the robotics dog:</p>
+<p>The robotic dog can have 3 states. The first one is <b>Sleep</b>, which triggers after a certain amount of time while being in <b>Normal</b> state: the dog will simply get back home and sleep for a bit. <b>Normal</b> is the state in which the robot wanders over the playing field. Finally, the <b>Play</b> state triggers from <b>Normal</b> when the dog sees a ball: it then start following it. The robo-dog will adjust its distance with respect to the sphere in order not to collide. If the dog sees the ball stading still (i.e. the throw effect by the human is over), it starts moving the head from left to right, and then starts following the ball again. As the human can hide the ball from time to time, If the robot loses track of the ball for long enough, it will get back to the normal state. This is the model of the robotic dog:</p>
 <div class="image">
 <img src="robotic dog.png" alt=""/>
 </div>
-<p>It loves big green balls</p>
+<p>It it a two-wheeled diffierential drive robot, with a camera mounter on top (reffering to the image, it is the white cube embedded in the orange "head") ...and of course it loves big green balls</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Architecture</h1>
 <div class="image">
@@ -125,7 +125,11 @@ Architecture</h1>
 <li><code>sim_scale</code>: parameter used to scale simulation velocity</li>
 <li><code>ball_detected</code>: parameter used to specify whether the ball is detected or not</li>
 </ul>
-<p>All of these, as already pointed out, can be adjusted before runtime.</p>
+<p>All of these, as already pointed out, can be adjusted before runtime.<br  />
+ Finally, here is the list of all the files and folders featured in this package:</p>
+<div class="image">
+<img src="tree.png" alt=""/>
+</div>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Requirements</h1>
 <p>In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):</p><ul>
