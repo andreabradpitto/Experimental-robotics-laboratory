@@ -67,7 +67,7 @@
   <!-- group for the robotic dog -->
   <group ns="$(arg ns1)">
 
-    <!-- parameters -->
+  <!-- parameters -->
     <!-- parameter specifying robot current state -->
     <param name='state' type='string' value='sleep'/>
     <!-- parameter specifying robot current position (x coordinate) -->
@@ -91,6 +91,7 @@
     <!-- parameter used to specify whether the ball is detected or not -->
     <param name='ball_detected' type='int' value='0'/>
 
+  <!-- nodes -->
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
 	  args="-urdf -model $(arg ns1) -param robot_description -x -5 -y 7 -Y 3.14 -z 0.05"/>
@@ -107,6 +108,11 @@
     <node pkg='assignment2' type='dog_control_ball.py'
       name='dog_control_ball_node' output='screen' respawn="false"/>
 
+    <!-- node used to simulate random ball movements made by
+         the human. The ball can also be hidden -->
+    <node pkg='assignment2' type='human.py'
+      name='human_node' output='screen' respawn="false"/>
+
     <rosparam file="$(find assignment2)/config/motor_config.yaml" command="load"/>
     <node name="controller_spawner_node" pkg="controller_manager" type="spawner"
       output="screen" args="joint_state_controller joint_position_controller
@@ -116,19 +122,16 @@
   
   <!-- group for the ball -->
   <group ns="$(arg ns2)">
+
+  <!-- nodes -->
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
 	  args="-urdf -model $(arg ns2) -param ball_description -x -7 -y 6 -z -0.5"/>
 
-    <!-- node used to simulate random ball movements made by
-         the human. The ball can also be hidden -->
-    <node pkg='assignment2' type='human.py'
-      name='human_node' output='screen' respawn="false"/>
-
     <!-- node used to have the ball reaching the goal position
          issued by the human -->
 	  <node name="go_to_point_ball_node" pkg="assignment2"
-      type="go_to_point_ball.py" output="screen"/>
+      type="go_to_point_ball.py"/>
   </group>
 
 </launch>

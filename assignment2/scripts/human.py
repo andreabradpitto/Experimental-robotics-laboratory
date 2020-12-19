@@ -31,7 +31,7 @@ sim_scale = rospy.get_param('sim_scale')
 # thing to do. The human can either hide or move the ball over the playing field
 def human():
     rospy.init_node('human_node', anonymous=True)
-    ball_action_client = actionlib.SimpleActionClient('reaching_goal_topic', assignment2.msg.PlanningAction)
+    ball_action_client = actionlib.SimpleActionClient('/ball/reaching_goal_topic', assignment2.msg.PlanningAction)
     rate = rospy.Rate(200)
     ball_choice = PoseStamped()
     while not rospy.is_shutdown():

@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <robot>
+
   <!-- materials -->
- 
-  
   <gazebo reference="link_chassis">
     <material>Gazebo/Blue</material>
   </gazebo>
@@ -84,6 +83,5 @@
       </plugin>
     </sensor>
   </gazebo> 
-
 
 </robot>

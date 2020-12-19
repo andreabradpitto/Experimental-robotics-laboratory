@@ -28,7 +28,11 @@ from geometry_msgs.msg import Twist
 
 from std_msgs.msg import Int64, Float64
 
+## variable used as a time before the robotic dog gets back to the Normal state
 find_counter = 0
+
+## variable used to acknowledge when the head has been moved in that situation
+head_moved = 0
 
 ## Acquire simulation speed scaling factor from launch file
 sim_scale = rospy.get_param('sim_scale')
@@ -58,7 +62,7 @@ class image_feature:
     def callback(self, ros_data):
         '''Callback function of subscribed topic. 
         Here images get converted and features detected'''
-        global find_counter
+        global find_counter, head_moved
 
         if (rospy.get_param('state') == 'normal' or rospy.get_param('state') == 'play'):
             #### direct conversion to CV2 ####
@@ -97,7 +101,6 @@ class image_feature:
                 if radius > 105:
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    head_moved = 0
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     cv2.circle(image_np, center, 5, (0, 0, 255), -1) 
                     if rospy.get_param('state') == 'play':
@@ -106,7 +109,6 @@ class image_feature:
                         vel.linear.x = -0.01 * (radius - 100)
                         self.vel_pub.publish(vel)
                 elif (radius < 95 and rospy.get_param('state') == 'play'):
-                    head_moved = 0
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
@@ -119,11 +121,14 @@ class image_feature:
                     elif vel.angular.z > 0.3:
                         vel.angular.z = 0.3
                     self.vel_pub.publish(vel)
-                elif (rospy.get_param('state') == 'play' and abs(vel.linear.x) <= 0.1) \
-                                                            and (abs(vel.angular.z) <= 0.1):
+                elif (rospy.get_param('state') == 'play' and radius <= 105 and radius >= 95):
                     if head_moved == 0:
                         rospy.loginfo('*The dog is turning the head...*')
                         head_angle = 0
+                        vel = Twist()
+                        vel.linear.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         self.head_pub.publish(head_angle)
                         while head_angle < (0.7854):
                             head_angle = head_angle + 0.1

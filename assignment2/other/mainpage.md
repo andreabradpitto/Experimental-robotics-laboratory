@@ -14,6 +14,9 @@ This is the model of the robotics dog:
 It loves big green balls
 
 # Architecture
+
+\image html "architecture and topics.png"
+
 The architecture is made of five components:
 - **Human**: it is implemented by [human.py](scripts/human.py), which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it
 - **Dog FSM**: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
@@ -30,8 +33,6 @@ Topics involved:
 - `control_topic`: topic used by the FSM to order the **Dog_control** component to start simulating a movement
 - `motion_over_topic`: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball
 - `ball_control_topic`: topic used by **Dog control ball** to communicate with **Dog FSM**: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it
-
-\image html "architecture and topics.png"
 
 The actions used are:
 

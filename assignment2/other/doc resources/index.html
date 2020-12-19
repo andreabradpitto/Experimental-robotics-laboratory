@@ -81,6 +81,9 @@ Setting</h1>
 <p>It loves big green balls</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Architecture</h1>
+<div class="image">
+<img src="architecture and topics.png" alt=""/>
+</div>
 <p>The architecture is made of five components:</p><ul>
 <li><b>Human</b>: it is implemented by <a href="scripts/human.py">human.py</a>, which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it</li>
 <li><b>Dog FSM</b>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
@@ -98,9 +101,6 @@ Architecture</h1>
 <li><code>motion_over_topic</code>: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball</li>
 <li><code>ball_control_topic</code>: topic used by <b>Dog control ball</b> to communicate with <b>Dog FSM</b>: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it</li>
 </ul>
-<div class="image">
-<img src="architecture and topics.png" alt=""/>
-</div>
 <p>The actions used are:</p>
 <ul>
 <li><code>assignment2.msg/PlanningAction</code>: a simple action whose goals are of type <b>geometry_msgs/PoseStamped</b></li>
