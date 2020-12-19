@@ -1,48 +1,61 @@
 # Introduction
-This is the repository for the first assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with [Python 2.7](https://www.python.org/download/releases/2.7/) and it has been tested on [ROS Kinetic](http://wiki.ros.org/kinetic).
+This is the repository for the second assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with [Python 2.7](https://www.python.org/download/releases/2.7/) and it has been tested on [ROS Kinetic](http://wiki.ros.org/kinetic).
 
 # Setting
-The theme is based on a robot (MiRo), which wanders around and plays with the user. Given a configurable 2D playing ground, MiRo moves randomly around, until it decides to go to sleep in his house (a configurable predetermined location). Then he wakes up and starts its normal behaviour again (i.e. wandering). An user can interact with the robot, asking him to <<**play**>> a simple game: if MiRo is awake, it will reach the user location (yet another configurable parameter) and then wait for him to send him to a random point via a pointing geture. After some time MiRo gets bored, and goes back to its normal state. 
+The theme is based on a robotic dog, which wanders around and plays with the a ball moved or hidden by the user. Through [Gazebo](http://gazebosim.org/), the idea is to build upon the finite state machine created for the [Assignment 1](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1) and implement a graphical version of the moving robot, while also modifying its behaviors, to better match its new "dog" representation. The final result should indeed loosely resemble a real pet.<br/>
+The world used, which is delimited by fences, is a 10x10 square and can be referred to as the dog playing field. Inside the square, other than the robotic dog, there are also an human mannequing and its chair, which have been added just to give some flavour to the environment. The dog has its home (see Sleep state) near the human model by default, but that can be changed in the parameters. Here is an image of the playing field:
+
+\image html "playing field.png"
+
+This is the model of the robotics dog:
+
+\image html "robotic dog.png"
+
+It loves big green balls
 
 # Architecture
-The architecture is made of three components:
-- **Person**: it is implemented by [perception.py](src/perception.py), which is used to simulate reception and processing of incoming voice commands and pointing gestures
-- **Command manager**: it is implemented by [command_manager.py](src/command_manager.py), which is used to handle the robot's finite state machine internal architecture
-- **Control**: it is implemented by [control.py](src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
+The architecture is made of five components:
+- **Human**: it is implemented by [human.py](scripts/human.py), which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it
+- **Dog FSM**: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
+- **Dog control**: it is implemented by [dog_control.py](scripts/dog_control.py), which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state
+- **Dog control ball**: it is implemented by [dog_control_ball.py](scripts/dog_control_ball.py), which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped
+- **Go to point ball**: it is implemented by [go_to_point_ball.pyy](scripts/go_to_point_ball.py), and is used to move the ball along the playing field. Goal positions are issued randomly by [human.py](scripts/human.py)
+
+
+\image html "fsm.png"
+
+The dog starts in the **Sleep** state.<br/>
+Topics involved:
+
+- `control_topic`: topic used by the FSM to order the **Dog_control** component to start simulating a movement
+- `motion_over_topic`: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball
+- `ball_control_topic`: topic used by **Dog control ball** to communicate with **Dog FSM**: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it
 
 \image html "architecture and topics.png"
 
-The first one simulates a person interacting with MiRo; the user can say <<**play**>> in order to ask the robot to play a simple game, and can use pointing gestures to indicate MiRo a location to reach. Then the Command manager is the component which is devoted to the implementation of the finite state machine representing the robot behaviours. Finally, the Control component has the duty of simulating physical delays that, in real life, a robot would require in order to move from one position to another one. All the comunications between components are carried out via publish-subscribe techniques.<br/>
-This is the intenal structure of the finite state machine:
-  
-\image html "fsm.png"
+The actions used are:
 
-MiRo starts in the **Sleep** state.<br/>
-Topics involved:
-
-- `control_topic`: topic used vy the FSM to order the **Control** component to start simulating a movement
-- `gesture_topic`: used to send the pointed location by the user to the FSM
-- `motion_over_topic`: topic whose duty is to inform the FSM when the simulated motion is assumed to be over
-- `play_topic`: topic used to inform the FSM whenever the user says <<**play**>>
+- `assignment2.msg/PlanningAction`: a simple action whose goals are of type **geometry_msgs/PoseStamped**
 
 The message types used are:
 
-- `std_msgs/String`:"stock" message type, composed by a simple string
-- `assignment1/Coordinates`: message made of two integers **x** and **y**
+- `std_msgs.msg/Int64`: imported message type consisting in an integer
+- `assignment2.msg/Coordinates`: message made of two integers **x** and **y**
 
 The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br/>
 Finally, here are all the parameters loaded in the ROS parameter server:
 
 - `state`: parameter specifying robot current state
-- `MiRo/x`: parameter specifying robot current position (x coordinate)
-- `MiRo/y`: parameter specifying robot current position (y coordinate)
+- `dog/x`: parameter specifying robot current position (x coordinate)
+- `dog/y`: parameter specifying robot current position (y coordinate)
 - `map/x_max`: parameter specifying the maximum x-axis value for the map
 - `map/y_max`: parameter specifying the maximum y-axis value for the map
+- `map/x_min`: parameter specifying the minimum x-axis value for the map
+- `map/y_min`: parameter specifying the minimum y-axis value for the map
 - `home/x`: parameter specifying robot home position (x coordinate)
 - `home/y`: parameter specifying robot home position (y coordinate)
-- `person/x`: parameter specifying user's position (x coordinate)
-- `person/y`: parameter specifying user's position (y coordinate)
 - `sim_scale`: parameter used to scale simulation velocity
+- `ball_detected`: parameter used to specify whether the ball is detected or not
 
 All of these, as already pointed out, can be adjusted before runtime.
 
@@ -59,24 +72,17 @@ It might be needed to make all the nodes executable, before actually being able 
 chmod +x src/*
 ```
 
-In order to run the code, simply open a terminal, move to the *assignment1* directory (which should be put in a catkin workspace), and type:
+In order to run the code, put the *assignment2* directory in your workspace, build, then open a terminal and type:
 
 ```
 roslaunch assignment.launch
 ```
 
-This will launch all the three nodes with the parameters defined in the launche file itself, with the addition of the SMACH viewer tool, which is useful to visually keep track of the FSM state transitions. The parameters inside the launch file can be adjusted as desired.
-
 # Assumptions
-In order to simplify the problem, it is assumed that the user is aware of the robot current state, and that they will only ask MiRo to play when necessary conditions are met (i.e. when it is in **Normal** state). Of course, all the wait times are random and do not resemble reality in a correct way: there has not been made any consideration about the fact that, for instance, a greater distance-wise movement, takes a bigger amount of time in the real world, wit respect to a shorter trip. So another assumption is that travel distances are not directly linked with the time the robot takes to perform them. It is also assumed that the user does not try to "break" the robot, as in fact its simulation is only allowed to say the <<**play**>> keyword and the to point a location in the playing ground. Finally, the user is assumed to use gestures only when the robot is in **Play** behavior, and to point to a location only after the voice command. <br/>
-Then, the architecture assumption that the sensing component is comprising both the user gestures recognition and their voice commands is simplistic at best, as they would require their seprate components, with different sensor devices and data processing.
+In order
 
 # Limitations
-Most, if not all, of the assumptions descripted above are indeed limits of the implementation. In addition to those, there is little to no integrity checking over input parameters (e.g. one can set a starting robot position outside of the playing field). Also, the user is not moving from its starting position. My implementation, due to time constraints, also implements a sub-optimal state switching procedure, for which the FSM alerts the system about a state change, regardless of MiRo still being moving or not: in the end, this seems only to be a minor visual annoyance, and there surely are a lot of more elegant solutions for behavior transitions. So it often happens that the terminal shows the state change right before MiRo warns you that it has reached the position that was required by the previous state.<br/><br/>
-One of the other things I did not have the time to do is an adequate system testing, especially with respect with more "extreme" `sim_scale` choices: I doubt my implementation is able to withstand those as well. Furthermore, there are some time waits in the code that are not affected by the scaling at all: I should also test the removal of those as well in several conditions (e.g. removing just part of them, or writing some workarounds), but again that kind of fine tuning takes time. Indeed, my phylosophy in this project has been to try to decide whether to tackle incoming issues and solve them completely, or to leave them as they are and then reporting them here: with this approach, I should have not left many halfway-done ideas or fixes.<br/>
-
-# Extra
-[MiRo](http://consequentialrobotics.com/miro-beta#:~:text=MiRo%20is%20a%20fully%20programmable,suited%20for%20developing%20companion%20robots.) is the robot that has been shown us in the images during the assignment presentation, and that we would probably have used if we could have worked in the University. Unfortunately, since the project's deadline still falls inside a high peak COVID-19 outbreak phase, there is no chanche we will use it.
+Most
 
 # Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).<br/>

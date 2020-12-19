@@ -66,40 +66,39 @@ $(function() {
 <div class="title">Experimental robotics laboratory - Assignment 2 </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md10"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md9"></a>
 Introduction</h1>
 <p>This is the repository for the second assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with <a href="https://www.python.org/download/releases/2.7/">Python 2.7</a> and it has been tested on <a href="http://wiki.ros.org/kinetic">ROS Kinetic</a>.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Setting</h1>
 <p>The theme is based on a robotic dog, which wanders around and plays with the a ball moved or hidden by the user. Through <a href="http://gazebosim.org/">Gazebo</a>, the idea is to build upon the finite state machine created for the <a href="https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1">Assignment 1</a> and implement a graphical version of the moving robot, while also modifying its behaviors, to better match its new "dog" representation. The final result should indeed loosely resemble a real pet.<br  />
  The world used, which is delimited by fences, is a 10x10 square and can be referred to as the dog playing field. Inside the square, other than the robotic dog, there are also an human mannequing and its chair, which have been added just to give some flavour to the environment. The dog has its home (see Sleep state) near the human model by default, but that can be changed in the parameters. Here is an image of the playing field:</p>
-<p>!!!inserisci immagine campo di gioco</p>
-<p>This is the model of the robotics dog:</p>
-<p>!!!inserici immagine cane</p>
-<p>It loves big green balls</p>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/playing%20field.png" alt="" class="inline"/> </div><p>This is the model of the robotics dog:</p>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/robotic%20dog.png" alt="" class="inline"/> </div><p>It loves big green balls</p>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Architecture</h1>
 <p>The architecture is made of five components:</p><ul>
-<li><b>Person</b>: it is implemented by <a href="src/perception.py">perception.py</a>, which is used to simulate the dog owner. This component randomly moves along the playing field, or hides the ball from sight</li>
-<li><b>Command manager</b>: it is implemented by <a href="src/command_manager.py">command_manager.py</a>, which is used to handle the robot's FSM internal architecture</li>
-<li><b>Control</b>: it is implemented by <a href="src/control.py">control.py</a>, which is used to emulate physical delays relative to robot travelling and position reaching</li>
-<li><b>Go to point ball</b>: it is implemented by <a href="src/control.py">go_to_point_ball.py</a>, which is used to finalize ball movements issued by perception.py</li>
-<li><b>Control</b>: it is implemented by <a href="src/control.py">control.py</a>, which is used to emulate physical delays relative to robot travelling and position reaching</li>
+<li><b>Human</b>: it is implemented by <a href="scripts/human.py">human.py</a>, which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it</li>
+<li><b>Dog FSM</b>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
+<li><b>Dog control</b>: it is implemented by <a href="scripts/dog_control.py">dog_control.py</a>, which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state</li>
+<li><b>Dog control ball</b>: it is implemented by <a href="scripts/dog_control_ball.py">dog_control_ball.py</a>, which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped</li>
+<li><b>Go to point ball</b>: it is implemented by <a href="scripts/go_to_point_ball.py">go_to_point_ball.pyy</a>, and is used to move the ball along the playing field. Goal positions are issued randomly by <a href="scripts/human.py">human.py</a></li>
 </ul>
-<p>!!!immagine della fsm</p>
-<p>The dog starts in the <b>Sleep</b> state.<br  />
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/fsm.png" alt="" class="inline"/> </div><p>The dog starts in the <b>Sleep</b> state.<br  />
  Topics involved:</p>
 <ul>
-<li><code>control_topic</code>: topic used by the FSM to order the <b>Control</b> component to start simulating a movement</li>
-<li><code>gesture_topic</code>: used to send the pointed location by the user to the FSM</li>
-<li><code>motion_over_topic</code>: topic whose duty is to inform the FSM when the simulated motion is assumed to be over</li>
-<li><code>play_topic</code>: topic used to inform the FSM whenever the user says &lt;&lt;<b>play</b>&gt;&gt;</li>
+<li><code>control_topic</code>: topic used by the FSM to order the <b>Dog_control</b> component to start simulating a movement</li>
+<li><code>motion_over_topic</code>: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball</li>
+<li><code>ball_control_topic</code>: topic used by <b>Dog control ball</b> to communicate with <b>Dog FSM</b>: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it</li>
 </ul>
-<p>!!!immagine dell'architettura e topics</p>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png" alt="" class="inline"/> </div><p>The actions used are:</p>
+<ul>
+<li><code>assignment2.msg/PlanningAction</code>: a simple action whose goals are of type <b>geometry_msgs/PoseStamped</b></li>
+</ul>
 <p>The message types used are:</p>
 <ul>
-<li><code>std_msgs/String</code>:"stock" message type, composed by a simple string</li>
-<li><code>assignment1/Coordinates</code>: message made of two integers <b>x</b> and <b>y</b></li>
+<li><code>std_msgs.msg/Int64</code>: imported message type consisting in an integer</li>
+<li><code>assignment2.msg/Coordinates</code>: message made of two integers <b>x</b> and <b>y</b></li>
 </ul>
 <p>The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br  />
  Finally, here are all the parameters loaded in the ROS parameter server:</p>
@@ -109,33 +108,34 @@ Architecture</h1>
 <li><code>dog/y</code>: parameter specifying robot current position (y coordinate)</li>
 <li><code>map/x_max</code>: parameter specifying the maximum x-axis value for the map</li>
 <li><code>map/y_max</code>: parameter specifying the maximum y-axis value for the map</li>
+<li><code>map/x_min</code>: parameter specifying the minimum x-axis value for the map</li>
+<li><code>map/y_min</code>: parameter specifying the minimum y-axis value for the map</li>
 <li><code>home/x</code>: parameter specifying robot home position (x coordinate)</li>
 <li><code>home/y</code>: parameter specifying robot home position (y coordinate)</li>
-<li><code>person/x</code>: parameter specifying user's position (x coordinate)</li>
-<li><code>person/y</code>: parameter specifying user's position (y coordinate)</li>
 <li><code>sim_scale</code>: parameter used to scale simulation velocity</li>
+<li><code>ball_detected</code>: parameter used to specify whether the ball is detected or not</li>
 </ul>
 <p>All of these, as already pointed out, can be adjusted before runtime.</p>
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Requirements</h1>
 <p>In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):</p><ul>
 <li><a href="http://wiki.ros.org/kinetic">ROS Kinetic</a></li>
 <li><a href="http://wiki.ros.org/smach">SMACH</a></li>
 <li>A <a href="https://www.python.org/">Python</a> interpreter</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Instructions</h1>
 <p>It might be needed to make all the nodes executable, before actually being able to run them. So, after reaching this assignment's folder via a terminal, type:</p>
 <div class="fragment"><div class="line">chmod +x src/* </div>
 </div><!-- fragment --><p>In order to run the code, put the <em>assignment2</em> directory in your workspace, build, then open a terminal and type:</p>
 <div class="fragment"><div class="line">roslaunch assignment.launch </div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md14"></a>
 Assumptions</h1>
 <p>In order</p>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Limitations</h1>
-<p>Most,</p>
-<h1><a class="anchor" id="autotoc_md17"></a>
+<p>Most</p>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Authors</h1>
 <p>All the files in this repository belong to <a href="https://github.com/andreabradpitto">Andrea Pitto</a>.<br  />
  Contact: <a href="#" onclick="location.href='mai'+'lto:'+'s39'+'42'+'710'+'@s'+'tud'+'en'+'ti.'+'un'+'ige'+'.i'+'t'; return false;">s3942710@studenti.unige.it</a>. </p>

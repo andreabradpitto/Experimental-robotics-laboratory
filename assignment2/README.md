@@ -7,39 +7,50 @@ This is the repository for the second assignment of the Robotics engineering "Ex
 The theme is based on a robotic dog, which wanders around and plays with the a ball moved or hidden by the user. Through [Gazebo](http://gazebosim.org/), the idea is to build upon the finite state machine created for the [Assignment 1](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1) and implement a graphical version of the moving robot, while also modifying its behaviors, to better match its new "dog" representation. The final result should indeed loosely resemble a real pet.<br/>
 The world used, which is delimited by fences, is a 10x10 square and can be referred to as the dog playing field. Inside the square, other than the robotic dog, there are also an human mannequing and its chair, which have been added just to give some flavour to the environment. The dog has its home (see Sleep state) near the human model by default, but that can be changed in the parameters. Here is an image of the playing field:
 
-!!!inserisci immagine campo di gioco
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/playing%20field.png">
+</div>
 
 This is the model of the robotics dog:
 
-!!!inserici immagine cane
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/robotic%20dog.png">
+</div>
 
 It loves big green balls
 
 ## Architecture
 The architecture is made of five components:
-- **Person**: it is implemented by [perception.py](src/perception.py), which is used to simulate the dog owner. This component randomly moves along the playing field, or hides the ball from sight
-- **Command manager**: it is implemented by [command_manager.py](src/command_manager.py), which is used to handle the robot's FSM internal architecture
-- **Control**: it is implemented by [control.py](src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
-- **Go to point ball**: it is implemented by [go_to_point_ball.py](src/control.py), which is used to finalize ball movements issued by perception.py
-- **Control**: it is implemented by [control.py](src/control.py), which is used to emulate physical delays relative to robot travelling and position reaching
+- **Human**: it is implemented by [human.py](scripts/human.py), which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it
+- **Dog FSM**: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
+- **Dog control**: it is implemented by [dog_control.py](scripts/dog_control.py), which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state
+- **Dog control ball**: it is implemented by [dog_control_ball.py](scripts/dog_control_ball.py), which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped
+- **Go to point ball**: it is implemented by [go_to_point_ball.pyy](scripts/go_to_point_ball.py), and is used to move the ball along the playing field. Goal positions are issued randomly by [human.py](scripts/human.py)
 
 
-!!!immagine della fsm
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/fsm.png">
+</div>
 
 The dog starts in the **Sleep** state.<br/>
 Topics involved:
 
-- `control_topic`: topic used by the FSM to order the **Control** component to start simulating a movement
-- `gesture_topic`: used to send the pointed location by the user to the FSM
-- `motion_over_topic`: topic whose duty is to inform the FSM when the simulated motion is assumed to be over
-- `play_topic`: topic used to inform the FSM whenever the user says <<**play**>>
+- `control_topic`: topic used by the FSM to order the **Dog_control** component to start simulating a movement
+- `motion_over_topic`: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball
+- `ball_control_topic`: topic used by **Dog control ball** to communicate with **Dog FSM**: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it
 
-!!!immagine dell'architettura e topics
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png">
+</div>
+
+The actions used are:
+
+- `assignment2.msg/PlanningAction`: a simple action whose goals are of type **geometry_msgs/PoseStamped**
 
 The message types used are:
 
-- `std_msgs/String`:"stock" message type, composed by a simple string
-- `assignment1/Coordinates`: message made of two integers **x** and **y**
+- `std_msgs.msg/Int64`: imported message type consisting in an integer
+- `assignment2.msg/Coordinates`: message made of two integers **x** and **y**
 
 The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br/>
 Finally, here are all the parameters loaded in the ROS parameter server:
@@ -49,11 +60,12 @@ Finally, here are all the parameters loaded in the ROS parameter server:
 - `dog/y`: parameter specifying robot current position (y coordinate)
 - `map/x_max`: parameter specifying the maximum x-axis value for the map
 - `map/y_max`: parameter specifying the maximum y-axis value for the map
+- `map/x_min`: parameter specifying the minimum x-axis value for the map
+- `map/y_min`: parameter specifying the minimum y-axis value for the map
 - `home/x`: parameter specifying robot home position (x coordinate)
 - `home/y`: parameter specifying robot home position (y coordinate)
-- `person/x`: parameter specifying user's position (x coordinate)
-- `person/y`: parameter specifying user's position (y coordinate)
 - `sim_scale`: parameter used to scale simulation velocity
+- `ball_detected`: parameter used to specify whether the ball is detected or not
 
 All of these, as already pointed out, can be adjusted before runtime.
 
@@ -80,7 +92,7 @@ roslaunch assignment.launch
 In order
 
 ## Limitations
-Most, 
+Most
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).<br/>

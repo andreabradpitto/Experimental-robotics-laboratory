@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sim_5fscale_68',['sim_scale',['../namespacecommand__manager.html#aacf4b0ee7c26b82930c46390b97b6d74',1,'command_manager.sim_scale()'],['../namespacecontrol.html#a1fba37f2398108d86f57f386cf30841d',1,'control.sim_scale()'],['../namespaceperception.html#ab3d92351fef0c46a6526c1062d748341',1,'perception.sim_scale()']]]
+  ['sim_5fscale_72',['sim_scale',['../namespacedog__control__ball.html#a377ac61c2770dcbd35c3b8d9b2711add',1,'dog_control_ball.sim_scale()'],['../namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726',1,'dog_fsm.sim_scale()'],['../namespacehuman.html#a5a61c77800fdeb5beca483239b6d3339',1,'human.sim_scale()']]]
 ];
