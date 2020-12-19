@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+## @package dog_control_ball
+# Implements a control for the robotic dog that lets him follow the ball
+# and move the head. This works only when the dog's finite state machine is
+# in the Play state
+
 # Python libs
 import sys
 import time
@@ -21,16 +26,22 @@ import rospy
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Twist
 
-from std_msgs.msg import Int64
+from std_msgs.msg import Int64, Float64
 
 find_counter = 0
 
+## Acquire simulation speed scaling factor from launch file
+sim_scale = rospy.get_param('sim_scale')
+
+## Class used to control the robotic dog during its Play state. It uses
+# OpenCV in order to acquire images of the playing field and seeks a green ball.
 class image_feature:
 
     def __init__(self):
         '''Initialize ros publisher, ros subscriber'''
-        rospy.init_node('image_feature', anonymous=True)
-     # topic where we publish
+        rospy.init_node('dog_control_ball_node', anonymous=True)
+
+        # topic where we publish
         self.image_pub = rospy.Publisher("output/image_raw/compressed",
                                          CompressedImage, queue_size=1)
         self.vel_pub = rospy.Publisher("cmd_vel",
@@ -42,6 +53,8 @@ class image_feature:
         self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
                                            CompressedImage, self.callback,  queue_size=1)
 
+        self.head_pub = rospy.Publisher("joint_position_controller/command", Float64, queue_size=1)
+
     def callback(self, ros_data):
         '''Callback function of subscribed topic. 
         Here images get converted and features detected'''
@@ -51,6 +64,8 @@ class image_feature:
             #### direct conversion to CV2 ####
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+
+            head_angle = Float64()
 
             greenLower = (50, 50, 20)
             greenUpper = (70, 255, 255)
@@ -82,6 +97,7 @@ class image_feature:
                 if radius > 105:
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    head_moved = 0
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     cv2.circle(image_np, center, 5, (0, 0, 255), -1) 
                     if rospy.get_param('state') == 'play':
@@ -90,24 +106,57 @@ class image_feature:
                         vel.linear.x = -0.01 * (radius - 100)
                         self.vel_pub.publish(vel)
                 elif (radius < 95 and rospy.get_param('state') == 'play'):
+                    head_moved = 0
                     vel = Twist()
-                    vel.linear.x = 0.5
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    if vel.linear.x < 0.4:
+                        vel.linear.x = 0.4
+                    elif vel.linear.x > 1.0:
+                        vel.linear.x = 1.0
+                    if vel.angular.z < 0.1:
+                        vel.angular.z = 0.1
+                    elif vel.angular.z > 0.3:
+                        vel.angular.z = 0.3
                     self.vel_pub.publish(vel)
-                elif rospy.get_param('state') == 'play':
-                    print('qui devo mettere che gira la testa!')
-                    # poi devo metterlo come if head_moved == 0 printa quello e metti
-                    # head_move = 1. negli altri due casi sopra metti come primo
-                    # instruction head_moved = 0. e devo metterlo anche a inizio i len(cnts)
-                    # per non avere problemi. su questa ultiam cosa bisogna vedere dove si
-                    # potrebbe mettere (perche forse non e il posto migliore), ma dovrebbe
-                    # andare cosi
+                elif (rospy.get_param('state') == 'play' and abs(vel.linear.x) <= 0.1) \
+                                                            and (abs(vel.angular.z) <= 0.1):
+                    if head_moved == 0:
+                        rospy.loginfo('*The dog is turning the head...*')
+                        head_angle = 0
+                        self.head_pub.publish(head_angle)
+                        while head_angle < (0.7854):
+                            head_angle = head_angle + 0.1
+                            self.head_pub.publish(head_angle)
+                            image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                            cv2.imshow('window', image_np)
+                            time.sleep(1 / sim_scale)
+                        time.sleep(1 / sim_scale)
+                        while head_angle > (-0.7854):
+                            head_angle = head_angle - 0.1
+                            self.head_pub.publish(head_angle)
+                            image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                            cv2.imshow('window', image_np)
+                            time.sleep(1 / sim_scale)
+                        time.sleep(1 / sim_scale)
+                        while head_angle < 0:
+                            head_angle = head_angle + 0.1
+                            self.head_pub.publish(head_angle)
+                            image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                            cv2.imshow('window', image_np)
+                            time.sleep(1 / sim_scale)
+                        head_angle = 0
+                        self.head_pub.publish(head_angle)   
+                        head_moved = 1              
 
-            elif (rospy.get_param('state') == 'play' and find_counter < 14): # per niente sicuro di questo
+            elif (rospy.get_param('state') == 'play' and find_counter < 100):
+                head_moved = 0
                 vel = Twist()
                 vel.angular.z = 0.5
                 self.vel_pub.publish(vel)
                 find_counter = find_counter + 1
-            elif (rospy.get_param('state') == 'play' and find_counter >= 14):
+            elif (rospy.get_param('state') == 'play' and find_counter >= 100):
+                head_moved = 0
                 vel = Twist()
                 vel.angular.z = 0
                 self.vel_pub.publish(vel)
@@ -118,9 +167,7 @@ class image_feature:
             cv2.imshow('window', image_np)
             cv2.waitKey(2)
 
-            # self.subscriber.unregister()
-
-
+## Initializes the image_feature class and spins until interrupted by a keyboard command
 def main(args):
     '''Initializes and cleanups ros node'''
     ic = image_feature()

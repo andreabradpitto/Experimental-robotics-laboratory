@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
-## @package perception
-# Emulates an user's voice command and pointing gestures.
-# The user randomly asks the robot to <<play>> and issues a location to reach
+## @package human
+# Emulates a human agent which throws or hides a ball.
+# The user randomly chooses what to do with the ball;
+# when they have chosen, is sends a goal action to go_to_point_ball.py
 
 import rospy
 import time
 import random
+import math
 import assignment2.msg
 import actionlib
 import actionlib.msg
@@ -25,25 +27,23 @@ map_y_min = rospy.get_param('map/y_min')
 ## Acquire simulation speed scaling factor from launch file
 sim_scale = rospy.get_param('sim_scale')
 
-## Simulate the sensors capturing user's <<play>> requests and subsequent
-# pointing gestures. The user is assumed to be aware of the robot's current
-# state (e.g. via LEDs on the robot itself) and asks to <<play>> only if
-# The dog is not sleeping or already playing, i.e. it is in Normal state
-def perception():
-    rospy.init_node('perception_node', anonymous=True)
+## After a pause, simulate the human behavior by randomly picking the next
+# thing to do. The human can either hide or move the ball over the playing field
+def human():
+    rospy.init_node('human_node', anonymous=True)
     ball_action_client = actionlib.SimpleActionClient('/ball/reaching_goal', assignment2.msg.PlanningAction)
-    # oppure 'ball/reaching_goal'
     rate = rospy.Rate(200)
     ball_choice = PoseStamped()
-    # raggio sfera 0.5: quando va sotto deve andare a -0.5
     while not rospy.is_shutdown():
-        time.sleep(random.randint(6, 7) / sim_scale)
+        time.sleep(random.randint(30, 70) / sim_scale)
         if rospy.get_param('state') == 'normal':
-            human_moves_timer = random.randint(2, 4)
+            human_moves_timer = math.floor(random.randint(20, 40) / sim_scale)
+            last_choice = 0 ## variable used to store the last choice of the human
+            # loop for a random amount of times, then go back to another longer pause
             while (rospy.get_param('state') != 'sleep' and human_moves_timer != 0):
                 ball_choice.pose.position.x = random.randint(map_x_min, map_x_max)
                 ball_choice.pose.position.y = random.randint(map_y_min, map_y_max)
-                hide_variable = random.randint(0, 0) # 0 0 per test, 0 1 default!
+                hide_variable = random.randint(0, 1)
                 if hide_variable == 0:
                     ball_choice.pose.position.z = 0.5
                     rospy.loginfo('*The human moves the ball to: %i %i*', \
@@ -53,16 +53,22 @@ def perception():
                     ball_action_client.wait_for_result()
                     rospy.loginfo('Ball moved to: %i %i*', \
                       ball_choice.pose.position.x, ball_choice.pose.position.y)
+                    last_choice = 0
                 else:
-                    ball_choice.pose.position.z = -0.5
-                    rospy.loginfo('*The human hides the ball...*')                  
-                    ball_goal = assignment2.msg.PlanningGoal(target_pose = ball_choice)
-                    ball_action_client.send_goal(ball_goal)
-                    ball_action_client.wait_for_result()
-                    rospy.loginfo('Ball hidden!')
+                    if last_choice == 1:
+                        rospy.loginfo('*The human keeps the ball hidden*') 
+                        time.sleep(random.randint(6, 7) / sim_scale)
+                    else:
+                        ball_choice.pose.position.z = -0.5
+                        rospy.loginfo('*The human hides the ball...*')                  
+                        ball_goal = assignment2.msg.PlanningGoal(target_pose = ball_choice)
+                        ball_action_client.send_goal(ball_goal)
+                        ball_action_client.wait_for_result()
+                        rospy.loginfo('Ball hidden!')
+                        last_choice = 1
                 human_moves_timer = human_moves_timer - 1
 
-                time.sleep(random.randint(10, 16) / sim_scale) # qua forse lascio il tempo al robot di girare la testa, o forse no
+                time.sleep(random.randint(10, 16) / sim_scale)
             rate.sleep()
             ball_choice.pose.position.x = random.randint(map_x_min, map_x_max)
             ball_choice.pose.position.y = random.randint(map_y_min, map_y_max)
@@ -76,6 +82,6 @@ def perception():
 
 if __name__ == '__main__':
     try:
-        perception()
+        human()
     except rospy.ROSInterruptException:
         pass

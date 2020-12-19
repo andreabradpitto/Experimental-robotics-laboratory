@@ -1,5 +1,11 @@
 #! /usr/bin/env python
-# import ros stuff
+
+## @package go_to_point_ball
+# Replies to the ball movements issued by the human.
+# The user randomly chooses to hide or move the ball, and this code implements
+# an action server in order to respond to those requests
+
+# import ROS libraries
 import rospy
 import math
 import actionlib
@@ -39,23 +45,23 @@ act_s = None
 
 # callbacks
 
-
+## Callback function that triggers every time something is sent on the
+# odom topic. It simply sets globabl variables values
 def clbk_odom(msg):
     global position_
     global pose_
-    global yaw_
 
     # position
     position_ = msg.pose.pose.position
     pose_ = msg.pose.pose
 
-
+## Function used to change state of this node's control pattern
 def change_state(state):
     global state_
     state_ = state
-    #print ('State changed to [%s]' % state_)
 
-
+## Step of the control algorithm which is devoted to the ball's linear
+# translation
 def go_straight_ahead(des_pos):
     global pub, state_, z_back
     err_pos = math.sqrt(pow(des_pos.y - position_.y, 2) +
@@ -87,17 +93,18 @@ def go_straight_ahead(des_pos):
         pub.publish(twist_msg)
 
     else:
-        #print ('Position error: [%s]' % err_pos)
         change_state(1)
 
-
+## Function used at the end of the algorithms. It stops the ball where it is
 def done():
     twist_msg = Twist()
     twist_msg.linear.x = 0
     twist_msg.linear.y = 0
     pub.publish(twist_msg)
 
-
+## This is the planning function of the script: it handles the
+# inner state changes and ensures the ball reaches its goal, or
+# warns the user about failures
 def planning(goal):
 
     global state_, desired_position_
@@ -121,12 +128,10 @@ def planning(goal):
             success = False
             break
         elif state_ == 0:
-            #feedback.stat = "Reaching the goal"
             feedback.position = pose_
             act_s.publish_feedback(feedback)
             go_straight_ahead(desired_position_)
         elif state_ == 1:
-            #feedback.stat = "Target reached!"
             feedback.position = pose_
             act_s.publish_feedback(feedback)
             done()
@@ -136,15 +141,14 @@ def planning(goal):
 
         rate.sleep()
     if success:
-        #rospy.loginfo('Goal: Succeeded!')
         act_s.set_succeeded(result)
 
-
+## Initializes the node and subscribes to the odom topic
 def main():
     global pub, active_, act_s, pubz
-    rospy.init_node('go_to_point')
+    rospy.init_node('go_to_point_ball_node')
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
-    pubz = rospy.Publisher('gazebo/set_link_state', LinkState, queue_size=1)
+    pubz = rospy.Publisher('/gazebo/set_link_state', LinkState, queue_size=1)
     sub_odom = rospy.Subscriber('odom', Odometry, clbk_odom)
     act_s = actionlib.SimpleActionServer(
         'reaching_goal', assignment2.msg.PlanningAction, planning, auto_start=False)

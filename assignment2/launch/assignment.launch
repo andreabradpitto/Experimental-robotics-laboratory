@@ -64,6 +64,7 @@
     respawn="false" output="screen"
   args="-urdf -model human1 -param human_description1 -x -7 -y 7 -z 0.34 -R 0 -P 0 -Y 0"/>
 
+  <!-- group for the robotic dog -->
   <group ns="$(arg ns1)">
 
     <!-- parameters -->
@@ -85,15 +86,9 @@
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
     <param name='home/y' type='int' value='7'/>
-    <!-- parameter specifying user's position (x coordinate) -->
-    <param name='person/x' type='int' value='-7'/>
-    <!-- parameter specifying user's position (y coordinate) -->
-    <param name='person/y' type='int' value='7'/>
     <!-- parameter used to scale simulation velocity -->
     <param name='sim_scale' type='int' value='1'/>
-    <!-- parameter used to specify head angle -->
-    <param name='dog/head' type='double' value='0'/>
-    <!-- parameter used to specify whetehr the ball is detected or not -->
+    <!-- parameter used to specify whether the ball is detected or not -->
     <param name='ball_detected' type='int' value='0'/>
 
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
@@ -102,19 +97,19 @@
 
     <!-- node used to simulate reception and processing of incoming
          voice commands and pointing gestures -->
-    <node pkg='assignment2' type='perception.py'
-      name='perception_node' output='screen' respawn="false"/>
+    <node pkg='assignment2' type='human.py'
+      name='human_node' output='screen' respawn="false"/>
     <!-- node used to handle the robot's finite state machine internal architecture -->
-    <node pkg='assignment2' type='control.py'
-      name='control_node' output='screen' respawn="false"/>
+    <node pkg='assignment2' type='dog_control.py'
+      name='dog_control_node' output='screen' respawn="false"/>
     <!-- node used to emulate physical delays relative to robot
          travelling and position reaching -->
-    <node pkg='assignment2' type='command_manager.py'
+    <node pkg='assignment2' type='dog_fsm.py'
       name='dog_fsm_node' output='screen' respawn="false"/>
 
-    <!-- node used to ..................................... -->
-    <node pkg='assignment2' type='follow_ball.py'
-      name='follow_ball_node' output='screen' respawn="false"/>
+    <!-- node used to control the robot while he is playing -->
+    <node pkg='assignment2' type='dog_control_ball.py'
+      name='dog_control_ball_node' output='screen' respawn="false"/>
 
     <rosparam file="$(find assignment2)/config/motor_config.yaml" command="load"/>
     <node name="controller_spawner_node" pkg="controller_manager" type="spawner"
@@ -123,11 +118,12 @@
     </node>
   </group>
   
+  <!-- group for the ball -->
   <group ns="$(arg ns2)">
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
 	  args="-urdf -model $(arg ns2) -param ball_description -x -7 -y 6 -z -0.5"/>
-	  <node name="position_server" pkg="assignment2"
+	  <node name="go_to_point_ball_node" pkg="assignment2"
       type="go_to_point_ball.py" output="screen"/>
   </group>
 
