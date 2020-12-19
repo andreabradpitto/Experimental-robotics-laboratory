@@ -8,11 +8,12 @@ The world used, which is delimited by fences, is a 10x10 square and can be refer
 \image html "playing field.png"
 
 The robotic dog can have 3 states. The first one is **Sleep**, which triggers after a certain amount of time while being in **Normal** state: the dog will simply get back home and sleep for a bit. **Normal** is the state in which the robot wanders over the playing field. Finally, the **Play** state triggers from **Normal** when the dog sees a ball: it then start following it. The robo-dog will adjust its distance with respect to the sphere in order not to collide. If the dog sees the ball stading still (i.e. the throw effect by the human is over), it starts moving the head from left to right, and then starts following the ball again. As the human can hide the ball from time to time, If the robot loses track of the ball for long enough, it will get back to the normal state.
-This is the model of the robotics dog:
+This is the model of the robotic dog:
 
 \image html "robotic dog.png"
 
-It loves big green balls
+It it a two-wheeled diffierential drive robot, with a camera mounter on top (reffering to the image, it is the white cube embedded in the orange "head")
+...and of course it loves big green balls
 
 # Architecture
 
