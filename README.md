@@ -26,4 +26,4 @@ Please refer to the readme and the documentation inside [its folder](https://git
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).<br/>
-Contact: [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it).
+Contact: [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it)
