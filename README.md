@@ -12,8 +12,8 @@ rosrun pos_server position_server
 ```
 [This](https://github.com/CarmineD8/exp-lab-exercises/tree/master/exercise1#monday-2809-exercise) is the official text for the assignment
 
-### Exercise 2 - Exercise n
-Due to time constraints, I have dropped formal reporting of all the exercises proposed at lecture time, save for the very first one. That said, part of the material used for the exercises is still available among [the professor's repositories](https://github.com/CarmineD8?tab=repositories)
+### Exercise 2 to Exercise n
+Due to time constraints, I have dropped formal reporting of all the exercises proposed at lecture time, save for the very first one. This also seems to be what the professor chose to do, as [this](https://github.com/CarmineD8/exp-lab-exercises) was supposed to be the overall folder for the exercises, but it comprises just the number 1. That said, part of the material used for the exercises is still available among [the professor's repositories](https://github.com/CarmineD8?tab=repositories)
 
 ### Assignment 1
 Please refer to the readme and the documentation inside [its folder](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment1)
@@ -25,4 +25,5 @@ Please refer to the readme and the documentation inside [its folder](https://git
 Please refer to the readme and the documentation inside [its folder](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment3)
 
 ## Authors
-The exercises folder can be found [here](https://github.com/CarmineD8/exp-lab-exercises). All the code in this repository was edited by me. Not that I have much to be proud about!
+All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).<br/>
+Contact: [s3942710@studenti.unige.it](mailto:s3942710@studenti.unige.it).
