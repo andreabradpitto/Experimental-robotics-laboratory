@@ -18,10 +18,10 @@
     <material>Gazebo/Orange</material>
   </gazebo>
   <gazebo reference="camera_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="laser_link">
-    <material>Gazebo/White</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   
   <gazebo>
@@ -88,7 +88,6 @@
   </gazebo> 
 
   <gazebo reference="laser_link">
-    <!--sensor type="gpu_ray" name="head_hokuyo_sensor">-->
     <sensor type="ray" name="head_hokuyo_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
@@ -117,7 +116,6 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <!--<plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">-->
       <plugin name="hokuyo_node" filename="libgazebo_ros_laser.so">
         <topicName>scan</topicName>
         <frameName>hokuyo_link</frameName>

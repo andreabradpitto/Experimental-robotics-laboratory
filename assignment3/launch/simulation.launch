@@ -42,7 +42,7 @@
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
   </group>
   
-  <!-- Start Rviz -->  
+  <!-- Start RViz -->  
   <param name="use_gui" value="False"/>
    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
