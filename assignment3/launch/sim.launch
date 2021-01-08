@@ -71,13 +71,13 @@
     <!-- parameter specifying robot current position (y coordinate) -->
     <param name='dog/y' type='int' value='0'/>
     <!-- parameter specifying the maximum x-axis value for the map -->
-    <param name='map/x_max' type='int' value='8'/>
+    <param name='map/x_max' type='int' value='9'/>
     <!-- parameter specifying the maximum y-axis value for the map -->
-    <param name='map/y_max' type='int' value='8'/>
+    <param name='map/y_max' type='int' value='9'/>
     <!-- parameter specifying the minimum x-axis value for the map -->
-    <param name='map/x_min' type='int' value='-8'/>
+    <param name='map/x_min' type='int' value='-9'/>
     <!-- parameter specifying the minimum y-axis value for the map -->
-    <param name='map/y_min' type='int' value='-8'/>
+    <param name='map/y_min' type='int' value='-9'/>
     <!-- parameter specifying robot home position (x coordinate) -->
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
