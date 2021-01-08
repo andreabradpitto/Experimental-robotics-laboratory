@@ -42,9 +42,80 @@
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
   </group>
   
-   <param name="human_description1" textfile="$(find assignment3)/urdf/human.urdf" />
-      
+  <!-- Start Rviz -->  
+  <param name="use_gui" value="False"/>
+   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
+   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find assignment3)/config/config.rviz" />
+
+
+
+  <param name="human_description1" textfile="$(find assignment3)/urdf/human.urdf" />   
   <node name="urdf_spawner_human1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
         args="-urdf -model human1 -param human_description1 -x -6 -y 8.5 -z 0.34 -R 0 -P 0 -Y -0.75"/>
+
+  <!--<arg name="ns1" value="robot"/>
+  <param name="$(arg ns1)/robot_description" 
+	 command="$(find xacro)/xacro QUI DUE TRATTINI:-inorder $(find assignment3)/urdf/robot.xacro"/>-->
+ <param name="robot_description" 
+	 command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
+
+  <!-- group for the robotic dog -->
+  <!--<group ns="$(arg ns1)">-->
+
+  <!-- parameters -->
+    <!-- parameter specifying robot current state -->
+    <param name='state' type='string' value='sleep'/>
+    <!-- parameter specifying robot current position (x coordinate) -->
+    <param name='dog/x' type='int' value='0'/>
+    <!-- parameter specifying robot current position (y coordinate) -->
+    <param name='dog/y' type='int' value='0'/>
+    <!-- parameter specifying the maximum x-axis value for the map -->
+    <param name='map/x_max' type='int' value='8'/>
+    <!-- parameter specifying the maximum y-axis value for the map -->
+    <param name='map/y_max' type='int' value='8'/>
+    <!-- parameter specifying the minimum x-axis value for the map -->
+    <param name='map/x_min' type='int' value='-8'/>
+    <!-- parameter specifying the minimum y-axis value for the map -->
+    <param name='map/y_min' type='int' value='-8'/>
+    <!-- parameter specifying robot home position (x coordinate) -->
+    <param name='home/x' type='int' value='-5'/>
+    <!-- parameter specifying robot home position (y coordinate) -->
+    <param name='home/y' type='int' value='7'/>
+    <!-- parameter used to scale simulation velocity -->
+    <param name='sim_scale' type='int' value='1'/>
+    <!-- parameter used to specify whether the ball is detected or not -->
+    <param name='ball_detected' type='int' value='0'/>
+
+  <!-- nodes -->
+    <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->
+  	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+      respawn="false" output="screen"
+	  args="-urdf -model robot1 -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>
+    <!--args="-urdf -model $(arg ns1) -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>-->
+    
+    <!-- node used to handle the robot's finite state machine internal architecture -->
+    <node pkg='assignment3' type='dog_control.py'
+      name='dog_control_node' output='screen' respawn="false"/>
+    <!-- node used to control the robotic dog while it is
+         in normal or sleeping state -->
+    <node pkg='assignment3' type='dog_fsm.py'
+      name='dog_fsm_node' output='screen' respawn="false"/>
+
+    <!-- node used to control the robot while it is playing -->
+    <node pkg='assignment3' type='dog_control_ball.py'
+      name='dog_control_ball_node' output='screen' respawn="false"/>
+
+    <!-- node used to simulate random ball movements made by
+         the human. The ball can also be hidden -->
+    <node pkg='assignment3' type='human.py'
+      name='human_node' output='screen' respawn="false"/>
+
+    <!--<rosparam file="$(find assignment3)/config/motor_config.yaml" command="load"/>-->
+    <!--<node name="controller_spawner_node" pkg="controller_manager" type="spawner"
+      output="screen" args="joint_state_controller joint_position_controller
+        QUI DUE TRATTINI:-shutdown-timeout 3">
+    </node> -->
+  <!--</group>-->
 
 </launch>
