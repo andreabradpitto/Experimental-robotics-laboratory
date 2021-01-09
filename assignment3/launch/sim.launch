@@ -81,11 +81,14 @@
     <!-- parameter specifying robot home position (x coordinate) -->
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
-    <param name='home/y' type='int' value='7'/>
+    <param name='home/y' type='int' value='8'/>
     <!-- parameter used to scale simulation velocity -->
-    <param name='sim_scale' type='int' value='1'/>
+    <param name='sim_scale' type='int' value='1'/> <!-- da mettere in assignment.launch -->
     <!-- parameter used to specify whether the ball is detected or not -->
     <param name='ball_detected' type='int' value='0'/>
+    
+    <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
+    <param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>
 
   <!-- nodes -->
     <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->

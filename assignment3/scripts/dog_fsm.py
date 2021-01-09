@@ -10,9 +10,9 @@ import smach
 import smach_ros
 import time
 import random
-import assignment2
+import assignment3
 from std_msgs.msg import Int64
-from assignment2.msg import Coordinates
+from assignment3.msg import Coordinates
 
 ## Acquire maximum x-axis parameter from launch file
 map_x_max = rospy.get_param('map/x_max')

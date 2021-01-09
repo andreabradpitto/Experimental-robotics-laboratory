@@ -12,8 +12,8 @@ import roslib
 import random
 import time
 import math
-import assignment2.msg
-from assignment2.msg import Coordinates
+import assignment3.msg
+from assignment3.msg import Coordinates
 from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry
 from tf import transformations

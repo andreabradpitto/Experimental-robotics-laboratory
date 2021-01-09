@@ -58,7 +58,7 @@ find_package (OpenCV REQUIRED)
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-#  Coordinates.msg
+  Coordinates.msg
 #   Message1.msg
 #   Message2.msg
  )
@@ -73,7 +73,8 @@ add_message_files(
 ## Generate actions in the 'action' folder
  add_action_files(
    FILES
-#   Planning.action
+   roomPlanning.action
+   homePlanning.action
 #   Action2.action
  )
 

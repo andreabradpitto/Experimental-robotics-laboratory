@@ -16,15 +16,15 @@ from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 
 ## Acquire maximum x-axis parameter from launch file
-#map_x_max = rospy.get_param('map/x_max')
+map_x_max = rospy.get_param('map/x_max')
 ## Acquire maximum y-axis parameter from launch file
-#map_y_max = rospy.get_param('map/y_max')
+map_y_max = rospy.get_param('map/y_max')
 ## Acquire minimum x-axis parameter from launch file
-#map_x_min = rospy.get_param('map/x_min')
+map_x_min = rospy.get_param('map/x_min')
 ## Acquire minimum y-axis parameter from launch file
-#map_y_min = rospy.get_param('map/y_min')
-#home_x = rospy.get_param('home/x')
-#home_y = rospy.get_param('home/y')
+map_y_min = rospy.get_param('map/y_min')
+home_x = rospy.get_param('home/x')
+home_y = rospy.get_param('home/y')
 room_list = rospy.get_param('room_list')
 #room_list = ['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']
 
@@ -35,17 +35,17 @@ sim_scale = rospy.get_param('sim_scale')
 # thing to do. The human can either hide or move the ball over the playing field
 def human():
     rospy.init_node('human_node', anonymous=True)
-    #room_action_client = actionlib.SimpleActionClient('/reaching_room_topic', assignment3.msg.roomPlanningAction)
-    #home_action_client = actionlib.SimpleActionClient('/reaching_home_topic', assignment3.msg.homePlanningAction)
+    room_action_client = actionlib.SimpleActionClient('/reaching_room_topic', assignment3.msg.roomPlanningAction)
+    home_action_client = actionlib.SimpleActionClient('/reaching_home_topic', assignment3.msg.homePlanningAction)
     # puo essere da sistemare topics sopra: /reaching_goal_topic
     rate = rospy.Rate(200)
-    #room_name = String()
-    #home_pos = PoseStamped()
-    #home_pos.pose.position.x = home_x
-    #home_pos.pose.position.y = home_y
+    room_name = String()
+    home_pos = PoseStamped()
+    home_pos.pose.position.x = home_x
+    home_pos.pose.position.y = home_y
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
     while not rospy.is_shutdown():
-        time.sleep(random.randint(40, 70) / sim_scale)
+        time.sleep(random.randint(30, 70) / sim_scale)
         if rospy.get_param('state') == 'normal':
             voice_pub.publish('play')
             rospy.loginfo('Human: I want to play')
@@ -53,20 +53,16 @@ def human():
                 rate.sleep()
             while (rospy.get_param('state') == 'play'):
                 room_choice = random.randint(0, 5)
-                order_string = 'Human: GoTo ' + room_list[room_choice]
-                rospy.loginfo(order_string)
-                voice_pub.publish(room_list[room_choice])
-                #room_name = room_list[room_choice]
-                #room_goal = assignment3.msg.roomPlanningGoal(target_pose = room_name)
-                #room_action_client.send_goal(room_goal)
-                #room_action_client.wait_for_result()
-                #rospy.loginfo('Human: Ok, now come back here!') #da eliminare         
-                #home_goal = assignment3.msg.homePlanningGoal(target_pose = home_pos)
-                #home_action_client.send_goal(home_goal)
-                #home_action_client.wait_for_result()
-                rospy.set_param('play_task_done', 0)
-                while(not rospy.get_param('play_task_done')): #ricordati di settare a 1 nella fsm o in altro nodo!
-                    rate.sleep()
+                string = 'Human: GoTo ' + room_list[room_choice]
+                rospy.loginfo(string)
+                room_name = room_list[room_choice]
+                room_goal = assignment3.msg.roomPlanningGoal(target_pose = room_name)
+                room_action_client.send_goal(room_goal)
+                room_action_client.wait_for_result()
+                rospy.loginfo('Human: Ok, now come back here!') #da eliminare         
+                home_goal = assignment3.msg.homePlanningGoal(target_pose = home_pos)
+                home_action_client.send_goal(home_goal)
+                home_action_client.wait_for_result()
                 rospy.loginfo('Human: home reached') #da eliminare
                 #con questa scelta nella fsm devo mettere il stop play counter (go back to normal)
                 #che si basa su if last position requested (o controlla lui la sua posizione attuale)
