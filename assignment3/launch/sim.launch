@@ -87,6 +87,8 @@
     <!-- parameter used to specify whether the ball is detected or not -->
     <param name='ball_detected' type='int' value='0'/>
     
+    <param name='play_task_done' type='int' value='0'/>
+    <param name='position_reached' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
     <param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>
 

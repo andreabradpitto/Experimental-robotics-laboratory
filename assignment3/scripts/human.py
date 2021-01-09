@@ -10,8 +10,8 @@ import time
 import random
 import math
 import assignment3.msg
-import actionlib
-import actionlib.msg
+#import actionlib
+#import actionlib.msg
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 
@@ -23,8 +23,10 @@ from geometry_msgs.msg import PoseStamped
 #map_x_min = rospy.get_param('map/x_min')
 ## Acquire minimum y-axis parameter from launch file
 #map_y_min = rospy.get_param('map/y_min')
+
 #home_x = rospy.get_param('home/x')
 #home_y = rospy.get_param('home/y')
+
 room_list = rospy.get_param('room_list')
 #room_list = ['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']
 
@@ -75,7 +77,7 @@ def human():
                 time.sleep(random.randint(5, 10) / sim_scale)
             rate.sleep()
             rospy.loginfo('Human: The robot has stopped playing') #da eliminare
-            time.sleep(random.randint(50, 100) / sim_scale)#da aumentare
+            time.sleep(random.randint(250, 300) / sim_scale)
     rate.sleep()
 
 if __name__ == '__main__':
