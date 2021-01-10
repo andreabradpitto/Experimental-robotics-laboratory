@@ -67,9 +67,9 @@
     <!-- parameter specifying robot current state -->
     <param name='state' type='string' value='sleep'/>
     <!-- parameter specifying robot current position (x coordinate) -->
-    <param name='dog/x' type='int' value='0'/>
+    <param name='dog/x' type='double' value='0'/>
     <!-- parameter specifying robot current position (y coordinate) -->
-    <param name='dog/y' type='int' value='0'/>
+    <param name='dog/y' type='double' value='0'/>
     <!-- parameter specifying the maximum x-axis value for the map -->
     <param name='map/x_max' type='int' value='9'/>
     <!-- parameter specifying the maximum y-axis value for the map -->
@@ -82,10 +82,46 @@
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
     <param name='home/y' type='int' value='8'/>
+    <!-- parameter used to specify whether the blue ball has been detected or not -->
+    <!--<param name='blue_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify whether the red ball has been detected or not -->
+    <!--<param name='red_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify whether the green ball has been detected or not -->
+    <!--<param name='green_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify whether the yellow ball has been detected or not -->
+    <!--<param name='yellow_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify whether the magenta ball has been detected or not -->
+    <!--<param name='magenta_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify whether the green black has been detected or not -->
+    <!--<param name='black_detected' type='int' value='0'/>-->
+    <!-- parameter used to specify x coordinate of the blue ball, once discovered -->
+    <param name='blue/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the blue ball, once discovered -->
+    <param name='blue/y' type='double' value='100'/>
+    <!-- parameter used to specify x coordinate of the red ball, once discovered -->
+    <param name='red/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the red ball, once discovered -->
+    <param name='red/y' type='double' value='100'/>
+    <!-- parameter used to specify x coordinate of the green ball, once discovegreen -->
+    <param name='green/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the green ball, once discovegreen -->
+    <param name='green/y' type='double' value='100'/>
+    <!-- parameter used to specify x coordinate of the yellow ball, once discoveyellow -->
+    <param name='yellow/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the yellow ball, once discoveyellow -->
+    <param name='yellow/y' type='double' value='100'/>
+    <!-- parameter used to specify x coordinate of the magenta ball, once discovemagenta -->
+    <param name='magenta/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the magenta ball, once discovemagenta -->
+    <param name='magenta/y' type='double' value='100'/>
+    <!-- parameter used to specify x coordinate of the black ball, once discoveblack -->
+    <param name='black/x' type='double' value='100'/>
+    <!-- parameter used to specify y coordinate of the black ball, once discoveblack -->
+    <param name='black/y' type='double' value='100'/>
+    <!-- parameter used to specify whether a new ball has been detected or not -->
+    <param name='new_ball_detected' type='int' value='0'/>
     <!-- parameter used to scale simulation velocity -->
     <param name='sim_scale' type='int' value='1'/> <!-- da mettere in assignment.launch -->
-    <!-- parameter used to specify whether the ball is detected or not -->
-    <param name='ball_detected' type='int' value='0'/>
     
     <param name='play_task_done' type='int' value='0'/>
     <param name='position_reached' type='int' value='0'/>

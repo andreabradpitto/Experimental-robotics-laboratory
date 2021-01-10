@@ -36,7 +36,7 @@ sim_scale = rospy.get_param('sim_scale')
 ## After a pause, simulate the human behavior by randomly picking the next
 # thing to do. The human can either hide or move the ball over the playing field
 def human():
-    rospy.init_node('human_node', anonymous=True)
+    rospy.init_node('human_node', anonymous = True)
     #room_action_client = actionlib.SimpleActionClient('/reaching_room_topic', assignment3.msg.roomPlanningAction)
     #home_action_client = actionlib.SimpleActionClient('/reaching_home_topic', assignment3.msg.homePlanningAction)
     # puo essere da sistemare topics sopra: /reaching_goal_topic

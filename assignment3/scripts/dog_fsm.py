@@ -15,6 +15,8 @@ from std_msgs.msg import Int64, String #Int64 era usato da ball control topic
 from assignment3.msg import Coordinates
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from actionlib_msgs.msg import GoalStatus
+from nav_msgs.msg import Odometry
 
 ## Acquire maximum x-axis parameter from launch file
 map_x_max = rospy.get_param('map/x_max')
@@ -42,6 +44,17 @@ first_iteration = 1
 ## variable used to state whether it is time to play or not
 playtime = 0
 
+blue = Coordinates()
+red = Coordinates()
+green = Coordinates()
+yellow = Coordinates()
+magenta = Coordinates()
+black = Coordinates()
+ball_locations = [blue, red, green, yellow, magenta, black]
+for ball in ball_locations:
+    ball.x = 0
+    ball.y = 0
+
 ## Sleep state definition
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes and subscribe to the
@@ -67,7 +80,7 @@ class Sleep(smach.State):
         home_pos.target_pose.pose.position.y = home_y # set target as the home position (y-axis)
         #pos.x = home_x # set target as the home position (x-axis)
         #pos.y = home_y # set target as the home position (y-axis)
-        pub_sleep = rospy.Publisher('control_topic', Coordinates, queue_size=10)
+        #pub_sleep = rospy.Publisher('control_topic', Coordinates, queue_size=10)
         if first_iteration == 0:
             rospy.loginfo('Dog: I am going to spleep!')
             time.sleep(random.randint(2, 5) / sim_scale)
@@ -113,6 +126,7 @@ class Normal(smach.State):
         mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         goal_pos = MoveBaseGoal()
         #goal_pos.target_pose.pose.orientation.w = 1.0
+        pos = Odometry()
         while (sleep_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'normal'):
             goal_pos.target_pose.header.frame_id = "map"
@@ -122,13 +136,32 @@ class Normal(smach.State):
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                  goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)
-            wait = mb_normal_client.wait_for_result() #wait da togliere se non usato
-            #mettere caso in cui fallisce (goal impossibile)
+            while(rospy.get_param('new_ball_detected') == 0):
+                mb_normal_client.wait_for_result()
+                #tecnicamente credo che cosi lui giri finche il dog non arriva a goal,
+                #il goal e impossibile o una nuova palla viene individuata
+                # se goal impossibile o raggiunto vado avanti subito direi
+                #mentre se appare palla mi fermo a meta lavoro ma nell'if sotto cancello
+                #il goal
+
+                #controlla status goal, se succeeded printo e aggiorno posizione corretta
+                #altrimenti faccio get param posizione corrente e la setto nel param server
+                #questo è il caso caso in cui fallisce (goal impossibile)
+
+            if(rospy.get_param('new_ball_detected') == 1):
+                mb_normal_client.cancel_all_goals()
+            #    qui ci va codice "track sub-state":
+            #    il movimento meglio farlo gestire all'altro nodo
+            #    devo settare nuova pos palla eccetera...
+            while(rospy.get_param('new_ball_detected') == 1):
+                self.rate.sleep # e ok cosi?
+
+            # forse inutili queste 3. ma e da vedere bene dappertutto
+            result = rospy.wait_for_message('odom', Odometry, timeout = None)
+            rospy.set_param('dog/x', result.pose.pose.position.x)
+            rospy.set_param('dog/y', result.pose.pose.position.y)
+            
             sleep_timer = sleep_timer - 1	
-            pub.publish(pos)
-            if(rospy.wait_for_message('motion_over_topic', Coordinates) or playtime == 1):
-                rospy.set_param('dog/x', pos.x)
-                rospy.set_param('dog/y', pos.y)
             self.rate.sleep
 
         if sleep_timer == 0:
@@ -147,8 +180,10 @@ class Normal(smach.State):
     # acknowledges the ball
     def normal_callback_play(self, data):
         global playtime
-        if (rospy.get_param('state') == 'normal' and rospy.get_param('ball_detected') == 1):
-            rospy.loginfo('dog: I have seen the ball! Woof!')
+        if (rospy.get_param('state') == 'normal'):
+            rospy.loginfo('Dog: I have received a play request! Woof!')
+            mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+            mb_normal_client.cancel_all_goals()
             playtime = 1
 
 ## Play state definition
@@ -216,7 +251,7 @@ class Find(smach.State):
 ## Finite state machine's (fsm) main. It initializes the dog_fsm_node and setups
 # a SMACH state machine along with all the three possible states
 def main():
-    rospy.init_node('dog_fsm_node')
+    rospy.init_node('dog_fsm_node', anonymous = True)
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['container_interface'])
