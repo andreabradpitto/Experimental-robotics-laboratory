@@ -94,37 +94,36 @@
     <!--<param name='magenta_detected' type='int' value='0'/>-->
     <!-- parameter used to specify whether the green black has been detected or not -->
     <!--<param name='black_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify x coordinate of the blue ball, once discovered -->
+    <!-- parameter used to specify the x coordinate of the blue ball, once discovered -->
     <param name='blue/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the blue ball, once discovered -->
+    <!-- parameter used to specify the y coordinate of the blue ball, once discovered -->
     <param name='blue/y' type='double' value='100'/>
-    <!-- parameter used to specify x coordinate of the red ball, once discovered -->
+    <!-- parameter used to specify the x coordinate of the red ball, once discovered -->
     <param name='red/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the red ball, once discovered -->
+    <!-- parameter used to specify the y coordinate of the red ball, once discovered -->
     <param name='red/y' type='double' value='100'/>
-    <!-- parameter used to specify x coordinate of the green ball, once discovegreen -->
+    <!-- parameter used to specify the x coordinate of the green ball, once discovegreen -->
     <param name='green/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the green ball, once discovegreen -->
+    <!-- parameter used to specify the y coordinate of the green ball, once discovegreen -->
     <param name='green/y' type='double' value='100'/>
-    <!-- parameter used to specify x coordinate of the yellow ball, once discoveyellow -->
+    <!-- parameter used to specify the x coordinate of the yellow ball, once discoveyellow -->
     <param name='yellow/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the yellow ball, once discoveyellow -->
+    <!-- parameter used to specify the y coordinate of the yellow ball, once discoveyellow -->
     <param name='yellow/y' type='double' value='100'/>
-    <!-- parameter used to specify x coordinate of the magenta ball, once discovemagenta -->
+    <!-- parameter used to specify the x coordinate of the magenta ball, once discovemagenta -->
     <param name='magenta/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the magenta ball, once discovemagenta -->
+    <!-- parameter used to specify the y coordinate of the magenta ball, once discovemagenta -->
     <param name='magenta/y' type='double' value='100'/>
-    <!-- parameter used to specify x coordinate of the black ball, once discoveblack -->
+    <!-- parameter used to specify the x coordinate of the black ball, once discoveblack -->
     <param name='black/x' type='double' value='100'/>
-    <!-- parameter used to specify y coordinate of the black ball, once discoveblack -->
+    <!-- parameter used to specify the y coordinate of the black ball, once discoveblack -->
     <param name='black/y' type='double' value='100'/>
     <!-- parameter used to specify whether a new ball has been detected or not -->
     <param name='new_ball_detected' type='int' value='0'/>
     <!-- parameter used to scale simulation velocity -->
     <param name='sim_scale' type='int' value='1'/> <!-- da mettere in assignment.launch -->
     
-    <param name='play_task_done' type='int' value='0'/>
-    <param name='position_reached' type='int' value='0'/>
+    <param name='play_task_status' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
     <param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>
 

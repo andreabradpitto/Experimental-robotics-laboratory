@@ -53,10 +53,15 @@ def human():
             rospy.loginfo('Human: I want to play')
             while (rospy.get_param('state') == 'normal'):
                 rate.sleep()
+            #I am assuming the human can see when the robot turns into play state
+            #(i.e. thanks to an external LED mounted on the robotic dog)
             while (rospy.get_param('state') == 'play'):
+                while (rospy.get_param('play_task_status') ==  0):
+                    rate.sleep()
                 room_choice = random.randint(0, 5)
-                order_string = 'Human: GoTo ' + room_list[room_choice]
-                rospy.loginfo(order_string)
+                #order_string = 'Human: GoTo ' + room_list[room_choice]
+                #rospy.loginfo(order_string)
+                rospy.loginfo('Human: GoTo %s', room_list[room_choice])
                 voice_pub.publish(room_list[room_choice])
                 #room_name = room_list[room_choice]
                 #room_goal = assignment3.msg.roomPlanningGoal(target_pose = room_name)
@@ -66,10 +71,8 @@ def human():
                 #home_goal = assignment3.msg.homePlanningGoal(target_pose = home_pos)
                 #home_action_client.send_goal(home_goal)
                 #home_action_client.wait_for_result()
-                rospy.set_param('play_task_done', 0)
-                while(not rospy.get_param('play_task_done')): #ricordati di settare a 1 nella fsm o in altro nodo!
+                while (rospy.get_param('play_task_status') !=  3):
                     rate.sleep()
-                rospy.loginfo('Human: home reached') #da eliminare
                 #con questa scelta nella fsm devo mettere il stop play counter (go back to normal)
                 #che si basa su if last position requested (o controlla lui la sua posizione attuale)
                 # == home allora puoi smettere. non voglio che smetta mentre è a metà di sto coso
