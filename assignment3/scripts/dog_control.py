@@ -395,6 +395,8 @@ class image_feature:
 
         elif(rospy.get_param('state') == 'find'):
             time.sleep(1)#explore lite...
+            #poi ci vuole il tracking dei colori come per normal
+            #ma con la differenza che se vedo il colore obiettivo poi torno in play
 
         elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'): # basta anche solo un else qui
             #con questo assumo che il robot dia priorita ai comandi dell'uomo

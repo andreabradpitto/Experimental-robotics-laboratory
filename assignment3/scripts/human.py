@@ -55,8 +55,10 @@ def human():
                 rate.sleep()
             #I am assuming the human can see when the robot turns into play state
             #(i.e. thanks to an external LED mounted on the robotic dog)
-            while (rospy.get_param('state') == 'play'):
+            while (rospy.get_param('state') == 'play' or rospy.get_param('state') == 'find'):
                 while (rospy.get_param('play_task_status') ==  0):
+                #while (rospy.get_param('play_task_status') ==  0 or rospy.get_param('play_task_status') ==  3):
+                #magari cosi con questo while sono piu sicuro nel passaggio da find a play
                     rate.sleep()
                 room_choice = random.randint(0, 5)
                 #order_string = 'Human: GoTo ' + room_list[room_choice]
