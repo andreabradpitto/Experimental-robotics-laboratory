@@ -153,7 +153,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -199,7 +199,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -245,7 +245,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -291,7 +291,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -337,7 +337,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -383,7 +383,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -426,7 +426,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 blue_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and
@@ -453,7 +454,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -478,7 +479,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 red_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle and
@@ -505,7 +507,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -530,7 +532,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 green_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and
@@ -557,7 +560,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -582,7 +585,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 yellow_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the yellow mask, then use
                 # it to compute the minimum enclosing circle and
@@ -609,7 +613,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -634,7 +638,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 magenta_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and
@@ -661,7 +666,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)
@@ -686,7 +691,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 black_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
-                explore_client.send_goal(0)
+                #explore_client.send_goal(0)
+                explore_client.cancel_all_goals()
 
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and
@@ -713,7 +719,7 @@ class image_feature:
                 else:
                     #qui siamo arrivati nella stanza. segna la posizione
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
                     rospy.set_param('dog/x', pos.pose.pose.position.x)

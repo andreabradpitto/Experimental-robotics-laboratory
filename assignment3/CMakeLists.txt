@@ -78,7 +78,7 @@ add_message_files(
 ## Generate actions in the 'action' folder
  add_action_files(
    FILES
-   IntAction.action
+   Int.action
  )
 
 ## Generate added messages and services with any dependencies listed here
@@ -216,7 +216,7 @@ target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
- install(TARGETS ${PROJECT_NAME}
+ install(TARGETS ${PROJECT_NAME}_node
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
