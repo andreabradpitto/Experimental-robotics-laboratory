@@ -19,6 +19,11 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   tf
   actionlib_msgs
+  actionlib
+  costmap_2d
+  map_msgs
+  move_base_msgs
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -71,10 +76,10 @@ add_message_files(
  )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action2.action
-# )
+ add_action_files(
+   FILES
+   IntAction.action
+ )
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
@@ -116,7 +121,20 @@ add_message_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES assignment3
-  CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs geometry_msgs rospy std_msgs message_runtime
+  CATKIN_DEPENDS
+  cv_bridge
+  image_transport
+  roscpp
+  sensor_msgs
+  geometry_msgs
+  rospy
+  std_msgs
+  message_runtime
+  actionlib_msgs
+  map_msgs
+  move_base_msgs
+  nav_msgs
+  visualization_msgs
   DEPENDS OpenCV
 )
 
@@ -127,8 +145,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
+  include
 )
 
 ## Declare a C++ library
@@ -146,6 +164,13 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/example.cpp)
 # add_executable(${PROJECT_NAME}_node_t src/example_transport.cpp)
+add_executable(${PROJECT_NAME}_node
+  src/costmap_client.cpp
+  src/explore.cpp
+  src/frontier_search.cpp
+)
+add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -177,7 +202,9 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  install(PROGRAMS
-   scripts/human.py scripts/dog_fsm.py scripts/dog_control.py
+   scripts/human.py
+   scripts/dog_fsm.py
+   scripts/dog_control.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
@@ -189,11 +216,12 @@ include_directories(
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-# )
+ install(TARGETS ${PROJECT_NAME}
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+ )
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -208,6 +236,10 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
 
 #############
 ## Testing ##

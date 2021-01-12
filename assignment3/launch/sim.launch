@@ -121,7 +121,9 @@
     <!-- parameter used to specify whether a new ball has been detected or not -->
     <param name='new_ball_detected' type='int' value='0'/>
     <!-- parameter used to scale simulation velocity -->
-    <param name='sim_scale' type='int' value='1'/> <!-- da mettere in assignment.launch -->
+    <!--<param name='sim_scale' type='int' value='1'/>-->
+    <!-- parameter used to identify which ball has to be looked for -->
+    <param name='unknown_ball' type='int' value='100'/>
     
     <param name='play_task_status' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
@@ -150,6 +152,21 @@
          the human. The ball can also be hidden -->
     <node pkg='assignment3' type='human.py'
       name='human_node' output='screen' respawn="false"/>
+
+  <node pkg="assignment3" type="explore" respawn="false" name="explore_node" output="screen">
+    <!--togliere output = screen-->
+    <param name="robot_base_frame" value="link_chassis"/>
+    <param name="costmap_topic" value="map"/>
+    <param name="costmap_updates_topic" value="map_updates"/>
+    <param name="visualize" value="true"/>
+    <param name="planner_frequency" value="0.33"/>
+    <param name="progress_timeout" value="30.0"/>
+    <param name="potential_scale" value="3.0"/>
+    <param name="orientation_scale" value="0.0"/>
+    <param name="gain_scale" value="1.0"/>
+    <param name="transform_tolerance" value="0.3"/>
+    <param name="min_frontier_size" value="0.75"/>
+  </node>
 
     <!--<rosparam file="$(find assignment3)/config/motor_config.yaml" command="load"/>-->
     <!--<node name="controller_spawner_node" pkg="controller_manager" type="spawner"
