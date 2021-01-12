@@ -66,10 +66,6 @@
   <!-- parameters -->
     <!-- parameter specifying robot current state -->
     <param name='state' type='string' value='sleep'/>
-    <!-- parameter specifying robot current position (x coordinate) -->
-    <param name='dog/x' type='double' value='0'/>
-    <!-- parameter specifying robot current position (y coordinate) -->
-    <param name='dog/y' type='double' value='0'/>
     <!-- parameter specifying the maximum x-axis value for the map -->
     <param name='map/x_max' type='int' value='9'/>
     <!-- parameter specifying the maximum y-axis value for the map -->
@@ -82,18 +78,6 @@
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
     <param name='home/y' type='int' value='8'/>
-    <!-- parameter used to specify whether the blue ball has been detected or not -->
-    <!--<param name='blue_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify whether the red ball has been detected or not -->
-    <!--<param name='red_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify whether the green ball has been detected or not -->
-    <!--<param name='green_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify whether the yellow ball has been detected or not -->
-    <!--<param name='yellow_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify whether the magenta ball has been detected or not -->
-    <!--<param name='magenta_detected' type='int' value='0'/>-->
-    <!-- parameter used to specify whether the green black has been detected or not -->
-    <!--<param name='black_detected' type='int' value='0'/>-->
     <!-- parameter used to specify the x coordinate of the blue ball, once discovered -->
     <param name='blue/x' type='double' value='100'/>
     <!-- parameter used to specify the y coordinate of the blue ball, once discovered -->

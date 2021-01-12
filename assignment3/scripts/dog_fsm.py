@@ -13,9 +13,8 @@ import random
 import assignment3
 import actionlib
 from std_msgs.msg import String
-from assignment3.msg import Coordinates
-from assignment3.srv import BallService # magari inutile (anche quello sopra) visto che
-                                        # ho import assignment3
+from assignment3.msg import Coordinates # needed?
+from assignment3.srv import BallService # needed?
 from assignment3.action import IntAction
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
@@ -36,7 +35,6 @@ home_x = rospy.get_param('home/x')
 home_y = rospy.get_param('home/y')
 
 room_list = rospy.get_param('room_list')
-#room_list = ['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']
 
 ## Acquire simulation speed scaling factor from launch file
 sim_scale = rospy.get_param('sim_scale')
@@ -68,7 +66,6 @@ class Sleep(smach.State):
         global first_iteration, energy_timer
         rospy.set_param('state','sleep')
         self.rate = rospy.Rate(200)
-        #pos = Coordinates()
         mb_sleep_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         home_pos = MoveBaseGoal()
         #home_pos.target_pose.pose.orientation.w = 1.0
@@ -76,27 +73,16 @@ class Sleep(smach.State):
         home_pos.target_pose.header.stamp = rospy.Time.now()
         home_pos.target_pose.pose.position.x = home_x # set target as the home position (x-axis)
         home_pos.target_pose.pose.position.y = home_y # set target as the home position (y-axis)
-        #pos.x = home_x # set target as the home position (x-axis)
-        #pos.y = home_y # set target as the home position (y-axis)
-        #pub_sleep = rospy.Publisher('control_topic', Coordinates, queue_size=10)
         if first_iteration == 0:
             rospy.loginfo('Dog: I am going to spleep!')
             time.sleep(random.randint(2, 5) / sim_scale)
         else:
             time.sleep(random.randint(2, 5) / sim_scale) 
-        #rospy.set_param('position_reached', 0)
-        #pub_sleep.publish(pos)
         mb_sleep_client.send_goal(home_pos)
         mb_sleep_client.wait_for_result()
-        #while(not rospy.get_param('position_reached')):
-        #    self.rate.sleep()
         if (first_iteration == 0):
             rospy.loginfo('Dog: home position reached!')
-            rospy.set_param('dog/x', home_x)
-            rospy.set_param('dog/y', home_y)
         elif(rospy.get_param('state') == 'sleep'):
-            rospy.set_param('dog/x', home_x)
-            rospy.set_param('dog/y', home_y)
             first_iteration = 0    
         time.sleep(random.randint(2, 5) / sim_scale) # the dog is sleeping
         energy_timer = random.randint(2, 7)
@@ -136,32 +122,15 @@ class Normal(smach.State):
                  goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)
             while(rospy.get_param('new_ball_detected') == 0):
                 mb_normal_client.wait_for_result()
-                #tecnicamente credo che cosi lui giri finche il dog non arriva a goal,
+                #credo che cosi lui giri finche il dog non arriva a goal,
                 #il goal e impossibile o una nuova palla viene individuata
                 # se goal impossibile o raggiunto vado avanti subito direi
-                #mentre se appare palla mi fermo a meta lavoro ma nell'if sotto cancello
-                #il goal
-
-                #controlla status goal, se succeeded printo e aggiorno posizione corretta
-                #altrimenti faccio get param posizione corrente e la setto nel param server
-                #questo è il caso caso in cui fallisce (goal impossibile)
-
+                #mentre se appare una palla mi fermo a meta lavoro,
+                #ma nell'if sotto cancello il goal
             if(rospy.get_param('new_ball_detected') == 1):
                 mb_normal_client.cancel_all_goals()
-            #    qui ci va codice "track sub-state":
-            #    il movimento meglio farlo gestire all'altro nodo
-            #    devo settare nuova pos palla eccetera...
             while(rospy.get_param('new_ball_detected') == 1):
-                self.rate.sleep # e ok cosi questo sleep?
-
-            #pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-            #pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            #rospy.set_param('dog/x', pos.pose.pose.position.x)
-            #rospy.set_param('dog/y', pos.pose.pose.position.y)
-
-            #scopri quale palla è stata scoperta e assegna la stanza corrispondente
-            #forse meglio far gestire questo a play
-            
+                self.rate.sleep        
             energy_timer = energy_timer - 1	
             self.rate.sleep
 
@@ -215,9 +184,7 @@ class Play(smach.State):
         mb_play_client.wait_for_result()
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_status', 1)
-        #while ((not rospy.is_shutdown()) and energy_timer != 1 \
-                        #and rospy.get_param('unknown_ball') == 100 and rospy.get_param('state') == 'play'):
-        #NB ora tornero sempre in normal con una mossa disponibile: assumo che
+        # ora tornero sempre in normal con una mossa disponibile: assumo che
         # il play state richieda piu batteria
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                         and rospy.get_param('state') == 'play'):

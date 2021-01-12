@@ -32,9 +32,6 @@ import actionlib
 
 from assignment3.action import IntAction
 
-## Acquire simulation speed scaling factor from launch file
-sim_scale = rospy.get_param('sim_scale')
-
 blueLower = (100, 50, 50)
 blueUpper = (130, 255, 255)
 redLower = (0, 50, 50)
@@ -47,8 +44,6 @@ magentaLower = (125, 50, 50) # non so se va bene perche si overlappa col blue
 magentaUpper = (150, 255, 255)
 blackLower = (0, 0, 0)
 blackUpper = (5, 50, 50)
-#per decidere basta guardare la prima cifra, a parte tra 0 e 5 in cui
-#si guarda la seconda per spareggio nero-rosso. forse non si fa cosi mi sa
 
 blue_solved = 0 # 0 = not yet discovered; 1 = in progress; 2 = done
 red_solved = 0
@@ -56,8 +51,6 @@ green_solved = 0
 yellow_solved = 0
 magenta_solved = 0
 black_solved = 0
-
-room_color = rospy.get_param('room_color')
 
 ## Class used to control the robotic dog during its Play state. It uses
 # OpenCV in order to acquire images of the playing field and seeks a green ball.
@@ -73,12 +66,6 @@ class image_feature:
 
         self.vel_pub = rospy.Publisher("cmd_vel",
                                        Twist, queue_size=1)
-
-        #self.ball_pub = rospy.Publisher("ball_detection_topic", Int64, queue_size=1) 
-        # potrebbe essere stato utile tenere il vecchio ball. serviva per discernere
-        # anche tra play state e normal, mandando 1 o 2 sul topic
-        
-        # ma non so se serve ora, ho il param new_ball_detected che se funziona e ottimo
 
         # subscribed topic
         self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
@@ -96,10 +83,8 @@ class image_feature:
     def callback(self, ros_data):
         '''Callback function of subscribed topic. 
         Here images get converted and features detected'''
-        #global blueLower, blueUpper, redLower, redUpper, greenLower, greenUpper, \
-        #        yellowLower, yellowUpper, magentaLower, magentaUpper, blackLower, blackUpper, \
-        #        blue_solved, red_solved, green_solved, yellow_solved, magenta_solved, black_solved
-        global blue_solved, red_solved, green_solved, yellow_solved, magenta_solved, black_solved
+        global blue_solved, red_solved, green_solved, \
+                yellow_solved, magenta_solved, black_solved
 
         if (rospy.get_param('state') == 'normal'):
             #### direct conversion to CV2 ####
@@ -120,21 +105,12 @@ class image_feature:
             # only proceed if at least one contour was found
 
             if(len(blueCnts) > 0 and blue_solved != 2 \
-                and red_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza blueCnts, o robe cosi...)
-                    #NB ho messo blue solved != 2 perche qui siamo in normal o find, non in play
+                     and red_solved != 1 and green_solved != 1 and yellow_solved != 1 \
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 blue_solved = 1
-
                 # find the largest contour in the blue mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(blueCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -144,14 +120,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
@@ -166,21 +145,12 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(redCnts) > 0 and red_solved != 2 \
-                and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza redCnts, o robe cosi...)
-                    #NB ho messo red solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 red_solved = 1
-
                 # find the largest contour in the red mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle centroid
                 c = max(redCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -190,14 +160,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a green dot
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
@@ -212,21 +185,12 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza greenCnts, o robe cosi...)
-                    #NB ho messo green solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 green_solved = 1
-
                 # find the largest contour in the green mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(greenCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -236,14 +200,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
@@ -258,21 +225,12 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza yellowCnts, o robe cosi...)
-                    #NB ho messo yellow solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 yellow_solved = 1
-
                 # find the largest contour in the yellow mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(yellowCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -282,14 +240,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2) # cerchio magenta
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a magenta circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
@@ -304,21 +265,12 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    yellow_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza magentaCnts, o robe cosi...)
-                    #NB ho messo magenta solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                     and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 magenta_solved = 1
-
                 # find the largest contour in the magenta mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(magentaCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -328,14 +280,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a green dot
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
@@ -350,21 +305,12 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    yellow_solved != 1 and magenta_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza blackCnts, o robe cosi...)
-                    #NB ho messo black solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                     and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 black_solved = 1
-
                 # find the largest contour in the black mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(blackCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -374,14 +320,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
@@ -398,10 +347,6 @@ class image_feature:
 
 
         elif(rospy.get_param('state') == 'find'):
-            # ci vuole il tracking dei colori come per normal
-            #ma con la differenza che se vedo il colore obiettivo poi torno in play
-            #devo capire quale palla cercare e vedere se trovo altre nuove
-
             #### direct conversion to CV2 ####
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
@@ -420,24 +365,15 @@ class image_feature:
             # only proceed if at least one contour was found
 
             if(len(blueCnts) > 0 and blue_solved != 2 \
-                and red_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza blueCnts, o robe cosi...)
-                    #NB ho messo blue solved != 2 perche qui siamo in normal o find, non in play
+                     and red_solved != 1 and green_solved != 1 and yellow_solved != 1
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 blue_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
-
                 # find the largest contour in the blue mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(blueCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -447,14 +383,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
@@ -464,6 +403,7 @@ class image_feature:
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 0:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -473,24 +413,15 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(redCnts) > 0 and red_solved != 2 \
-                and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza redCnts, o robe cosi...)
-                    #NB ho messo red solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 red_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
-
                 # find the largest contour in the red mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(redCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -500,14 +431,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a green dot
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
@@ -517,6 +451,7 @@ class image_feature:
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 1:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -526,24 +461,15 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza greenCnts, o robe cosi...)
-                    #NB ho messo green solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 green_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
-
                 # find the largest contour in the green mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(greenCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -553,14 +479,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
@@ -570,6 +499,7 @@ class image_feature:
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 2:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -579,11 +509,8 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    magenta_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza yellowCnts, o robe cosi...)
-                    #NB ho messo yellow solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                     and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 yellow_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
@@ -591,12 +518,7 @@ class image_feature:
                 explore_client.cancel_all_goals()
 
                 # find the largest contour in the yellow mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(yellowCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -606,14 +528,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2) # cerchio magenta
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a magenta circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
@@ -623,6 +548,7 @@ class image_feature:
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 3:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -632,24 +558,15 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    yellow_solved != 1 and black_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza magentaCnts, o robe cosi...)
-                    #NB ho messo magenta solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                     and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 magenta_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
-
                 # find the largest contour in the magenta mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(magentaCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -659,14 +576,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a green dot
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
@@ -676,6 +596,7 @@ class image_feature:
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 4:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -685,24 +606,15 @@ class image_feature:
                 cv2.waitKey(2)
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
-                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
-                    yellow_solved != 1 and magenta_solved != 1):
-                    # per il play state (quando cerco la palla posso copiare questo
-                    # senza blackCnts, o robe cosi...)
-                    #NB ho messo black solved != 2 perche qui siamo in normal o find, non in play
+                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                     and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 black_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
-
                 # find the largest contour in the black mask, then use
-                # it to compute the minimum enclosing circle and
-                # centroid
-                #if not rospy.get_param('state') == 'sleep':
-                #    rospy.set_param('ball_detected', 1)
-
-                #self.ball_pub.publish(1)
+                # it to compute the minimum enclosing circle and centroid
                 c = max(blackCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
                 M = cv2.moments(c)
@@ -712,14 +624,17 @@ class image_feature:
                 if(center != 400 or radius != 100):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
-                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    # draw a yellow circle
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    # draw a red dot
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1)
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
                     self.vel_pub.publish(vel)
                 else:
-                    #qui siamo arrivati nella stanza. segna la posizione
+                    # the robot reached the ball: store coordinates
+                    # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
@@ -729,6 +644,7 @@ class image_feature:
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 5:
+                        # this was the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -736,10 +652,6 @@ class image_feature:
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
                 cv2.waitKey(2)
-
-
-            #qui ce un action client che comunica 0 a explore.cpp quando abbiamo fatto
-            rospy.set_param('find_task_status', 0)
 
 
 
