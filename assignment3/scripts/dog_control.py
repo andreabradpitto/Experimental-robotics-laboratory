@@ -395,6 +395,8 @@ class image_feature:
                 cv2.imshow('window', image_np)
                 cv2.waitKey(2)
 
+
+
         elif(rospy.get_param('state') == 'find'):
             # ci vuole il tracking dei colori come per normal
             #ma con la differenza che se vedo il colore obiettivo poi torno in play
@@ -738,6 +740,8 @@ class image_feature:
 
             #qui ce un action client che comunica 0 a explore.cpp quando abbiamo fatto
             rospy.set_param('find_task_status', 0)
+
+
 
         elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'): # basta anche solo un else qui
             #con questo assumo che il robot dia priorita ai comandi dell'uomo

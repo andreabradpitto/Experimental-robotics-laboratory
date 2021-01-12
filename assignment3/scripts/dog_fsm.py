@@ -51,6 +51,8 @@ play_ball_request = 100
 
 energy_timer = random.randint(4, 7)
 
+
+
 ## Sleep state definition
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes and subscribe to the
