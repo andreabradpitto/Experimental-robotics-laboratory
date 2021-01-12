@@ -125,7 +125,7 @@
     
     <param name='play_task_status' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
-    <param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>
+    <!--<param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>-->
 
   <!-- nodes -->
     <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->

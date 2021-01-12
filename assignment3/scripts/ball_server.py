@@ -5,7 +5,7 @@ from assignment3.msg import Coordinates
 import rospy
 
 def match_balls(req):
-    res = Coordinates()
+    #res = Coordinates()
     if req == 0:
         res.x = rospy.get_param('blue/x')
         res.y = rospy.get_param('blue/y')

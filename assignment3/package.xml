@@ -2,7 +2,7 @@
 <package format="2">
   <name>assignment3</name>
   <version>1.0.0</version>
-  <description>The experimental robotics laboratory assignment 3 package</description>
+  <description>The Experimental robotics laboratory assignment 3 package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -82,7 +82,6 @@
   <exec_depend>tf</exec_depend>
   <exec_depend>message_generation</exec_depend>
   <exec_depend>actionlib_msgs</exec_depend>
-  <exec_depend>message_runtime</exec_depend> <!--aggiunto dopo... controla anche licenza sopra-->
 
 
   <!-- The export tag contains other, unspecified, tags -->

@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['head_5fmoved_16',['head_moved',['../namespacedog__control__ball.html#a79a8e2a2e7d722c13fe564f5586156b1',1,'dog_control_ball']]],
-  ['home_5fx_17',['home_x',['../namespacedog__fsm.html#a4888e11009af177900f20e31439a6472',1,'dog_fsm']]],
-  ['home_5fy_18',['home_y',['../namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5',1,'dog_fsm']]],
-  ['human_19',['human',['../namespacehuman.html',1,'human'],['../namespacehuman.html#aafd7ef3bb2e481deba422bb8520d448b',1,'human.human()']]]
-];

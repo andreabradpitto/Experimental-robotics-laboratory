@@ -48,19 +48,7 @@ playtime = 0
 
 play_ball_request = 100
 
-# forse questo puo non essere usato, ci sono le cose nel param settate dallaltro nodo
-blue = Coordinates()
-red = Coordinates()
-green = Coordinates()
-yellow = Coordinates()
-magenta = Coordinates()
-black = Coordinates()
-ball_locations = [blue, red, green, yellow, magenta, black]
-for ball in ball_locations:
-    ball.x = 100
-    ball.y = 100
-
-
+unknown_ball = 100
 
 ## Sleep state definition
 class Sleep(smach.State):
@@ -208,11 +196,10 @@ class Play(smach.State):
     # robot gets back to the Normal state
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        global play_ball_request
+        global play_ball_request, unknown_ball
         rospy.set_param('state', 'play')
         self.rate = rospy.Rate(200)
         normal_timer = (random.randint(2, 7) / sim_scale)
-        unknown_ball = 0
         mb_play_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         target_pos = MoveBaseGoal()
         #ball_location = BallService()
@@ -224,14 +211,17 @@ class Play(smach.State):
         mb_play_client.wait_for_result()
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_status', 1)
+        #while ((not rospy.is_shutdown()) and normal_timer != 0 \
+                        #and unknown_ball == 100 and rospy.get_param('state') == 'play'):
         while ((not rospy.is_shutdown()) and normal_timer != 0 \
-                        and unknown_ball != 1 and rospy.get_param('state') == 'play'):
+                        and rospy.get_param('state') == 'play'):
             rospy.set_param('play_task_status', 0)
             while(play_ball_request == 100):
                 self.rate.sleep
             rospy.wait_for_service('BallService')
             ball_service_client = rospy.ServiceProxy('BallService', BallService)
             ball_location = ball_service_client(play_ball_request)
+            temp_unknown_ball = play_ball_request
             play_ball_request = 100
             if (ball_location.x != 100 and ball_location.y != 100):
                 #target_pos.target_pose.pose.orientation.w = 1.0
@@ -252,21 +242,21 @@ class Play(smach.State):
                 rospy.loginfo('Dog: I am finally back to you')
                 rospy.set_param('play_task_status', 3)        
                 normal_timer = normal_timer - 1
-
             else:
-                unknown_ball = 1
+                unknown_ball = temp_unknown_ball
+                break
             self.rate.sleep
 
         if normal_timer == 0:
             return 'game_over'
 
-        elif unknown_ball == 1:
+        elif unknown_ball != 100:
             return 'go_find'
 
     ## Play state callback: as the dog has lost the ball, order the
     # finite state machine to get back to the Normal state
     def play_callback(self, data):
-        global room_list, play_ball_request
+        global play_ball_request
         if (rospy.get_param('state') == 'play'):
             #order_string = 'Dog: I will to GoTo the ' + data.data
             #rospy.loginfo(order_string)
@@ -294,7 +284,7 @@ class Find(smach.State):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['game_over'])
-        rospy.Subscriber('ball_control_topic', Int64, self.play_callback_ball)
+        rospy.Subscriber('ball_control_topic', Int64, self.find_callback)
 
     ## Find state execution: the robotic dog follows the ball as long as
     # it is in his sight. If the ball is still, the dog starts turning
@@ -302,19 +292,20 @@ class Find(smach.State):
     # robot gets back to the Normal state
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
+        global unknown_ball #ricorda di settarla a 100 poi quando finisci
         self.rate = rospy.Rate(200)
-        rospy.set_param('state', 'play')
+        rospy.set_param('state', 'find')
         while ((not rospy.is_shutdown()) and playtime == 1 \
-            and rospy.get_param('state') == 'play'):
+            and rospy.get_param('state') == 'find'):
             self.rate.sleep
-        return 'game_over'
+        return 'find_over'
 
     ## Find state callback: as the dog has lost the ball, order the
     # finite state machine to get back to the Normal state
-    def play_callback_ball(self, data):
+    def find_callback(self, data):
         global playtime
-        if (rospy.get_param('state') == 'play' and rospy.get_param('ball_detected') == 0):
-            rospy.loginfo('Dog: I have lost the ball :(')
+        if (rospy.get_param('state') == 'find'):
+            rospy.loginfo('Dog: miao')
             playtime = 0
 
 

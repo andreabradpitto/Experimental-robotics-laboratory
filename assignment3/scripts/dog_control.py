@@ -1,185 +1,421 @@
 #!/usr/bin/env python
 
-## @package dog_control
-# Implements a control for the robotic dog that guides it to the
-# goal location. This works only when the dog's finite state machine is
-# in the Normal or Sleep states
+## @package dog_control_ball
+# Implements a control for the robotic dog that lets him follow the ball
+# and move the head. This works only when the dog's finite state machine is
+# in the Play state
 
+# Python libs
 import sys
-import numpy as np
-import rospy
-import roslib
-import random
 import time
-import math
-import assignment3.msg
-from assignment3.msg import Coordinates
-from geometry_msgs.msg import Twist, Point
+
+# numpy and scipy
+import numpy as np
+from scipy.ndimage import filters
+
+import imutils
+
+# OpenCV
+import cv2
+
+# Ros libraries
+import roslib
+import rospy
+
+# Ros Messages
+from sensor_msgs.msg import CompressedImage
+from geometry_msgs.msg import Twist
+
+from std_msgs.msg import Int64
 from nav_msgs.msg import Odometry
-from tf import transformations
 
-# robot state variables
-position_ = Point()
-final_position = Point()
-yaw_ = 0
-# machine state
-state_ = 0
-# goal
-desired_position_ = Point()
-desired_position_.x = 0
-desired_position_.y = 0
-desired_position_.z = 0
-# parameters
-yaw_precision_ = math.pi / 9  # +/- 20 degree allowed
-yaw_precision_2_ = math.pi / 90  # +/- 2 degree allowed
-dist_precision_ = 0.1
-kp_a = 3.0  # It may be necessary to change the sign of this proportional controller
-kp_d = 0.2
-ub_a = 0.6
-lb_a = -0.5
-ub_d = 0.6
+## Acquire simulation speed scaling factor from launch file
+sim_scale = rospy.get_param('sim_scale')
 
-# publishers
-pub = None
+blueLower = (100, 50, 50)
+blueUpper = (130, 255, 255)
+redLower = (0, 50, 50)
+redUpper = (5, 255, 255)
+greenLower = (50, 50, 50)
+greenUpper = (70, 255, 255)
+yellowLower = (25, 50, 50)
+yellowUpper = (35, 255, 255)
+magentaLower = (125, 50, 50) # non so se va bene perche si overlappa col blue
+magentaUpper = (150, 255, 255)
+blackLower = (0, 0, 0)
+blackUpper = (5, 50, 50)
+#per decidere basta guardare la prima cifra, a parte tra 0 e 5 in cui
+#si guarda la seconda per spareggio nero-rosso. forse non si fa cosi mi sa
 
-## Callback function that triggers every time something is sent on the
-# odom topic. It simply sets globabl variables values, and converts
-# quaternions into euler angles, in order to obtain the yaw value
-def clbk_odom(msg):
-    global position_
-    global yaw_
+blue_solved = 0 # 0 = not yet discovered; 1 = in progress; 2 = done
+red_solved = 0
+green_solved = 0
+yellow_solved = 0
+magenta_solved = 0
+black_solved = 0
 
-    # position
-    position_ = msg.pose.pose.position
+room_color = rospy.get_param('room_color')
 
-    # yaw
-    quaternion = (
-        msg.pose.pose.orientation.x,
-        msg.pose.pose.orientation.y,
-        msg.pose.pose.orientation.z,
-        msg.pose.pose.orientation.w)
-    euler = transformations.euler_from_quaternion(quaternion)
-    yaw_ = euler[2]
+## Class used to control the robotic dog during its Play state. It uses
+# OpenCV in order to acquire images of the playing field and seeks a green ball.
+class image_feature:
 
-## Function used to change state of this node's control pattern
-def change_state(state):
-    global state_
-    state_ = state
+    def __init__(self):
+        '''Initialize ros publisher, ros subscriber'''
+        rospy.init_node('dog_control_ball_node', anonymous = True)
 
-## Function used to normalize, with respect to pi, incoming angles
-def normalize_angle(angle):
-    if(math.fabs(angle) > math.pi):
-        angle = angle - (2 * math.pi * angle) / (math.fabs(angle))
-    return angle
+        # topic over which camera images get published
+        self.image_pub = rospy.Publisher("output/image_raw/compressed",
+                                         CompressedImage, queue_size=1)
 
-## Step of the control algorithm which is devoted to the robotic dog's yaw
-# (orientation) adjustments
-def fix_yaw(des_pos):
-    global yaw_, pub, yaw_precision_2_, state_, pub_over
-    desired_yaw = math.atan2(des_pos.y - position_.y, des_pos.x - position_.x)
-    err_yaw = normalize_angle(desired_yaw - yaw_)
+        self.vel_pub = rospy.Publisher("cmd_vel",
+                                       Twist, queue_size=1)
 
-    twist_msg = Twist()
-    if math.fabs(err_yaw) > yaw_precision_2_:
-        twist_msg.angular.z = kp_a*err_yaw
-        if twist_msg.angular.z > ub_a:
-            twist_msg.angular.z = ub_a
-        elif twist_msg.angular.z < lb_a:
-            twist_msg.angular.z = lb_a
-    if rospy.get_param('ball_detected') == 0:
-        pub.publish(twist_msg)
+        #self.ball_pub = rospy.Publisher("ball_detection_topic", Int64, queue_size=1) 
+        # potrebbe essere stato utile tenere il vecchio ball. serviva per discernere
+        # anche tra play state e normal, mandando 1 o 2 sul topic
+        
+        # ma non so se serve ora, ho il param new_ball_detected che se funziona e ottimo
 
-        # state change conditions
-        if math.fabs(err_yaw) <= yaw_precision_2_:
-            change_state(1)
-    else:
-        change_state(2)
+        # subscribed topic
+        self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
+                                           CompressedImage, self.callback,  queue_size=1)
 
-## Step of the control algorithm which is devoted to the robotic dog's linear
-# translation. This is carried out after the orientation of the dog has
-# been properly set, but it then also checks if it has to be fixed again
-def go_straight_ahead(des_pos):
-    global yaw_, pub, yaw_precision_, state_, final_position, pub_over
-    desired_yaw = math.atan2(des_pos.y - position_.y, des_pos.x - position_.x)
-    err_yaw = desired_yaw - yaw_
-    err_pos = math.sqrt(pow(des_pos.y - position_.y, 2) +
-                        pow(des_pos.x - position_.x, 2))
-    err_yaw = normalize_angle(desired_yaw - yaw_)
-    if rospy.get_param('ball_detected') == 0:
-        if err_pos > dist_precision_:
-            twist_msg = Twist()
-            twist_msg.linear.x = 0.3
-            if twist_msg.linear.x > ub_d:
-                twist_msg.linear.x = ub_d
+    def computeCount(self, hsv, colorLower, colorUpper):
+            colorMask = cv2.inRange(hsv, colorLower, colorUpper)
+            colorMask = cv2.erode(colorMask, None, iterations=2)
+            colorMask = cv2.dilate(colorMask, None, iterations=2)
+            colorCnts = cv2.findContours(colorMask.copy(), cv2.RETR_EXTERNAL,
+                                    cv2.CHAIN_APPROX_SIMPLE)
+            colorCnts = imutils.grab_contours(colorCnts)
+            return colorCnts
 
-            twist_msg.angular.z = kp_a*err_yaw
-            pub.publish(twist_msg)
-        else:
-            final_position.x = round(position_.x)
-            final_position.y = round(position_.y)
-            change_state(2)
+    def callback(self, ros_data):
+        '''Callback function of subscribed topic. 
+        Here images get converted and features detected'''
+        #global blueLower, blueUpper, redLower, redUpper, greenLower, greenUpper, \
+        #        yellowLower, yellowUpper, magentaLower, magentaUpper, blackLower, blackUpper, \
+        #        blue_solved, red_solved, green_solved, yellow_solved, magenta_solved, black_solved
+        global blue_solved, red_solved, green_solved, yellow_solved, magenta_solved, black_solved
 
-        # state change conditions
-        if math.fabs(err_yaw) > yaw_precision_:
-            change_state(0)
+        if (rospy.get_param('state') == 'normal'):
+            #questo magari sara solo per normal; find ha da usare explore_lite
+            #### direct conversion to CV2 ####
+            np_arr = np.fromstring(ros_data.data, np.uint8)
+            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
-    else:
-        change_state(2)
+            blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
+            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
-## Function used at the end of the algorithms. It stops the robot where it is
-def done():
-    twist_msg = Twist()
-    twist_msg.linear.x = 0
-    twist_msg.angular.z = 0
-    pub.publish(twist_msg)
+            blueCnts = image_feature.computeCount(self, hsv, blueLower, blueUpper)
+            redCnts = image_feature.computeCount(self, hsv, redLower, redUpper)
+            greenCnts = image_feature.computeCount(self, hsv, greenLower, greenUpper)
+            yellowCnts = image_feature.computeCount(self, hsv, yellowLower, yellowUpper)
+            magentaCnts = image_feature.computeCount(self, hsv, magentaLower, magentaUpper)
+            blackCnts = image_feature.computeCount(self, hsv, blackLower, blackUpper)
 
-## control_topic callback. It implements the robotic dog movements,
-# guiding it to the goal, then publishes the reached position on the 
-# motion_over_topic
-def control_cb(data):
-    global pub, state_, desired_position, final_position, pub_over
+            center = None
+            # only proceed if at least one contour was found
 
-    desired_position_.x = data.x
-    desired_position_.y = data.y
-    desired_position_.z = 0
+            if(len(blueCnts) > 0 and blue_solved != 2 \
+                and red_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
+                    magenta_solved != 1 and black_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza blueCnts, o robe cosi...)
+                    #NB ho messo blue solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                blue_solved = 1
 
-    pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
-    pub_over = rospy.Publisher('motion_over_topic', Coordinates, queue_size=1)
-    final_coords = Coordinates()
+                # find the largest contour in the blue mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
 
-    sub_odom = rospy.Subscriber('odom', Odometry, clbk_odom)
+                #self.ball_pub.publish(1)
+                c = max(blueCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
-    state_ = 0
-    rate = rospy.Rate(20)
-    while not (state_ == 3 or rospy.get_param('state') == 'play'):
-        if state_ == 0:
-            fix_yaw(desired_position_)
-        elif state_ == 1:
-            go_straight_ahead(desired_position_)
-        elif state_ == 2:
-            done()
-            final_coords.x = final_position.x
-            final_coords.y = final_position.y
-            pub_over.publish(final_coords)
-            state_ = 3
-        else:
-            rospy.logerr('Unknown state!')
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('blue/x', pos.pose.pose.position.x)
+                    rospy.set_param('blue/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    blue_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
 
-        rate.sleep()
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
 
+            elif(len(redCnts) > 0 and red_solved != 2 \
+                and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 and \
+                    magenta_solved != 1 and black_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza redCnts, o robe cosi...)
+                    #NB ho messo red solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                red_solved = 1
 
-## Initializes the dog_control_node and subscribes to the control_topic. manager_listener
-# keeps waiting for incoming motion requests from dog_fsm.py
-def manager_listener():
+                # find the largest contour in the red mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
 
-    rospy.init_node('dog_control_node', anonymous=True)
-    rospy.Subscriber('control_topic', Coordinates, control_cb)
+                #self.ball_pub.publish(1)
+                c = max(redCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
-    rospy.spin()
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('red/x', pos.pose.pose.position.x)
+                    rospy.set_param('red/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    red_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
+
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
+
+            elif(len(greenCnts) > 0 and green_solved != 2 \
+                and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 and \
+                    magenta_solved != 1 and black_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza greenCnts, o robe cosi...)
+                    #NB ho messo green solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                green_solved = 1
+
+                # find the largest contour in the green mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
+
+                #self.ball_pub.publish(1)
+                c = max(greenCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('green/x', pos.pose.pose.position.x)
+                    rospy.set_param('green/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    green_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
+
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
+
+            elif(len(yellowCnts) > 0 and yellow_solved != 2 \
+                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
+                    magenta_solved != 1 and black_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza yellowCnts, o robe cosi...)
+                    #NB ho messo yellow solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                yellow_solved = 1
+
+                # find the largest contour in the yellow mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
+
+                #self.ball_pub.publish(1)
+                c = max(yellowCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2) # cerchio magenta
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('yellow/x', pos.pose.pose.position.x)
+                    rospy.set_param('yellow/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    yellow_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
+
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
+
+            elif(len(magentaCnts) > 0 and magenta_solved != 2 \
+                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
+                    yellow_solved != 1 and black_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza magentaCnts, o robe cosi...)
+                    #NB ho messo magenta solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                magenta_solved = 1
+
+                # find the largest contour in the magenta mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
+
+                #self.ball_pub.publish(1)
+                c = max(magentaCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
+                    cv2.circle(image_np, center, 5, (0, 255, 0), -1) # puntino verde
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('magenta/x', pos.pose.pose.position.x)
+                    rospy.set_param('magenta/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    magenta_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
+
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
+
+            elif(len(blackCnts) > 0 and black_solved != 2 \
+                and blue_solved != 1 and red_solved != 1 and green_solved != 1 and \
+                    yellow_solved != 1 and magenta_solved != 1):
+                    # per il play state (quando cerco la palla posso copiare questo
+                    # senza blackCnts, o robe cosi...)
+                    #NB ho messo black solved != 2 perche qui siamo in normal o find, non in play
+                rospy.set_param('new_ball_detected', 1)
+                black_solved = 1
+
+                # find the largest contour in the black mask, then use
+                # it to compute the minimum enclosing circle and
+                # centroid
+                #if not rospy.get_param('state') == 'sleep':
+                #    rospy.set_param('ball_detected', 1)
+
+                #self.ball_pub.publish(1)
+                c = max(blackCnts, key=cv2.contourArea)
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+                # only proceed if the radius meets a minimum size
+                if(center != 400 or radius != 100):
+                    # draw the circle and centroid on the frame,
+                    # then update the list of tracked points
+                    cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2) # cerchio giallo
+                    cv2.circle(image_np, center, 5, (0, 0, 255), -1) # puntino rosso
+                    vel = Twist()
+                    vel.angular.z = -0.002 * (center[0] - 400)
+                    vel.linear.x = -0.01 * (radius - 100)
+                    self.vel_pub.publish(vel)
+                else:
+                    #qui siamo arrivati nella stanza. segna la posizione
+                    pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                    pos = Odometry() # DA COMMENTARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    rospy.set_param('black/x', pos.pose.pose.position.x)
+                    rospy.set_param('black/y', pos.pose.pose.position.y)
+                    rospy.set_param('dog/x', pos.pose.pose.position.x)
+                    rospy.set_param('dog/y', pos.pose.pose.position.y)
+                    black_solved = 2
+                    rospy.set_param('new_ball_detected', 0)
+
+                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+                cv2.imshow('window', image_np)
+                cv2.waitKey(2)
+
+        elif(rospy.get_param('state') == 'find'):
+            time.sleep(1)#explore lite...
+
+        elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'): # basta anche solo un else qui
+            #con questo assumo che il robot dia priorita ai comandi dell'uomo
+            #in play se ne frega se vede nuove palle
+            np_arr = np.fromstring(ros_data.data, np.uint8)
+            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+
+            image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
+            cv2.imshow('window', image_np)
+            cv2.waitKey(2)
+
+## Initializes the image_feature class and spins until interrupted by a keyboard command
+def main(args):
+    '''Initializes and cleanups ros node'''
+    ic = image_feature()
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        print ("Shutting down ROS Image feature detector module")
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
-    try:
-        manager_listener()
-    except rospy.ROSInterruptException:
-        pass
+    main(sys.argv)
