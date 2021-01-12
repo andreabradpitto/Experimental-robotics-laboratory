@@ -3,10 +3,10 @@
 
 #include <thread>
 
-#include <action/IntAction.h>
+#include <assignment3/IntAction.h>
 #include <actionlib/server/simple_action_server.h>
 
-typedef actionlib::SimpleActionServer<action::IntAction> Server;
+typedef actionlib::SimpleActionServer<assignment3::IntAction> Server;
 
 inline static bool operator==(const geometry_msgs::Point& one,
                               const geometry_msgs::Point& two)
@@ -264,7 +264,7 @@ void Explore::stop()
 }  // namespace explore
 
 
-void execute(const action::IntGoalConstPtr& goal, Server* as) 
+void execute(const assignment3::IntGoalConstPtr& goal, Server* as) 
 {
   //metterci un while(1) qui?
   explore::Explore explore;
