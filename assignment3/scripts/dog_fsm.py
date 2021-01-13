@@ -169,7 +169,6 @@ class Play(smach.State):
         self.rate = rospy.Rate(200)
         mb_play_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         target_pos = MoveBaseGoal()
-        #ball_location = BallService()
         target_pos.target_pose.header.frame_id = "map"
         target_pos.target_pose.header.stamp = rospy.Time.now()
         # set target as the home position (x-axis)

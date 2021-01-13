@@ -42,7 +42,7 @@ greenLower = (50, 50, 50)
 greenUpper = (70, 255, 255)
 yellowLower = (25, 50, 50)
 yellowUpper = (35, 255, 255)
-magentaLower = (125, 50, 50) # non so se va bene perche si overlappa col blue
+magentaLower = (125, 50, 50)
 magentaUpper = (150, 255, 255)
 blackLower = (0, 0, 0)
 blackUpper = (5, 50, 50)
@@ -138,11 +138,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -179,11 +176,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -220,11 +214,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -261,11 +252,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -302,11 +290,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -343,11 +328,8 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -382,7 +364,6 @@ class image_feature:
                 blue_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -407,15 +388,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 0:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -431,7 +409,6 @@ class image_feature:
                 red_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -456,15 +433,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 1:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -480,7 +454,6 @@ class image_feature:
                 green_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -505,15 +478,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 2:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -529,7 +499,6 @@ class image_feature:
                 yellow_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
 
                 # find the largest contour in the yellow mask, then use
@@ -555,15 +524,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 3:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -579,7 +545,6 @@ class image_feature:
                 magenta_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -604,15 +569,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 4:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -628,7 +590,6 @@ class image_feature:
                 black_solved = 1
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
-                #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -653,15 +614,12 @@ class image_feature:
                     # the robot reached the ball: store coordinates
                     # of the corresponding room
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                    #pos = Odometry()
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
-                    rospy.set_param('dog/x', pos.pose.pose.position.x)
-                    rospy.set_param('dog/y', pos.pose.pose.position.y)
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 5:
-                        # this was the ball the robot had to find
+                        # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
                         explore_client.send_goal(1)
@@ -671,9 +629,7 @@ class image_feature:
                 cv2.waitKey(2)
 
 
-
-        elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'):
-            # basta un else al posto di elif qui
+        else: # the robot is in Play or Sleep state
             #con questo assumo che il robot dia priorita ai comandi dell'uomo
             #in play se ne frega se vede nuove palle
             np_arr = np.fromstring(ros_data.data, np.uint8)

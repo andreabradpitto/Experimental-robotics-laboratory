@@ -70,11 +70,11 @@
     <param name='map/x_min' type='int' value='-9'/>
     <!-- parameter specifying the minimum y-axis value for the map -->
     <param name='map/y_min' type='int' value='-9'/>
-    <!-- parameter specifying robot home position (x coordinate) -->
-    <!-- home is assumed to be a place near the human position -->
+    <!-- parameter specifying robot home position (x coordinate)
+         home is assumed to be a place near the human position   -->
     <param name='home/x' type='int' value='-5'/>
-    <!-- parameter specifying robot home position (y coordinate) -->
-    <!-- home is assumed to be a place near the human position -->
+    <!-- parameter specifying robot home position (y coordinate)
+         home is assumed to be a place near the human position   -->
     <param name='home/y' type='int' value='8'/>
     <!-- parameter used to specify the x coordinate of the blue ball, once discovered -->
     <param name='blue/x' type='double' value='100'/>
@@ -107,6 +107,13 @@
     <!-- parameter used to identify which ball has to be looked for -->
     <param name='unknown_ball' type='int' value='100'/>
     
+    <!-- parameter used to specify Play state progress
+         A value of 0 means that the state is not active or at in initialization phase
+         A 1 stands for it being in progress
+         A value of 2 means that it has completed one iteration
+         The last value is also used by the Find state,
+         in case the location of the room asked by the human
+         was not present in the robot's database                                       -->
     <param name='play_task_status' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
     <!--<param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>-->
