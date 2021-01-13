@@ -14,7 +14,7 @@ import assignment3
 import actionlib
 from std_msgs.msg import String
 from assignment3.srv import BallService
-import assignment3.msg # needed?
+import assignment3.msg
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from nav_msgs.msg import Odometry
