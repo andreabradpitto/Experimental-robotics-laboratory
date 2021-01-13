@@ -13,9 +13,8 @@ import random
 import assignment3
 import actionlib
 from std_msgs.msg import String
-from assignment3.msg import Coordinates # needed?
-from assignment3.srv import BallService # needed?
-from assignment3.action import IntAction
+from assignment3.srv import BallService
+import assignment3.msg # needed?
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from nav_msgs.msg import Odometry
@@ -68,11 +67,13 @@ class Sleep(smach.State):
         self.rate = rospy.Rate(200)
         mb_sleep_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         home_pos = MoveBaseGoal()
-        #home_pos.target_pose.pose.orientation.w = 1.0
+        home_pos.target_pose.pose.orientation.w = 1.0
         home_pos.target_pose.header.frame_id = "map"
         home_pos.target_pose.header.stamp = rospy.Time.now()
-        home_pos.target_pose.pose.position.x = home_x # set target as the home position (x-axis)
-        home_pos.target_pose.pose.position.y = home_y # set target as the home position (y-axis)
+        # set target as the home position (x-axis)
+        home_pos.target_pose.pose.position.x = home_x
+        # set target as the home position (y-axis)
+        home_pos.target_pose.pose.position.y = home_y
         if first_iteration == 0:
             rospy.loginfo('Dog: I am going to spleep!')
             time.sleep(random.randint(2, 5) / sim_scale)
@@ -84,7 +85,7 @@ class Sleep(smach.State):
             rospy.loginfo('Dog: home position reached!')
         elif(rospy.get_param('state') == 'sleep'):
             first_iteration = 0    
-        time.sleep(random.randint(2, 5) / sim_scale) # the dog is sleeping
+        time.sleep(random.randint(5, 10) / sim_scale) # the dog is sleeping
         energy_timer = random.randint(2, 7)
         rospy.loginfo('Dog: Good morning!')
         return 'wake_up'
@@ -110,7 +111,7 @@ class Normal(smach.State):
         self.rate = rospy.Rate(200)
         mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         goal_pos = MoveBaseGoal()
-        #goal_pos.target_pose.pose.orientation.w = 1.0
+        goal_pos.target_pose.pose.orientation.w = 1.0
         while (energy_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'normal'):
             goal_pos.target_pose.header.frame_id = "map"
@@ -171,8 +172,10 @@ class Play(smach.State):
         #ball_location = BallService()
         target_pos.target_pose.header.frame_id = "map"
         target_pos.target_pose.header.stamp = rospy.Time.now()
-        target_pos.target_pose.pose.position.x = home_x # set target as home position (x-axis)
-        target_pos.target_pose.pose.position.y = home_y # set target as home position (y-axis)
+        # set target as the home position (x-axis)
+        target_pos.target_pose.pose.position.x = home_x
+        # set target as the home position (y-axis)
+        target_pos.target_pose.pose.position.y = home_y
         rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
         mb_play_client.wait_for_result()
@@ -191,7 +194,7 @@ class Play(smach.State):
             temp_unknown_ball = play_ball_request
             play_ball_request = 100
             if (ball_location.x != 100 and ball_location.y != 100):
-                #target_pos.target_pose.pose.orientation.w = 1.0
+                target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
                 target_pos.target_pose.pose.position.x = ball_location.x
@@ -201,8 +204,10 @@ class Play(smach.State):
                 rospy.loginfo('Dog: I got to the room')
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
-                target_pos.target_pose.pose.position.x = home_x # set target as home position (x-axis)
-                target_pos.target_pose.pose.position.y = home_y # set target as home position (y-axis)
+                # set target as home position (x-axis)
+                target_pos.target_pose.pose.position.x = home_x
+                # set target as home position (y-axis)
+                target_pos.target_pose.pose.position.y = home_y
                 mb_play_client.send_goal(target_pos)
                 mb_play_client.wait_for_result()
                 rospy.loginfo('Dog: I am finally back to you')
@@ -214,12 +219,14 @@ class Play(smach.State):
             self.rate.sleep
 
         if energy_timer == 1:
-            rospy.loginfo('Dog: I am too tired to play any longer: I will briefly go in Normal')
+            rospy.loginfo('Dog: I am too tired to play any longer: ' + \
+                             'I will briefly go in Normal')
             return 'game_over'
 
         elif rospy.get_param('unknown_ball') != 100:
-            rospy.loginfo('Dog: I don\'t know where the %s is. I\'ll search around for it', \
-                 room_list[rospy.get_param('unknown_ball')])
+            rospy.loginfo('Dog: I don\'t know where the %s is. ' + \
+                             'I\'ll search around for it' + \
+                             room_list[rospy.get_param('unknown_ball')])
             return 'go_find'
 
     ## Play state callback: as the dog has lost the ball, order the
@@ -260,7 +267,8 @@ class Find(smach.State):
         # function called when exiting from the node, it can be blocking
         rospy.set_param('state', 'find')
         self.rate = rospy.Rate(200)
-        explore_find_client = actionlib.SimpleActionClient('explore', IntAction)
+        explore_find_client = actionlib.SimpleActionClient('explore', \
+             assignment3.msg.IntAction)
         explore_find_client.send_goal(1)
         while ((not rospy.is_shutdown()) and rospy.get_param('state') == 'find' \
              and rospy.get_param('unknown_ball') != 100):

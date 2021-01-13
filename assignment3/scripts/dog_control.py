@@ -30,7 +30,7 @@ from nav_msgs.msg import Odometry
 
 import actionlib
 
-from assignment3.action import IntAction
+import assignment3.msg
 
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
@@ -380,7 +380,8 @@ class image_feature:
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 blue_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the blue mask, then use
@@ -428,7 +429,8 @@ class image_feature:
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 red_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the red mask, then use
@@ -476,7 +478,8 @@ class image_feature:
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 green_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the green mask, then use
@@ -524,7 +527,8 @@ class image_feature:
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 yellow_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
 
@@ -573,7 +577,8 @@ class image_feature:
                      and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 magenta_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the magenta mask, then use
@@ -621,7 +626,8 @@ class image_feature:
                      and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 black_solved = 1
-                explore_client = actionlib.SimpleActionClient('explore', IntAction)
+                explore_client = actionlib.SimpleActionClient('explore', \
+                     assignment3.msg.IntAction)
                 #explore_client.send_goal(0)
                 explore_client.cancel_all_goals()
                 # find the largest contour in the black mask, then use
@@ -666,7 +672,8 @@ class image_feature:
 
 
 
-        elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'): # basta anche solo un else qui
+        elif(rospy.get_param('state') == 'play' or rospy.get_param('state') == 'sleep'):
+            # basta un else al posto di elif qui
             #con questo assumo che il robot dia priorita ai comandi dell'uomo
             #in play se ne frega se vede nuove palle
             np_arr = np.fromstring(ros_data.data, np.uint8)
@@ -679,7 +686,8 @@ class image_feature:
 ## Initializes the image_feature class and spins until interrupted by a keyboard command
 def main(args):
     '''Initializes and cleanups ros node'''
-    ic = image_feature()
+    #ic = image_feature()
+    image_feature()
     try:
         rospy.spin()
     except KeyboardInterrupt:
