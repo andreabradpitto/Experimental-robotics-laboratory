@@ -54,11 +54,7 @@
   <node name="urdf_spawner_human1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
         args="-urdf -model human1 -param human_description1 -x -6 -y 8.5 -z 0.34 -R 0 -P 0 -Y -0.75"/>
 
-  <!--<arg name="ns1" value="robot"/>
-  <param name="$(arg ns1)/robot_description" 
-	 command="$(find xacro)/xacro QUI DUE TRATTINI:-inorder $(find assignment3)/urdf/robot.xacro"/>-->
- <param name="robot_description" 
-	 command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
+  <!--<arg name="ns1" value="robot"/>-->
 
   <!-- group for the robotic dog -->
   <!--<group ns="$(arg ns1)">-->
@@ -75,8 +71,10 @@
     <!-- parameter specifying the minimum y-axis value for the map -->
     <param name='map/y_min' type='int' value='-9'/>
     <!-- parameter specifying robot home position (x coordinate) -->
+    <!-- home is assumed to be a place near the human position -->
     <param name='home/x' type='int' value='-5'/>
     <!-- parameter specifying robot home position (y coordinate) -->
+    <!-- home is assumed to be a place near the human position -->
     <param name='home/y' type='int' value='8'/>
     <!-- parameter used to specify the x coordinate of the blue ball, once discovered -->
     <param name='blue/x' type='double' value='100'/>
@@ -112,6 +110,9 @@
     <param name='play_task_status' type='int' value='0'/>
     <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
     <!--<param name="room_color" value="['blue', 'red', 'green', 'yellow', 'magenta', 'black']"/>-->
+
+    <param name="robot_description"
+      command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
 
   <!-- nodes -->
     <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->
@@ -152,11 +153,6 @@
     <param name="min_frontier_size" value="0.75"/>
   </node>
 
-    <!--<rosparam file="$(find assignment3)/config/motor_config.yaml" command="load"/>-->
-    <!--<node name="controller_spawner_node" pkg="controller_manager" type="spawner"
-      output="screen" args="joint_state_controller joint_position_controller
-        QUI DUE TRATTINI:-shutdown-timeout 3">
-    </node> -->
   <!--</group>-->
 
 </launch>

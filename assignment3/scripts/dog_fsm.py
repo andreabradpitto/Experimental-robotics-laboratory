@@ -120,17 +120,11 @@ class Normal(smach.State):
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                  goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)
-            while(rospy.get_param('new_ball_detected') == 0):
-                mb_normal_client.wait_for_result()
-                #credo che cosi lui giri finche il dog non arriva a goal,
-                #il goal e impossibile o una nuova palla viene individuata
-                # se goal impossibile o raggiunto vado avanti subito direi
-                #mentre se appare una palla mi fermo a meta lavoro,
-                #ma nell'if sotto cancello il goal
+            mb_normal_client.wait_for_result()
             if(rospy.get_param('new_ball_detected') == 1):
-                mb_normal_client.cancel_all_goals()
+                rospy.loginfo('Dog: I have spotted a new room!')
             while(rospy.get_param('new_ball_detected') == 1):
-                self.rate.sleep        
+                self.rate.sleep
             energy_timer = energy_timer - 1	
             self.rate.sleep
 
@@ -139,7 +133,6 @@ class Normal(smach.State):
             return 'go_sleep'
 
         elif playtime == 1:
-            #rospy.loginfo('Dog: Ok, let\'s play!')
             return 'go_play'
 
     ## Normal state callback that prints a string once the robotic dog
@@ -180,11 +173,12 @@ class Play(smach.State):
         target_pos.target_pose.header.stamp = rospy.Time.now()
         target_pos.target_pose.pose.position.x = home_x # set target as home position (x-axis)
         target_pos.target_pose.pose.position.y = home_y # set target as home position (y-axis)
+        rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
         mb_play_client.wait_for_result()
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_status', 1)
-        # ora tornero sempre in normal con una mossa disponibile: assumo che
+        # ora tornero sempre in normal con una sola mossa disponibile: assumo che
         # il play state richieda piu batteria
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                         and rospy.get_param('state') == 'play'):
@@ -205,7 +199,6 @@ class Play(smach.State):
                 mb_play_client.send_goal(target_pos)
                 mb_play_client.wait_for_result()
                 rospy.loginfo('Dog: I got to the room')
-                rospy.set_param('play_task_status', 2) # questo stato non serve ma ci sta
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
                 target_pos.target_pose.pose.position.x = home_x # set target as home position (x-axis)
@@ -213,7 +206,7 @@ class Play(smach.State):
                 mb_play_client.send_goal(target_pos)
                 mb_play_client.wait_for_result()
                 rospy.loginfo('Dog: I am finally back to you')
-                rospy.set_param('play_task_status', 3)
+                rospy.set_param('play_task_status', 2)
                 energy_timer = energy_timer - 1
             else:
                 rospy.set_param('unknown_ball', temp_unknown_ball)
@@ -234,8 +227,6 @@ class Play(smach.State):
     def play_callback(self, data):
         global play_ball_request
         if (rospy.get_param('state') == 'play'):
-            #order_string = 'Dog: I will to GoTo the ' + data.data
-            #rospy.loginfo(order_string)
             rospy.loginfo('Dog: I will try to go to the %s', data.data)
             if data.data == room_list[0]:
                 play_ball_request = 0
@@ -259,7 +250,7 @@ class Find(smach.State):
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['game_over'])
+                             outcomes=['find_over'])
 
     ## Find state execution: the robotic dog follows the ball as long as
     # it is in his sight. If the ball is still, the dog starts turning
@@ -275,7 +266,7 @@ class Find(smach.State):
              and rospy.get_param('unknown_ball') != 100):
             self.rate.sleep
         rospy.loginfo('Dog: I found the room you asked for!')
-        rospy.set_param('play_task_status', 3)
+        rospy.set_param('play_task_status', 2)
         return 'find_over'
 
 

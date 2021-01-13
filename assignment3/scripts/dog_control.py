@@ -32,6 +32,8 @@ import actionlib
 
 from assignment3.action import IntAction
 
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+
 blueLower = (100, 50, 50)
 blueUpper = (130, 255, 255)
 redLower = (0, 50, 50)
@@ -87,6 +89,9 @@ class image_feature:
                 yellow_solved, magenta_solved, black_solved
 
         if (rospy.get_param('state') == 'normal'):
+
+            mb_control_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+
             #### direct conversion to CV2 ####
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
@@ -108,6 +113,7 @@ class image_feature:
                      and red_solved != 1 and green_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 blue_solved = 1
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -148,6 +154,7 @@ class image_feature:
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 red_solved = 1
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle centroid
@@ -188,6 +195,7 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 green_solved = 1
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -228,6 +236,7 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 yellow_solved = 1
                 # find the largest contour in the yellow mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -268,6 +277,7 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 magenta_solved = 1
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -308,6 +318,7 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
+                mb_control_client.cancel_all_goals()
                 black_solved = 1
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and centroid

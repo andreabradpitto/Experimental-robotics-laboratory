@@ -24,30 +24,29 @@ def human():
     rospy.init_node('human_node', anonymous = True)
     rate = rospy.Rate(200)
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
+    time.sleep(random.randint(80, 120) / sim_scale)
     while not rospy.is_shutdown():
-        time.sleep(random.randint(40, 70) / sim_scale)
+        while (rospy.get_param('state') != 'normal' or rospy.get_param('state') != 'play'):
+            rate.sleep()
         if rospy.get_param('state') == 'normal':
             voice_pub.publish('play')
             rospy.loginfo('Human: I want to play')
-            while (rospy.get_param('state') == 'normal'):
+            while (rospy.get_param('state') != 'play'):
                 rate.sleep()
-            #I am assuming the human can see when the robot turns into play state
-            #(i.e. thanks to an external LED mounted on the robotic dog)
-            while (rospy.get_param('state') == 'play' or rospy.get_param('state') == 'find'):
-                while (rospy.get_param('play_task_status') ==  0):
-                #while (rospy.get_param('play_task_status') ==  0 or rospy.get_param('play_task_status') ==  3):
-                #magari cosi con questo while sono piu sicuro nel passaggio da find a play
-                    rate.sleep()
-                room_choice = random.randint(0, 5)
-                rospy.loginfo('Human: GoTo %s', room_list[room_choice])
-                voice_pub.publish(room_list[room_choice])
-                while (rospy.get_param('play_task_status') !=  3):
-                    rate.sleep()
-                time.sleep(random.randint(5, 10) / sim_scale)
+        #I am assuming the human can see when the robot turns into play state
+        #(i.e. thanks to an external LED mounted on the robotic dog)
+        while (rospy.get_param('state') == 'play' or rospy.get_param('state') == 'find'):
+            while (rospy.get_param('play_task_status') ==  0):
+                rate.sleep()
+            room_choice = random.randint(0, 5)
+            rospy.loginfo('Human: GoTo %s', room_list[room_choice])
+            voice_pub.publish(room_list[room_choice])
+            while (rospy.get_param('play_task_status') !=  2):
+                rate.sleep()
             rate.sleep()
-            rospy.loginfo('Human: The robot has stopped playing')
-            time.sleep(random.randint(250, 300) / sim_scale)
-    rate.sleep()
+        rospy.loginfo('Human: The robot has stopped playing')
+        time.sleep(random.randint(250, 300) / sim_scale)
+        rate.sleep()
 
 if __name__ == '__main__':
     try:
