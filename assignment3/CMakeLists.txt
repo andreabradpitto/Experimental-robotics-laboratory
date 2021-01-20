@@ -146,7 +146,10 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   ${catkin_INCLUDE_DIRS}
-#  include
+  include src/${PROJECT_NAME}/include/costmap_client.h
+  include src/${PROJECT_NAME}/include/costmap_tools.h
+  include src/${PROJECT_NAME}/include/explore.h
+  include src/${PROJECT_NAME}/include/frontier_search.h
 )
 
 ## Declare a C++ library

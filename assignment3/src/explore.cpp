@@ -1,4 +1,4 @@
-#include <explore/explore.h>
+#include <explore.h>
 #include <std_msgs/Int64.h>
 
 #include <thread>

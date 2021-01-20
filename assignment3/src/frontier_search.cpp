@@ -1,4 +1,4 @@
-#include <explore/frontier_search.h>
+#include <frontier_search.h>
 
 #include <mutex>
 
@@ -6,7 +6,7 @@
 #include <costmap_2d/costmap_2d.h>
 #include <geometry_msgs/Point.h>
 
-#include <explore/costmap_tools.h>
+#include <costmap_tools.h>
 
 namespace frontier_exploration
 {

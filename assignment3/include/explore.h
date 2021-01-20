@@ -12,8 +12,8 @@
 #include <ros/ros.h>
 #include <visualization_msgs/MarkerArray.h>
 
-#include <explore/costmap_client.h>
-#include <explore/frontier_search.h>
+#include <costmap_client.h>
+#include <frontier_search.h>
 
 namespace explore
 {
