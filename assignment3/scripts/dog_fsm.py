@@ -2,7 +2,7 @@
 
 ## @package dog_fsm
 # Emulates the robotic dog's finite state machine internal architecture. 
-# The implemented states are Sleep, Normal, Play
+# The implemented states are Sleep, Normal, Play and Find
 
 import roslib
 import rospy
@@ -10,11 +10,11 @@ import smach
 import smach_ros
 import time
 import random
-import assignment3
 import actionlib
+import assignment3
+import assignment3.msg
 from std_msgs.msg import String
 from assignment3.srv import BallService
-import assignment3.msg
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from nav_msgs.msg import Odometry
@@ -33,6 +33,7 @@ home_x = rospy.get_param('home/x')
 ## Acquire y-axis home position parameter from launch file
 home_y = rospy.get_param('home/y')
 
+## Acquire the list of available rooms from launch file
 room_list = rospy.get_param('room_list')
 
 ## Acquire simulation speed scaling factor from launch file
@@ -44,27 +45,34 @@ first_iteration = 1
 ## variable used to state whether it is time to play or not
 playtime = 0
 
+## variable used to identify and store the requested room (hence ball) by the human
+# when it equals 100, it is set to its default value, and does not correspond to
+# any ball
 play_ball_request = 100
 
+## variable used to keep track of the robot's simulated battery charge
 energy_timer = random.randint(4, 7)
 
 
 
 ## Sleep state definition
 class Sleep(smach.State):
-    ## Sleep state initialization: set the outcomes and subscribe to the
-    # motion_over_topic topic
+    ## Sleep state initialization: set the outcomes
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['wake_up'])
 
-    ## Sleep state execution: the robot goes to sleep once he gets back home
+    ## Sleep state execution: the robot goes to sleep once he gets back home.
+    # It relies on the move_base algorithm in order to move in the environment,
+    # and it does so by implementing an action client and asking it to reach
+    # the coordinates corresponding to home
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global first_iteration, energy_timer
         rospy.set_param('state','sleep')
         self.rate = rospy.Rate(200)
+        ## move_base client used to reach home position
         mb_sleep_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         home_pos = MoveBaseGoal()
         home_pos.target_pose.pose.orientation.w = 1.0
@@ -95,20 +103,28 @@ class Sleep(smach.State):
 ## Normal state definition
 class Normal(smach.State):
     ## Normal state initialization: set the outcomes and subscribe to the
-    # play_topic and the motion_over_topic topics
+    # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['go_play','go_sleep'])
+        ## subscribed topic, used to receive commands from the human.py node
         rospy.Subscriber('play_topic', String, self.normal_callback)
     
-    ## Normal state execution: the robot wanders randomly, while waiting for
-    # finding the ball, or becoming tired and then going to sleep
+    ## Normal state execution: the robot wanders randomly, by feeding
+    # the move_base algorithm with randomly generated positions. If, while moving around,
+    # the robot detects a new room/ball, it reaches it and stores the corresponding
+    # position. At any time, a play command can be received by the human: if so happens,
+    # the robotic dog transitions to the Play state. Every newly detected room,
+    # along with its subsequent data collection process, consumes robot battery.
+    # If the battery gets depleted, the robot goes to sleep, by transitioning
+    # to the Sleep state.
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global playtime, energy_timer
         rospy.set_param('state', 'normal')
         self.rate = rospy.Rate(200)
+        ## move_base client used to send random positions as goals
         mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         goal_pos = MoveBaseGoal()
         goal_pos.target_pose.pose.orientation.w = 1.0
@@ -136,8 +152,8 @@ class Normal(smach.State):
         elif playtime == 1:
             return 'go_play'
 
-    ## Normal state callback that prints a string once the robotic dog
-    # acknowledges the ball
+    ## Normal state callback that prints a string acknowledging that the robotic dog
+    # has received a play request
     def normal_callback(self, data):
         global playtime
         if (rospy.get_param('state') == 'normal'):
@@ -151,22 +167,34 @@ class Normal(smach.State):
 ## Play state definition
 class Play(smach.State):
     ## Play state initialization: set the outcomes and subscribe to the
-    # ball_detection and the motion_over_topic topics
+    # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['game_over'])
+        ## subscribed topic, used to receive commands from the human.py node                    
         rospy.Subscriber('play_topic', String, self.play_callback)
 
-    ## Play state execution: the robotic dog follows the ball as long as
-    # it is in his sight. If the ball is still, the dog starts turning
-    # it head. If the ball is lost over a certain amount of time, the 
-    # robot gets back to the Normal state
+    ## Play state execution: using the move_base algorithm, the robotic dog, gets
+    # back home (i.e. close to the human), then starts listening for the
+    # room request. Once received, it checks via a service implemented in ball_server.py
+    # which are the corresponing ball coordinates to reach. If the ball is not yet in the
+    # dog's database, it shifts to the Find state. If the ball has been seen before,
+    # the dog starts moving to the chosen room, still relying on move_base. After
+    # reaching that position, it comes back to the user, again via move_base:
+    # whenever this process is completed, some battery is consumed. Furthermore,
+    # I assumed that a single cycle of this state consumes slightly more battery,
+    # on average, than one of the Normal state; for this reason, the threshold of
+    # remaining battery before going back to the Normal state is higher than in the
+    # previous case (i.e. from Normal to Sleep): this also allows me to make sure
+    # that the robot can go to sleep before completely depleting its battery
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global play_ball_request, energy_timer
         rospy.set_param('state', 'play')
         self.rate = rospy.Rate(200)
+        ## move_base client that is used both to reach home location and the
+        # room requested by the human
         mb_play_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         target_pos = MoveBaseGoal()
         target_pos.target_pose.header.frame_id = "map"
@@ -180,14 +208,14 @@ class Play(smach.State):
         mb_play_client.wait_for_result()
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_status', 1)
-        # ora tornero sempre in normal con una sola mossa disponibile: assumo che
-        # il play state richieda piu batteria
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                         and rospy.get_param('state') == 'play'):
             rospy.set_param('play_task_status', 0)
             while(play_ball_request == 100):
                 self.rate.sleep
             rospy.wait_for_service('BallService')
+            ## BallService client that asks for the coordinates of the ball
+            # whose color matches the room requested by the human
             ball_service_client = rospy.ServiceProxy('BallService', BallService)
             ball_location = ball_service_client(play_ball_request)
             temp_unknown_ball = play_ball_request
@@ -228,8 +256,9 @@ class Play(smach.State):
                              room_list[rospy.get_param('unknown_ball')])
             return 'go_find'
 
-    ## Play state callback: as the dog has lost the ball, order the
-    # finite state machine to get back to the Normal state
+    ## Play state callback that is used to translate the room ordered
+    # by the human into the ball representing that same room, and that will then be
+    # reached or searched by the robotic dog
     def play_callback(self, data):
         global play_ball_request
         if (rospy.get_param('state') == 'play'):
@@ -251,21 +280,27 @@ class Play(smach.State):
 
 ## Find state definition
 class Find(smach.State):
-    ## Find state initialization: set the outcomes and subscribe to the
-    # ball_detection and the motion_over_topic topics
+    ## Find state initialization: set the outcomes
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
                              outcomes=['find_over'])
 
-    ## Find state execution: the robotic dog follows the ball as long as
-    # it is in his sight. If the ball is still, the dog starts turning
-    # it head. If the ball is lost over a certain amount of time, the 
-    # robot gets back to the Play state
+    ## Find state execution: in this state, the robotic dog looks for the goal ball,
+    # determined in the Play state. In order to do so, this state relies on the
+    # explore_lite algorithm; an action client sends a flag to the server, which
+    # corresponds to the signal the server itself is waiting it order to run the
+    # above mentioned algorithm, which is conveniently nested inside the server's
+    # callback. It keeps running until dog_vision.py stops its execution, i.e.
+    # a new ball has been found. If the new ball is indeed the goal one,
+    # the robot eventually gets back to the Play state. The human will then immediately
+    # call the dog back to its position, and another Play state cycle can begin
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         rospy.set_param('state', 'find')
         self.rate = rospy.Rate(200)
+        ## explore_lite client that simply lets the algorithm start exploring the
+        # surroundings
         explore_find_client = actionlib.SimpleActionClient('explore', \
              assignment3.msg.IntAction)
         explore_find_client.send_goal(1)
@@ -279,7 +314,7 @@ class Find(smach.State):
 
 
 ## Finite state machine's (fsm) main. It initializes the dog_fsm_node and setups
-# a SMACH state machine along with all the three possible states
+# a SMACH state machine along with all the 4 possible states
 def main():
     rospy.init_node('dog_fsm_node', anonymous = True)
 
@@ -303,10 +338,11 @@ def main():
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()
 
-    # Execute the state machine
     # outcome = sm.execute() # an output variable is to be used if
                              # this finite state machine is nested
                              # inside another one
+
+    # Execute the state machine
     sm.execute()
 
     # Wait for ctrl-c to stop the application

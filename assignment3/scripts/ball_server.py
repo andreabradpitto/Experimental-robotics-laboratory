@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
+## @package ball_server
+# Implements BallService, i.e. a server providing the coordinates of the ball whose color
+# is matches the input room.
+# The received room must have already been coded in a specific single digit integer format
+# in order to be correctly parsed
+
+import rospy
 from assignment3.srv import BallService
 from assignment3.msg import Coordinates
-import rospy
 
+## BallService callback. Set the corresponding ball color coordinates as response
 def match_balls(req):
-    #res = Coordinates()
     if req == 0:
         res.x = rospy.get_param('blue/x')
         res.y = rospy.get_param('blue/y')
@@ -26,6 +32,7 @@ def match_balls(req):
         res.y = rospy.get_param('black/y')
     return res
 
+## BallService initialization
 def ball_server():
     rospy.init_node('ball_server_node')
     s = rospy.Service('BallService', BallService, match_balls)

@@ -207,7 +207,8 @@ target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
  install(PROGRAMS
    scripts/human.py
    scripts/dog_fsm.py
-   scripts/dog_control.py
+   scripts/dog_vision.py
+   scripts/ball_server.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

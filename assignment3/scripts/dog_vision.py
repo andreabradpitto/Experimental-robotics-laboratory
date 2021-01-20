@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
-## @package dog_control_ball
-# Implements a control for the robotic dog that lets him follow the ball
-# and move the head. This works only when the dog's finite state machine is
-# in the Play state
+## @package dog_vision
+# Implements a vision module for the robotic dog that uses OpenCV in order to constantly
+# scan the surroundings, looking for specific colored balls.
+# This node is able to take control, when needed, of the robot movements, allowing it
+# to reach a room when a corresponding new ball is discovered. It also stores
+# the positions of the balls discovered, thus learning the displacement of the rooms
+# inside the house as time passes
 
 # Python libs
 import sys
@@ -26,53 +29,79 @@ import rospy
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Twist
 
-from nav_msgs.msg import Odometry
-
 import actionlib
-
 import assignment3.msg
-
+from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
+## set lower bound of the BGR color coding for blue ball recognition
 blueLower = (100, 50, 50)
+## set upper bound of the BGR color coding for blue ball recognition
 blueUpper = (130, 255, 255)
+## set lower bound of the BGR color coding for red ball recognition
 redLower = (0, 50, 50)
+## set upper bound of the BGR color coding for red ball recognition
 redUpper = (5, 255, 255)
+## set lower bound of the BGR color coding for green ball recognition
 greenLower = (50, 50, 50)
+## set upper bound of the BGR color coding for green ball recognition
 greenUpper = (70, 255, 255)
+## set lower bound of the BGR color coding for yellow ball recognition
 yellowLower = (25, 50, 50)
+## set upper bound of the BGR color coding for yellow ball recognition
 yellowUpper = (35, 255, 255)
+## set lower bound of the BGR color coding for magenta ball recognition
 magentaLower = (125, 50, 50)
+## set upper bound of the BGR color coding for magenta ball recognition
 magentaUpper = (150, 255, 255)
+## set lower bound of the BGR color coding for black ball recognition
 blackLower = (0, 0, 0)
+## set upper bound of the BGR color coding for black ball recognition
 blackUpper = (5, 50, 50)
 
-blue_solved = 0 # 0 = not yet discovered; 1 = in progress; 2 = done
+## defines the current knowledge state of the coordinates corresponding to the blue ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
+blue_solved = 0
+## defines the current knowledge state of the coordinates corresponding to the red ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
 red_solved = 0
+## defines the current knowledge state of the coordinates corresponding to the green ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
 green_solved = 0
+## defines the current knowledge state of the coordinates corresponding to the yellow ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
 yellow_solved = 0
+## defines the current knowledge state of the coordinates corresponding to the magenta ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
 magenta_solved = 0
+## defines the current knowledge state of the coordinates corresponding to the black ball
+# (0 = not yet discovered; 1 = in progress; 2 = completed)
 black_solved = 0
 
-## Class used to control the robotic dog during its Play state. It uses
-# OpenCV in order to acquire images of the playing field and seeks a green ball.
+## Class used to visualize what the the robotic dog see during motion. It uses
+# OpenCV in order to acquire images of the house, and takes control of the
+# robot movements as soon as a new ball is spotted, with the aim of getting near it
+# and storing the location for later reference
 class image_feature:
 
+    ## Class initialization: subscribe to topics and declare publishers
     def __init__(self):
-        '''Initialize ros publisher, ros subscriber'''
-        rospy.init_node('dog_control_ball_node', anonymous = True)
+        ##Initialize ros publisher, ros subscriber
+        rospy.init_node('dog_vision_node', anonymous = True)
 
-        # topic over which camera images get published
+        ## topic over which camera images get published
         self.image_pub = rospy.Publisher("output/image_raw/compressed",
                                          CompressedImage, queue_size=1)
-
+        ## topic used to publish robot velocity commands
         self.vel_pub = rospy.Publisher("cmd_vel",
                                        Twist, queue_size=1)
 
-        # subscribed topic
+        ## subscribed topic, used to check if balls are present nearby
         self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
                                            CompressedImage, self.callback,  queue_size=1)
 
+    ## Function used to compute the amount of image contours comprised inside
+    # a specific color's bounds
     def computeCount(self, hsv, colorLower, colorUpper):
             colorMask = cv2.inRange(hsv, colorLower, colorUpper)
             colorMask = cv2.erode(colorMask, None, iterations=2)
@@ -82,17 +111,32 @@ class image_feature:
             colorCnts = imutils.grab_contours(colorCnts)
             return colorCnts
 
+    ## Callback of the subscribed topic, used to constantly show on screen what
+    # the robotic dog is seeing. This callback also performs image conversion
+    # and feature detection. It has a different algorithm depending on the robotic
+    # dog current state. When the robot is in the Sleep or Play state, this callback
+    # only provides visual feedback on screen about what the robot is currently seeing.
+    # With this choice, the robot's Play state actually prioritizes the current human
+    # request over any possible new ball detection, i.e. they are ignored.
+    # When the robot is in Normal state, this callback does nothing if no balls are
+    # detected. If this is not the case, the robot checks if that ball is present
+    # in its database and, if so, it ignores it. If the ball is a new discovery,
+    # the callback cancell all current move_base goals and takes control of the movement
+    # of the dog, and leads the robot close to the ball, and then stores its coordinates.
+    # While this process is being carried out, the callback locks the triggering
+    # of new ball discovery processes, and frees them only once it is completed.
+    # The callback behavior for the Find state is similar to the one of the Normal state,
+    # but this time the goal cancelling is sent to the explore_lite algorithm, and the
+    # code also check if the ball found and reached was actually the wanted one:
+    # if so, the finding process is over, otherwise the callback restarts the
+    # explore_lite in order to find another new ball 
     def callback(self, ros_data):
-        '''Callback function of subscribed topic. 
-        Here images get converted and features detected'''
         global blue_solved, red_solved, green_solved, \
                 yellow_solved, magenta_solved, black_solved
 
         if (rospy.get_param('state') == 'normal'):
 
-            mb_control_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-
-            #### direct conversion to CV2 ####
+            ## Direct conversion to CV2
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
@@ -113,7 +157,9 @@ class image_feature:
                      and red_solved != 1 and green_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 blue_solved = 1
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -136,7 +182,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
@@ -151,7 +197,9 @@ class image_feature:
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 red_solved = 1
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle centroid
@@ -174,7 +222,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
@@ -189,7 +237,9 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 green_solved = 1
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -212,7 +262,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
@@ -227,7 +277,9 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 yellow_solved = 1
                 # find the largest contour in the yellow mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -250,7 +302,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
@@ -265,7 +317,9 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 magenta_solved = 1
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -288,7 +342,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
@@ -303,7 +357,9 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                mb_control_client.cancel_all_goals()
+                ## action client used only to stop move_base execution
+                mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                mb_vision_client.cancel_all_goals()
                 black_solved = 1
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -326,7 +382,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
@@ -340,7 +396,8 @@ class image_feature:
 
 
         elif(rospy.get_param('state') == 'find'):
-            #### direct conversion to CV2 ####
+
+            ## Direct conversion to CV2
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
@@ -361,10 +418,11 @@ class image_feature:
                      and red_solved != 1 and green_solved != 1 and yellow_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                blue_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
+                blue_solved = 1
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blueCnts, key=cv2.contourArea)
@@ -386,7 +444,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
@@ -406,10 +464,11 @@ class image_feature:
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                red_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
+                red_solved = 1
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(redCnts, key=cv2.contourArea)
@@ -431,7 +490,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
@@ -451,10 +510,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                green_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
+                green_solved = 1
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(greenCnts, key=cv2.contourArea)
@@ -476,7 +536,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
@@ -496,11 +556,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                yellow_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
-
+                yellow_solved = 1
                 # find the largest contour in the yellow mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(yellowCnts, key=cv2.contourArea)
@@ -522,7 +582,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
@@ -542,10 +602,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                magenta_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
+                magenta_solved = 1
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(magentaCnts, key=cv2.contourArea)
@@ -567,7 +628,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
@@ -587,10 +648,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                black_solved = 1
+                ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
                      assignment3.msg.IntAction)
                 explore_client.cancel_all_goals()
+                black_solved = 1
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blackCnts, key=cv2.contourArea)
@@ -612,7 +674,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
-                    # of the corresponding room
+                    # corresponding to its color
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
@@ -630,8 +692,8 @@ class image_feature:
 
 
         else: # the robot is in Play or Sleep state
-            #con questo assumo che il robot dia priorita ai comandi dell'uomo
-            #in play se ne frega se vede nuove palle
+
+            ## Direct conversion to CV2
             np_arr = np.fromstring(ros_data.data, np.uint8)
             image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
@@ -639,7 +701,7 @@ class image_feature:
             cv2.imshow('window', image_np)
             cv2.waitKey(2)
 
-## Initializes the image_feature class and spins until interrupted by a keyboard command
+## Invokes the image_feature class and spins until interrupted by a keyboard command
 def main(args):
     '''Initializes and cleanups ros node'''
     #ic = image_feature()
@@ -649,7 +711,6 @@ def main(args):
     except KeyboardInterrupt:
         print ("Shutting down ROS Image feature detector module")
     cv2.destroyAllWindows()
-
 
 if __name__ == '__main__':
     main(sys.argv)

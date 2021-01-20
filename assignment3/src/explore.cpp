@@ -6,6 +6,13 @@
 #include <assignment3/IntAction.h>
 #include <actionlib/server/simple_action_server.h>
 
+/** @package explore
+* This is the piece of code implementing the action server, whose callback runs the
+* explore_lite algorithm.
+* As this is the only portion of the original package I modified, I will skip
+* documenting the other files, and briefly comments only this one
+*/
+
 typedef actionlib::SimpleActionServer<assignment3::IntAction> Server;
 
 inline static bool operator==(const geometry_msgs::Point& one,
@@ -240,7 +247,7 @@ void Explore::reachedGoal(const actionlib::SimpleClientGoalState& status,
     ROS_DEBUG("Adding current goal to black list");
   }
 
-  // find new goal immediatelly regardless of planning frequency.
+  // find new goal immediately regardless of planning frequency.
   // execute via timer to prevent dead lock in move_base_client (this is
   // callback for sendGoal, which is called in makePlan). the timer must live
   // until callback is executed.
@@ -263,10 +270,12 @@ void Explore::stop()
 
 }  // namespace explore
 
-
+  /** Explore server callback
+   * Once triggered, it runs the explore_lite indefinitely, or until a goal
+   * cancelling request is received
+  */
 void execute(const assignment3::IntGoalConstPtr& goal, Server* as) 
 {
-  //metterci un while(1) qui?
   explore::Explore explore;
   as->setSucceeded();
 }
@@ -275,6 +284,8 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "explore_server_node");
   ros::NodeHandle n;
+  /** Explore server initialization
+  */
   Server server(n, "explore", boost::bind(&execute, _1, &server), false);
   server.start();
   ros::spin();
