@@ -14,7 +14,7 @@ import actionlib
 import assignment3
 import assignment3.msg
 from std_msgs.msg import String
-from assignment3.srv import BallService
+from assignment3.srv import BallService, Explore
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from nav_msgs.msg import Odometry
@@ -302,8 +302,8 @@ class Find(smach.State):
         ## explore_lite client that simply lets the algorithm start exploring the
         # surroundings
         explore_find_client = actionlib.SimpleActionClient('explore', \
-             assignment3.msg.IntAction)
-        explore_find_client.send_goal(1)
+             assignment3.msg.IntAction) # NO e modifica descrizione sopra e descr. Find
+        explore_find_client.send_goal(1) # NO
         while ((not rospy.is_shutdown()) and rospy.get_param('state') == 'find' \
              and rospy.get_param('unknown_ball') != 100):
             self.rate.sleep

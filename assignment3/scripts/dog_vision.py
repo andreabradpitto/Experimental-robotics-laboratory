@@ -31,6 +31,7 @@ from geometry_msgs.msg import Twist
 
 import actionlib
 import assignment3.msg
+from assignment3.srv import Explore
 from nav_msgs.msg import Odometry
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
@@ -420,8 +421,8 @@ class image_feature:
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used to stop or resume explore_lite execution
                 explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                     assignment3.msg.IntAction) # NO e modifica descr. sopra e altri colori
+                explore_client.cancel_all_goals() # NO e anche altri colori 
                 blue_solved = 1
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -454,7 +455,7 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        explore_client.send_goal(1) # NO e altri colori e descr. callback
 
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)

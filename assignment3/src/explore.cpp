@@ -3,17 +3,17 @@
 
 #include <thread>
 
-#include <assignment3/IntAction.h>
-#include <actionlib/server/simple_action_server.h>
+#include <ros/ros.h>
+#include <assignment3/Explore.h>
 
-/** @package explore
-* This is the piece of code implementing the action server, whose callback runs the
-* explore_lite algorithm.
-* As this is the only portion of the original package I modified, I will skip
-* documenting the other files, and briefly comments only this one
-*/
-
-typedef actionlib::SimpleActionServer<assignment3::IntAction> Server;
+/** 
+ * @class Explore
+ * @brief This is the piece of code implementing the action server, whose callback runs the
+ * explore_lite algorithm.
+ * As this is the only portion of the original package I modified, I will skip
+ * documenting the other files, and briefly comments only this one
+ * DA METTERE A POSTO
+ */
 
 inline static bool operator==(const geometry_msgs::Point& one,
                               const geometry_msgs::Point& two)
@@ -26,7 +26,7 @@ inline static bool operator==(const geometry_msgs::Point& one,
 
 namespace explore
 {
-Explore::Explore()
+Explore::Explore() // class constructor
   : private_nh_("~")
   , tf_listener_(ros::Duration(10.0))
   , costmap_client_(private_nh_, relative_nh_, &tf_listener_)
@@ -193,7 +193,7 @@ void Explore::makePlan()
     last_progress_ = ros::Time::now();
     prev_distance_ = frontier->min_distance;
   }
-  // black list if we've made no progress for a long time
+  // black list if we have made no progress for a long time
   if (ros::Time::now() - last_progress_ > progress_timeout_) {
     frontier_blacklist_.push_back(target_position);
     ROS_DEBUG("Adding current goal to black list");
@@ -225,7 +225,7 @@ bool Explore::goalOnBlacklist(const geometry_msgs::Point& goal)
   constexpr static size_t tolerace = 5;
   costmap_2d::Costmap2D* costmap2d = costmap_client_.getCostmap();
 
-  // check if a goal is on the blacklist for goals that we're pursuing
+  // check if a goal is on the blacklist for goals that we are pursuing
   for (auto& frontier_goal : frontier_blacklist_) {
     double x_diff = fabs(goal.x - frontier_goal.x);
     double y_diff = fabs(goal.y - frontier_goal.y);
@@ -268,26 +268,43 @@ void Explore::stop()
   ROS_INFO("Exploration stopped");
 }
 
-}  // namespace explore
-
-  /** Explore server callback
-   * Once triggered, it runs the explore_lite indefinitely, or until a goal
-   * cancelling request is received
-  */
-void execute(const assignment3::IntGoalConstPtr& goal, Server* as) 
+void Explore::srv_start(assignment3::Explore::Request& req,
+                 assignment3::Explore::Response& res) // da mettere a posto
 {
-  explore::Explore explore;
-  as->setSucceeded();
+  /** pulire la blacklist e usare il metodo start per
+   * l'exploring_timer che viene istanziato nel costruttore
+   */
+  //res.output = req.input; //forse inutile
+  // manca la pulizia blacklist: chiedi ancora aiuto ad andre...
+  start();
+  return true;
 }
+
+void Explore::srv_stop(assignment3::Explore::Request& req,
+                 assignment3::Explore::Response& res) // da mettere a posto
+{
+  /** cancellare i goal e usare il metodo stop dell'exploring_timer
+   */
+  //res.output = req.input; //forse inutile
+  stop();
+  return true;
+}
+
+}  // namespace explore
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "explore_server_node");
-  ros::NodeHandle n;
-  /** Explore server initialization
-  */
-  Server server(n, "explore", boost::bind(&execute, _1, &server), false);
-  server.start();
+
+  explore::Explore explore;
+
+  ros::NodeHandle n1;
+  ros::NodeHandle n2;
+  ros::ServiceServer startService =
+          n1.advertiseService("explore_start_service", &Explore::srv_start, &explore);
+  ros::ServiceServer stopService =
+          n2.advertiseService("explore_stop_service", &Explore::srv_stop, &explore);
+
   ros::spin();
   return 0;
 }
