@@ -7,12 +7,9 @@
 #include <assignment3/Explore.h>
 
 /** 
- * @class Explore
  * @brief This is the piece of code implementing the exploration algorithm. I added a pair
  * of methods inside the class in order to provide a start & stop service server feature
- * to the original code. These servers are used by dog_fsm.py and dog_vision.py.
- * As this is the only portion of the original package I modified, I will skip
- * documenting the other package files, and briefly comment only this one
+ * to the original code. These servers are used by dog_fsm.py and dog_vision.py
  */
 
 inline static bool operator==(const geometry_msgs::Point& one,

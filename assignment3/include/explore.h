@@ -23,6 +23,9 @@ namespace explore
  * @class Explore
  * @brief A class adhering to the robot_actions::Action interface that moves the
  * robot base to explore its environment.
+ * 
+ * Here I added the two service server declarations. The remaining changes I made are
+ * all in explore.cpp, so refer to its documentation if needed
  */
 class Explore
 {
@@ -33,19 +36,25 @@ public:
   void start();
   void stop();
 
+  /**
+   * @brief Exploration algorithm start service server declaration
+   */
   bool srv_start(assignment3::Explore::Request& req,
           assignment3::Explore::Response& res);
+  /**
+   * @brief Exploration algorithm stop service server declaration
+   */
   bool srv_stop(assignment3::Explore::Request& req,
           assignment3::Explore::Response& res);
 
 private:
   /**
-   * @brief  Make a global plan
+   * @brief Make a global plan
    */
   void makePlan();
 
   /**
-   * @brief  Publish a frontiers as markers
+   * @brief Publish a frontiers as markers
    */
   void visualizeFrontiers(
       const std::vector<frontier_exploration::Frontier>& frontiers);
