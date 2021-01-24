@@ -8,11 +8,11 @@
 
 /** 
  * @class Explore
- * @brief This is the piece of code implementing the action server, whose callback runs the
- * explore_lite algorithm.
+ * @brief This is the piece of code implementing the exploration algorithm. I added a pair
+ * of methods inside the class in order to provide a start & stop service server feature
+ * to the original code. These servers are used by dog_fsm.py and dog_vision.py.
  * As this is the only portion of the original package I modified, I will skip
- * documenting the other files, and briefly comments only this one
- * DA METTERE A POSTO
+ * documenting the other package files, and briefly comment only this one
  */
 
 inline static bool operator==(const geometry_msgs::Point& one,
@@ -268,24 +268,23 @@ void Explore::stop()
   ROS_INFO("Exploration stopped");
 }
 
-void Explore::srv_start(assignment3::Explore::Request& req,
-                 assignment3::Explore::Response& res) // da mettere a posto
+/** Exploration algorithm start service server
+ */
+bool Explore::srv_start(assignment3::Explore::Request& req,
+                 assignment3::Explore::Response& res)
 {
-  /** pulire la blacklist e usare il metodo start per
-   * l'exploring_timer che viene istanziato nel costruttore
-   */
-  //res.output = req.input; //forse inutile
-  // manca la pulizia blacklist: chiedi ancora aiuto ad andre...
+  // clean blacklist?
+  res.output = req.input;
   start();
   return true;
 }
 
-void Explore::srv_stop(assignment3::Explore::Request& req,
-                 assignment3::Explore::Response& res) // da mettere a posto
+/** Exploration algorithm stop service server
+ */
+bool Explore::srv_stop(assignment3::Explore::Request& req,
+                 assignment3::Explore::Response& res)
 {
-  /** cancellare i goal e usare il metodo stop dell'exploring_timer
-   */
-  //res.output = req.input; //forse inutile
+  res.output = req.input;
   stop();
   return true;
 }
@@ -296,14 +295,18 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "explore_server_node");
 
+  // Instantiating an object of the Explore class
   explore::Explore explore;
 
+  /** Creation of the service servers called by dog_fsm.py and dog_vision.py as
+   * methods of the Explore class
+   */
   ros::NodeHandle n1;
   ros::NodeHandle n2;
   ros::ServiceServer startService =
-          n1.advertiseService("explore_start_service", &Explore::srv_start, &explore);
+      n1.advertiseService("explore_start_service", &explore::Explore::srv_start, &explore);
   ros::ServiceServer stopService =
-          n2.advertiseService("explore_stop_service", &Explore::srv_stop, &explore);
+      n2.advertiseService("explore_stop_service", &explore::Explore::srv_stop, &explore);
 
   ros::spin();
   return 0;

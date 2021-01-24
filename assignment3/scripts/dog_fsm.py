@@ -288,10 +288,12 @@ class Find(smach.State):
 
     ## Find state execution: in this state, the robotic dog looks for the goal ball,
     # determined in the Play state. In order to do so, this state relies on the
-    # explore_lite algorithm; an action client sends a flag to the server, which
+    # explore_lite algorithm; a service client sends a flag to the server, which
     # corresponds to the signal the server itself is waiting it order to run the
-    # above mentioned algorithm, which is conveniently nested inside the server's
-    # callback. It keeps running until dog_vision.py stops its execution, i.e.
+    # above mentioned algorithm. The code of the algorithm, which is contained inside
+    # the Explore class (see explore.cpp), has been adjusted with the inclusion of
+    # a method able to handle requests coming from this node. The exploration
+    # algorithm keeps running until dog_vision.py stops its execution, i.e.
     # a new ball has been found. If the new ball is indeed the goal one,
     # the robot eventually gets back to the Play state. The human will then immediately
     # call the dog back to its position, and another Play state cycle can begin
@@ -299,11 +301,12 @@ class Find(smach.State):
         # function called when exiting from the node, it can be blocking
         rospy.set_param('state', 'find')
         self.rate = rospy.Rate(200)
-        ## explore_lite client that simply lets the algorithm start exploring the
-        # surroundings
-        explore_find_client = actionlib.SimpleActionClient('explore', \
-             assignment3.msg.IntAction) # NO e modifica descrizione sopra e descr. Find
-        explore_find_client.send_goal(1) # NO
+        ## explore_lite service client that lets the algorithm start
+        # exploring the robotic dog's surroundings
+        rospy.wait_for_service('explore_start_service')
+        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+        explore_start(1)
+        rospy.loginfo('Dog: Exploration started')
         while ((not rospy.is_shutdown()) and rospy.get_param('state') == 'find' \
              and rospy.get_param('unknown_ball') != 100):
             self.rate.sleep

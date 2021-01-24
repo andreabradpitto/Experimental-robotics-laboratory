@@ -121,16 +121,20 @@ class image_feature:
     # request over any possible new ball detection, i.e. they are ignored.
     # When the robot is in Normal state, this callback does nothing if no balls are
     # detected. If this is not the case, the robot checks if that ball is present
-    # in its database and, if so, it ignores it. If the ball is a new discovery,
-    # the callback cancell all current move_base goals and takes control of the movement
-    # of the dog, and leads the robot close to the ball, and then stores its coordinates.
-    # While this process is being carried out, the callback locks the triggering
-    # of new ball discovery processes, and frees them only once it is completed.
-    # The callback behavior for the Find state is similar to the one of the Normal state,
-    # but this time the goal cancelling is sent to the explore_lite algorithm, and the
-    # code also check if the ball found and reached was actually the wanted one:
+    # in its database and, if so, it ignores it. If the ball preceived is a new discovery,
+    # the callback cancels all current move_base goals through an action client, and
+    # takes control of the dog motion; it leads the robot close to the ball,
+    # and then stores its coordinates. While this process is being carried out,
+    # the callback locks the triggering of new ball discovery processes,
+    # and frees them only once it is completed. The callback behavior for the Find state
+    # is similar to the one of the Normal state, but this time the goal cancelling
+    # is sent to the explore_lite algorithm via a service client. The code also
+    # checks if the ball found and reached was actually the wanted one:
     # if so, the finding process is over, otherwise the callback restarts the
-    # explore_lite in order to find another new ball 
+    # explore_lite algorithm, with another service client, in order to find
+    # another new ball. The two service clients used to communicate with the Explore
+    # class (which hosts the exploration algorithm) rely on as many service servers,
+    # that I added as methods of the original code
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
                 yellow_solved, magenta_solved, black_solved
@@ -419,10 +423,11 @@ class image_feature:
                      and red_solved != 1 and green_solved != 1 and yellow_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction) # NO e modifica descr. sopra e altri colori
-                explore_client.cancel_all_goals() # NO e anche altri colori 
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 blue_solved = 1
                 # find the largest contour in the blue mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -455,7 +460,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1) # NO e altri colori e descr. callback
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
 
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
@@ -465,10 +474,11 @@ class image_feature:
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 red_solved = 1
                 # find the largest contour in the red mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -501,7 +511,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
                        
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
@@ -511,10 +525,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 green_solved = 1
                 # find the largest contour in the green mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -547,7 +562,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
  
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
@@ -557,10 +576,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 yellow_solved = 1
                 # find the largest contour in the yellow mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -593,7 +613,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
  
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
@@ -603,10 +627,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 magenta_solved = 1
                 # find the largest contour in the magenta mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -639,7 +664,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
  
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)
@@ -649,10 +678,11 @@ class image_feature:
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
                      and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
-                ## action client used to stop or resume explore_lite execution
-                explore_client = actionlib.SimpleActionClient('explore', \
-                     assignment3.msg.IntAction)
-                explore_client.cancel_all_goals()
+                ## explore lite service client used to
+                # stop explore_lite algorithm execution
+                rospy.wait_for_service('explore_stop_service')
+                explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
+                explore_stop(0)
                 black_solved = 1
                 # find the largest contour in the black mask, then use
                 # it to compute the minimum enclosing circle and centroid
@@ -685,7 +715,11 @@ class image_feature:
                         # this is the ball the robot had to find
                         rospy.set_param('unknown_ball', 100)
                     else:
-                        explore_client.send_goal(1)
+                        ## explore_lite service client that lets the algorithm start
+                        # exploring the robotic dog's surroundings
+                        rospy.wait_for_service('explore_start_service')
+                        explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+                        explore_start(1)
  
                 image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
                 cv2.imshow('window', image_np)

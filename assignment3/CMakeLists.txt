@@ -72,6 +72,7 @@ add_message_files(
  add_service_files(
    FILES
    BallService.srv
+   Explore.srv
 #   Service2.srv
  )
 

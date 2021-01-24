@@ -15,6 +15,8 @@
 #include <costmap_client.h>
 #include <frontier_search.h>
 
+#include <assignment3/Explore.h>
+
 namespace explore
 {
 /**
@@ -30,6 +32,11 @@ public:
 
   void start();
   void stop();
+
+  bool srv_start(assignment3::Explore::Request& req,
+          assignment3::Explore::Response& res);
+  bool srv_stop(assignment3::Explore::Request& req,
+          assignment3::Explore::Response& res);
 
 private:
   /**
