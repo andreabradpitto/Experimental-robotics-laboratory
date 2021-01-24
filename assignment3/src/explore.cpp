@@ -21,6 +21,8 @@ inline static bool operator==(const geometry_msgs::Point& one,
   return dist < 0.01;
 }
 
+int first_run = 1;
+
 namespace explore
 {
 Explore::Explore() // class constructor
@@ -272,6 +274,7 @@ bool Explore::srv_start(assignment3::Explore::Request& req,
 {
   // clean blacklist?
   res.output = req.input;
+  first_run = 0;
   start();
   return true;
 }
@@ -294,6 +297,11 @@ int main(int argc, char** argv)
 
   // Instantiating an object of the Explore class
   explore::Explore explore;
+
+  if (first_run == 1)
+  {
+    explore.stop();
+  }
 
   /** Creation of the service servers called by dog_fsm.py and dog_vision.py as
    * methods of the Explore class

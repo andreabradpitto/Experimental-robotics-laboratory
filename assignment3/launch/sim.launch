@@ -72,6 +72,9 @@
 
   <!--<arg name="ns1" value="robot"/>-->
 
+  <param name="robot_description" 
+	 command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
+
   <!-- group for the robotic dog -->
   <!--<group ns="$(arg ns1)">-->
 
@@ -139,11 +142,7 @@
     <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
-	    args="-urdf -model robot1 -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05">
-      <param name="robot_description"
-      command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
-    </node>
-      <!-- da controllare se va cosi, altrimenti rimetti fuori il param robot description -->
+	    args="-urdf -model robot1 -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>
     <!--args="-urdf -model $(arg ns1) -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>-->
     
     <!-- node used to handle the robot's finite state machine internal architecture -->
@@ -165,9 +164,8 @@
     <node pkg='assignment3' type='ball_server.py'
       name='ball_server_node' output='screen' respawn="false"/>
 
-    <!-- node used to implement an action server, whose callback
-         runs the explore_lite algorithm -->
-    <node pkg="assignment3" type="explore" respawn="false" name="explore_node" output="screen">
+    <!-- node executing, when requested, the explore_lite algorithm -->
+    <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node" output="screen">
     <!--togliere output = screen-->
       <param name="robot_base_frame" value="link_chassis"/>
       <param name="costmap_topic" value="map"/>

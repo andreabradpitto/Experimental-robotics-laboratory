@@ -171,7 +171,7 @@ class Play(smach.State):
     def __init__(self):
         # initialisation function, it should not wait
         smach.State.__init__(self, 
-                             outcomes=['game_over'])
+                             outcomes=['game_over','go_find'])
         ## subscribed topic, used to receive commands from the human.py node                    
         rospy.Subscriber('play_topic', String, self.play_callback)
 
@@ -334,7 +334,7 @@ def main():
         smach.StateMachine.add('PLAY', Play(), 
                                transitions={'game_over':'NORMAL',
                                             'go_find':'FIND'})
-        smach.StateMachine.add('FIND', Play(), 
+        smach.StateMachine.add('FIND', Find(), 
                                transitions={'find_over':'PLAY'})
 
     # Create and start the introspection server for visualization
