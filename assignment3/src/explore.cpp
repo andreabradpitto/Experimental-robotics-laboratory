@@ -21,8 +21,6 @@ inline static bool operator==(const geometry_msgs::Point& one,
   return dist < 0.01;
 }
 
-int first_run = 1;
-
 namespace explore
 {
 Explore::Explore() // class constructor
@@ -33,6 +31,7 @@ Explore::Explore() // class constructor
   , prev_distance_(0)
   , last_markers_count_(0)
 {
+
   double timeout;
   double min_frontier_size;
   private_nh_.param("planner_frequency", planner_frequency_, 1.0);
@@ -298,7 +297,7 @@ int main(int argc, char** argv)
   // Instantiating an object of the Explore class
   explore::Explore explore;
 
-  if (first_run == 1)
+  if (explore.first_run == 1)
   {
     explore.stop();
   }
