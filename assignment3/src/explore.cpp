@@ -31,7 +31,7 @@ Explore::Explore() // class constructor
   , prev_distance_(0)
   , last_markers_count_(0)
 {
-
+  //int first_run = 0;
   double timeout;
   double min_frontier_size;
   private_nh_.param("planner_frequency", planner_frequency_, 1.0);
@@ -273,7 +273,7 @@ bool Explore::srv_start(assignment3::Explore::Request& req,
 {
   // clean blacklist?
   res.output = req.input;
-  first_run = 0;
+  //first_run = 0;
   start();
   return true;
 }
@@ -297,10 +297,10 @@ int main(int argc, char** argv)
   // Instantiating an object of the Explore class
   explore::Explore explore;
 
-  if (explore.first_run == 1)
-  {
+  //if (explore.first_run == 1)
+  //{
     explore.stop();
-  }
+  //}
 
   /** Creation of the service servers called by dog_fsm.py and dog_vision.py as
    * methods of the Explore class
