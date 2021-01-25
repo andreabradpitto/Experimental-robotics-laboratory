@@ -83,15 +83,12 @@ class Sleep(smach.State):
         # set target as the home position (y-axis)
         home_pos.target_pose.pose.position.y = home_y
         if first_iteration == 0:
+            time.sleep(5) # wait for other nodes to launch
             rospy.loginfo('Dog: I am going to spleep!')
-            time.sleep(random.randint(2, 5) / sim_scale)
-        else:
-            time.sleep(random.randint(2, 5) / sim_scale) 
-        mb_sleep_client.send_goal(home_pos)
-        mb_sleep_client.wait_for_result()
-        if (first_iteration == 0):
+            mb_sleep_client.send_goal(home_pos)
+            mb_sleep_client.wait_for_result()
             rospy.loginfo('Dog: home position reached!')
-        elif(rospy.get_param('state') == 'sleep'):
+        else:
             first_iteration = 0    
         time.sleep(random.randint(5, 10) / sim_scale) # the dog is sleeping
         energy_timer = random.randint(2, 7)

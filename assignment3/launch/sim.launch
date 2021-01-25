@@ -59,7 +59,7 @@
   </group>
   
   <!-- Start RViz -->  
-  <param name="use_gui" value="False"/>
+  <param name="use_gui" value="false"/>
    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find assignment3)/config/config.rviz" />
