@@ -74,21 +74,21 @@ class Sleep(smach.State):
         self.rate = rospy.Rate(200)
         ## move_base client used to reach home position
         mb_sleep_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        home_pos = MoveBaseGoal()
-        home_pos.target_pose.pose.orientation.w = 1.0
-        home_pos.target_pose.header.frame_id = "map"
-        home_pos.target_pose.header.stamp = rospy.Time.now()
-        # set target as the home position (x-axis)
-        home_pos.target_pose.pose.position.x = home_x
-        # set target as the home position (y-axis)
-        home_pos.target_pose.pose.position.y = home_y
         if first_iteration == 0:
-            time.sleep(5) # wait for other nodes to launch
+            home_pos = MoveBaseGoal()
+            home_pos.target_pose.pose.orientation.w = 1.0
+            home_pos.target_pose.header.frame_id = "map"
+            home_pos.target_pose.header.stamp = rospy.Time.now()
+            # set target as the home position (x-axis)
+            home_pos.target_pose.pose.position.x = home_x
+            # set target as the home position (y-axis)
+            home_pos.target_pose.pose.position.y = home_y
             rospy.loginfo('Dog: I am going to spleep!')
             mb_sleep_client.send_goal(home_pos)
             mb_sleep_client.wait_for_result()
             rospy.loginfo('Dog: home position reached!')
         else:
+            mb_sleep_client.wait_for_server() # wait for all the other nodes to launch
             first_iteration = 0    
         time.sleep(random.randint(5, 10) / sim_scale) # the dog is sleeping
         energy_timer = random.randint(2, 7)
@@ -125,9 +125,9 @@ class Normal(smach.State):
         mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         goal_pos = MoveBaseGoal()
         goal_pos.target_pose.pose.orientation.w = 1.0
+        goal_pos.target_pose.header.frame_id = "map"
         while (energy_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'normal'):
-            goal_pos.target_pose.header.frame_id = "map"
             goal_pos.target_pose.header.stamp = rospy.Time.now()
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
             goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)
@@ -194,6 +194,7 @@ class Play(smach.State):
         # room requested by the human
         mb_play_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         target_pos = MoveBaseGoal()
+        target_pos.target_pose.pose.orientation.w = 1.0
         target_pos.target_pose.header.frame_id = "map"
         target_pos.target_pose.header.stamp = rospy.Time.now()
         # set target as the home position (x-axis)
@@ -226,6 +227,7 @@ class Play(smach.State):
                 mb_play_client.send_goal(target_pos)
                 mb_play_client.wait_for_result()
                 rospy.loginfo('Dog: I got to the room')
+                target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
                 # set target as home position (x-axis)

@@ -116,7 +116,7 @@ class image_feature:
     # the robotic dog is seeing. This callback also performs image conversion
     # and feature detection. It has a different algorithm depending on the robotic
     # dog current state. When the robot is in the Sleep or Play state, this callback
-    # only provides visual feedback on screen about what the robot is currently seeing.
+    # just provides visual feedback on screen about what the robot is currently seeing.
     # With this choice, the robot's Play state actually prioritizes the current human
     # request over any possible new ball detection, i.e. they are ignored.
     # When the robot is in Normal state, this callback does nothing if no balls are
@@ -139,11 +139,13 @@ class image_feature:
         global blue_solved, red_solved, green_solved, \
                 yellow_solved, magenta_solved, black_solved
 
-        if (rospy.get_param('state') == 'normal'):
+        ## Direct conversion to CV2
+        np_arr = np.fromstring(ros_data.data, np.uint8)
+        image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR) # OpenCV >= 3.0:
 
-            ## Direct conversion to CV2
-            np_arr = np.fromstring(ros_data.data, np.uint8)
-            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
+
+
+        if (rospy.get_param('state') == 'normal'):
 
             blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
             hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
@@ -194,10 +196,6 @@ class image_feature:
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
-
             elif(len(redCnts) > 0 and red_solved != 2 \
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
                      and magenta_solved != 1 and black_solved != 1):
@@ -233,10 +231,6 @@ class image_feature:
                     rospy.set_param('red/y', pos.pose.pose.position.y)
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
@@ -274,10 +268,6 @@ class image_feature:
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
-
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
@@ -313,10 +303,6 @@ class image_feature:
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
@@ -354,10 +340,6 @@ class image_feature:
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
-
             elif(len(blackCnts) > 0 and black_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1
                      and yellow_solved != 1 and magenta_solved != 1):
@@ -394,17 +376,9 @@ class image_feature:
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
-
 
 
         elif(rospy.get_param('state') == 'find'):
-
-            ## Direct conversion to CV2
-            np_arr = np.fromstring(ros_data.data, np.uint8)
-            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
 
             blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
             hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
@@ -466,10 +440,6 @@ class image_feature:
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
-
             elif(len(redCnts) > 0 and red_solved != 2 \
                      and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
                      and magenta_solved != 1 and black_solved != 1):
@@ -516,10 +486,6 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
-                       
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
@@ -567,10 +533,6 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
- 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -618,10 +580,6 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
- 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -669,10 +627,6 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
- 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
                      and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -720,21 +674,11 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
- 
-                image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-                cv2.imshow('window', image_np)
-                cv2.waitKey(2)
 
 
-        else: # the robot is in Play or Sleep state
 
-            ## Direct conversion to CV2
-            np_arr = np.fromstring(ros_data.data, np.uint8)
-            image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
-
-            image_np = cv2.rotate(image_np, cv2.ROTATE_90_CLOCKWISE)
-            cv2.imshow('window', image_np)
-            cv2.waitKey(2)
+        cv2.imshow('window', image_np)
+        cv2.waitKey(2)
 
 ## Invokes the image_feature class and spins until interrupted by a keyboard command
 def main(args):

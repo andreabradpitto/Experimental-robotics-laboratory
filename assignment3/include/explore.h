@@ -46,6 +46,8 @@ public:
    */
   bool srv_stop(assignment3::Explore::Request& req,
           assignment3::Explore::Response& res);
+  
+  int first_run = 0;
 
 private:
   /**
