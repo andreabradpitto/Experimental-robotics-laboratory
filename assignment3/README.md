@@ -3,6 +3,13 @@
 ## Introduction
 This is the repository for the third and last assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with [Python 2.7](https://www.python.org/download/releases/2.7/) and it has been tested on [ROS Kinetic](http://wiki.ros.org/kinetic).
 
+---
+
+## /!\ Documentation /!\
+In order to access the full documentation page, download this package and double-click on the "Documentation" file.
+
+---
+
 ## Setting
 Like for the previous assignment, [Assignment 2](https://github.com/andreabradpitto/Experimental-robotics-laboratory/tree/main/assignment2), the main subject of the project is a robotic dog. This time, it is free to wander inside a house, comprising 6 different rooms: the entrance, the closet, the living room, the kitchen, the bathroom, and the bedroom. Each of these room locations is schematically represented by a colored ball lying on the ground, so that the dog can recognize them. In order to avoid ambiguities, each ball has a different color; following the same order mentioned above, the colors are: blue, red, green, yellow, magenta and black. Event though the house is not procedurally generated (i.e. it is always the same model), every time the simulation is started, the robot does not know where these room are, so it has to learn the house planimetry by exploration. The only thing it knows, indeed, is the association of each colored ball to its respective room, so that when the robotic dog sees e.g. the yellow ball, it knows that that room is the kitchen.<br/>
 <br/>
@@ -44,6 +51,8 @@ On the left hand side of the image above, there are many the elements useful to 
 - the red lines are the current detections of the robot's laser
 - the blue borders (and the green spheres, not shown here) are elements used by the exploration algorithm (see later on)
 - the two white squares centered over the robot are the gloabl and local costmaps
+
+---
 
 ## Architecture
 <div align="center">
@@ -95,9 +104,9 @@ Finally, here are the parameters (strictly related to the robotic dog) loaded in
 - `unknown_ball`: parameter used to identify which ball has to be looked for
 - `room_list`: list of the available rooms
 - `play_task_status`: parameter used to specify **Play** state progress<br/>
-                      A value of *0* means that the state is not active or at in initialization phase<br/>
-                      A *1* stands for it being in progress<br/>
-                      A value of *2* means that it has completed one iteration
+                      A value of 0 means that the state is not active or at in initialization phase<br/>
+                      A 1 stands for it being in progress<br/>
+                      A value of 2 means that it has completed one iteration
                       The last value is also used by the **Find** state, in case the location of the room asked by the human was not present in the robot's database
 - `blue/x`: parameter used to specify the x coordinate of the blue ball, once discovered 
 - `blue/y`: parameter used to specify the y coordinate of the blue ball, once discovered
@@ -119,6 +128,8 @@ Finally, here is the list of all the files and folders featured in this package:
   <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png">
 </div>
 
+---
+
 ## Requirements
 In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):
 - [ROS Kinetic](http://wiki.ros.org/kinetic)
@@ -126,28 +137,34 @@ In order to run this piece of software, it is needed to have a Linux distributio
 - [OpenCV](https://opencv.org/)
 - A [Python](https://www.python.org/) interpreter
 
+---
+
 ## Instructions
 It might be needed to make all the nodes executable, before actually being able to run them. So, after reaching this assignment's folder via a terminal, type:
 
 ```
-chmod +x scripts/*
-chmod +x src/*
+$ chmod +x scripts/*
+$ chmod +x src/*
 ```
 
 In order to run the code, put the *assignment3* directory in your workspace, build, then open a terminal and type:
 
 ```
-roslaunch assignment.launch
+$ roslaunch assignment.launch
 ```
 
 This will start the simulation on both Gazebo and RViz.
 
+---
+
 ## Assumptions, limitations and possible improvements
-- first of all, due to time constraints, I had no time completely test the code, i.e. I did not leave my program running for hours as suggested (also because my PC would have melted)
-- during **Play** the robotic dog ignores (and discards) any new ball discovery: I made this choice in order to grants human orders higher priority with respect to mapping or any other task. That said, I could then have made so that the robot would store its position when a new ball is found during **Play**, and then get back to it once the state ends
-- the robot's simulated battery is assumed to drain more rapidly while in **Play** than when in **Normal**, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the **Find** state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from **Play** to **Normal** after a certain drain threshold is reached, and then always carries out a single **Normal** state cycle (no matter how far it goes, which is of course another simpification) before going to **Sleep** to recharge its batteries
-- the dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (**Play** state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code dog_fsm.py must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file
-- if, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases
+- First of all, due to time constraints, I had no time completely test the code, i.e. I did not leave my program running for hours as suggested (also because my PC would have melted)
+- During **Play** the robotic dog ignores (and discards) any new ball discovery: I made this choice in order to grants human orders higher priority with respect to mapping or any other task. That said, I could then have made so that the robot would store its position when a new ball is found during **Play**, and then get back to it once the state ends
+- The robot's simulated battery is assumed to drain more rapidly while in **Play** than when in **Normal**, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the **Find** state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from **Play** to **Normal** after a certain drain threshold is reached, and then always carries out a single **Normal** state cycle (no matter how far it goes, which is of course another simpification) before going to **Sleep** to recharge its batteries
+- The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (**Play** state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code dog_fsm.py must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file
+- If, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases
+
+---
 
 ## Authors
 All the files in this repository belong to [Andrea Pitto](https://github.com/andreabradpitto).<br/>
