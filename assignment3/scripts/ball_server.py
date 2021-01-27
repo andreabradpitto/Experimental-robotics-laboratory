@@ -10,8 +10,9 @@ import rospy
 from assignment3.srv import BallService
 from assignment3.msg import Coordinates
 
-## BallService callback. Set the corresponding ball color coordinates as response
+## BallService callback: set the corresponding ball color coordinates as response
 def match_balls(req):
+    res = Coordinates()
     if req == 0:
         res.x = rospy.get_param('blue/x')
         res.y = rospy.get_param('blue/y')

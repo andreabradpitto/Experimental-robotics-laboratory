@@ -70,7 +70,7 @@ The architecture is made of five components:
 states description
 
 <div align="center">
-  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/fsm.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/fsm.png">
 </div>
 
 The dog starts in the **Sleep** state.<br/>
