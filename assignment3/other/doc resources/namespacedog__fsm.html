@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Experimental robotics laboratory - Assignment 2: dog_fsm Namespace Reference</title>
+<title>Experimental robotics laboratory - Assignment 3: dog_fsm Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="dog.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Experimental robotics laboratory - Assignment 2
+   <div id="projectname">Experimental robotics laboratory - Assignment 3
    </div>
   </td>
  </tr>
@@ -77,16 +77,16 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__fsm_1_1Find.html">Find</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Find.html" title="Find state definition.">Find</a> state definition.  <a href="classdog__fsm_1_1Find.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> state: the robotic dog looks around for a specific room.  <a href="classdog__fsm_1_1Find.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__fsm_1_1Normal.html">Normal</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state definition.">Normal</a> state definition.  <a href="classdog__fsm_1_1Normal.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state: the robot wanders randomly in the house via move_base calls.  <a href="classdog__fsm_1_1Normal.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__fsm_1_1Play.html">Play</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Play.html" title="Play state definition.">Play</a> state definition.  <a href="classdog__fsm_1_1Play.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state: the robot gets to the human, waits for a room order, then gets back to the human.  <a href="classdog__fsm_1_1Play.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__fsm_1_1Sleep.html">Sleep</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state definition.">Sleep</a> state definition.  <a href="classdog__fsm_1_1Sleep.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state: the robot gets home and sleeps for some time.">Sleep</a> state: the robot gets home and sleeps for some time.  <a href="classdog__fsm_1_1Sleep.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -97,58 +97,46 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:af39bbc3cbd28c88d5cfe021f10f28520"><td class="memItemLeft" align="right" valign="top"><a id="af39bbc3cbd28c88d5cfe021f10f28520"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#af39bbc3cbd28c88d5cfe021f10f28520">map_x_max</a> = rospy.get_param('map/x_max')</td></tr>
-<tr class="memdesc:af39bbc3cbd28c88d5cfe021f10f28520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire maximum x-axis parameter from launch file. <br /></td></tr>
+<tr class="memitem:af39bbc3cbd28c88d5cfe021f10f28520"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#af39bbc3cbd28c88d5cfe021f10f28520">map_x_max</a> = rospy.get_param('map/x_max')</td></tr>
+<tr class="memdesc:af39bbc3cbd28c88d5cfe021f10f28520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire maximum x-axis parameter from launch file.  <a href="namespacedog__fsm.html#af39bbc3cbd28c88d5cfe021f10f28520">More...</a><br /></td></tr>
 <tr class="separator:af39bbc3cbd28c88d5cfe021f10f28520"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63776c94abe23016bd32304354602278"><td class="memItemLeft" align="right" valign="top"><a id="a63776c94abe23016bd32304354602278"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a63776c94abe23016bd32304354602278">map_y_max</a> = rospy.get_param('map/y_max')</td></tr>
-<tr class="memdesc:a63776c94abe23016bd32304354602278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire maximum y-axis parameter from launch file. <br /></td></tr>
+<tr class="memitem:a63776c94abe23016bd32304354602278"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a63776c94abe23016bd32304354602278">map_y_max</a> = rospy.get_param('map/y_max')</td></tr>
+<tr class="memdesc:a63776c94abe23016bd32304354602278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire maximum y-axis parameter from launch file.  <a href="namespacedog__fsm.html#a63776c94abe23016bd32304354602278">More...</a><br /></td></tr>
 <tr class="separator:a63776c94abe23016bd32304354602278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7654888265a10a4cc1420ae249b9b772"><td class="memItemLeft" align="right" valign="top"><a id="a7654888265a10a4cc1420ae249b9b772"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a7654888265a10a4cc1420ae249b9b772">map_x_min</a> = rospy.get_param('map/x_min')</td></tr>
-<tr class="memdesc:a7654888265a10a4cc1420ae249b9b772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire minimum x-axis parameter from launch file. <br /></td></tr>
+<tr class="memitem:a7654888265a10a4cc1420ae249b9b772"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a7654888265a10a4cc1420ae249b9b772">map_x_min</a> = rospy.get_param('map/x_min')</td></tr>
+<tr class="memdesc:a7654888265a10a4cc1420ae249b9b772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire minimum x-axis parameter from launch file.  <a href="namespacedog__fsm.html#a7654888265a10a4cc1420ae249b9b772">More...</a><br /></td></tr>
 <tr class="separator:a7654888265a10a4cc1420ae249b9b772"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab89cd8b10d13ab7f2df3648c423230a8"><td class="memItemLeft" align="right" valign="top"><a id="ab89cd8b10d13ab7f2df3648c423230a8"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#ab89cd8b10d13ab7f2df3648c423230a8">map_y_min</a> = rospy.get_param('map/y_min')</td></tr>
-<tr class="memdesc:ab89cd8b10d13ab7f2df3648c423230a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire minimum y-axis parameter from launch file. <br /></td></tr>
+<tr class="memitem:ab89cd8b10d13ab7f2df3648c423230a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#ab89cd8b10d13ab7f2df3648c423230a8">map_y_min</a> = rospy.get_param('map/y_min')</td></tr>
+<tr class="memdesc:ab89cd8b10d13ab7f2df3648c423230a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire minimum y-axis parameter from launch file.  <a href="namespacedog__fsm.html#ab89cd8b10d13ab7f2df3648c423230a8">More...</a><br /></td></tr>
 <tr class="separator:ab89cd8b10d13ab7f2df3648c423230a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4888e11009af177900f20e31439a6472"><td class="memItemLeft" align="right" valign="top"><a id="a4888e11009af177900f20e31439a6472"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a4888e11009af177900f20e31439a6472">home_x</a> = rospy.get_param('home/x')</td></tr>
-<tr class="memdesc:a4888e11009af177900f20e31439a6472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire x-axis home position parameter from launch file. <br /></td></tr>
+<tr class="memitem:a4888e11009af177900f20e31439a6472"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a4888e11009af177900f20e31439a6472">home_x</a> = rospy.get_param('home/x')</td></tr>
+<tr class="memdesc:a4888e11009af177900f20e31439a6472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire x-axis home position parameter from launch file.  <a href="namespacedog__fsm.html#a4888e11009af177900f20e31439a6472">More...</a><br /></td></tr>
 <tr class="separator:a4888e11009af177900f20e31439a6472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="memItemLeft" align="right" valign="top"><a id="aa811224fcbe617c2bdf1a8699ef8d8b5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">home_y</a> = rospy.get_param('home/y')</td></tr>
-<tr class="memdesc:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire y-axis home position parameter from launch file. <br /></td></tr>
+<tr class="memitem:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">home_y</a> = rospy.get_param('home/y')</td></tr>
+<tr class="memdesc:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire y-axis home position parameter from launch file.  <a href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">More...</a><br /></td></tr>
 <tr class="separator:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41639f163dc74212860ca622b9d6a7a7"><td class="memItemLeft" align="right" valign="top"><a id="a41639f163dc74212860ca622b9d6a7a7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">room_list</a> = rospy.get_param('room_list')</td></tr>
-<tr class="memdesc:a41639f163dc74212860ca622b9d6a7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the list of available rooms from launch file. <br /></td></tr>
+<tr class="memitem:a41639f163dc74212860ca622b9d6a7a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">room_list</a> = rospy.get_param('room_list')</td></tr>
+<tr class="memdesc:a41639f163dc74212860ca622b9d6a7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the list of available rooms from launch file.  <a href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">More...</a><br /></td></tr>
 <tr class="separator:a41639f163dc74212860ca622b9d6a7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fd52750765ee795252527dfbd6a8726"><td class="memItemLeft" align="right" valign="top"><a id="a6fd52750765ee795252527dfbd6a8726"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">sim_scale</a> = rospy.get_param('sim_scale')</td></tr>
-<tr class="memdesc:a6fd52750765ee795252527dfbd6a8726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire simulation speed scaling factor from launch file. <br /></td></tr>
+<tr class="memitem:a6fd52750765ee795252527dfbd6a8726"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">sim_scale</a> = rospy.get_param('sim_scale')</td></tr>
+<tr class="memdesc:a6fd52750765ee795252527dfbd6a8726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire simulation speed scaling factor from launch file.  <a href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">More...</a><br /></td></tr>
 <tr class="separator:a6fd52750765ee795252527dfbd6a8726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01dfb5101d8897bc40b925534effb3e3"><td class="memItemLeft" align="right" valign="top"><a id="a01dfb5101d8897bc40b925534effb3e3"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a01dfb5101d8897bc40b925534effb3e3">first_iteration</a> = 1</td></tr>
-<tr class="memdesc:a01dfb5101d8897bc40b925534effb3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to let the fsm behave differently for the very first state only <br /></td></tr>
+<tr class="memitem:a01dfb5101d8897bc40b925534effb3e3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a01dfb5101d8897bc40b925534effb3e3">first_iteration</a> = 1</td></tr>
+<tr class="memdesc:a01dfb5101d8897bc40b925534effb3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to let the fsm behave differently for the very first state only  <a href="namespacedog__fsm.html#a01dfb5101d8897bc40b925534effb3e3">More...</a><br /></td></tr>
 <tr class="separator:a01dfb5101d8897bc40b925534effb3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd61d2596faead01f1da1876fd719c20"><td class="memItemLeft" align="right" valign="top"><a id="acd61d2596faead01f1da1876fd719c20"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">playtime</a> = 0</td></tr>
-<tr class="memdesc:acd61d2596faead01f1da1876fd719c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to state whether it is time to play or not <br /></td></tr>
+<tr class="memitem:acd61d2596faead01f1da1876fd719c20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">playtime</a> = 0</td></tr>
+<tr class="memdesc:acd61d2596faead01f1da1876fd719c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to state whether it is time to play or not  <a href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">More...</a><br /></td></tr>
 <tr class="separator:acd61d2596faead01f1da1876fd719c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08e20e3319ccf23e0331479526f02c72"><td class="memItemLeft" align="right" valign="top"><a id="a08e20e3319ccf23e0331479526f02c72"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">play_ball_request</a> = 100</td></tr>
-<tr class="memdesc:a08e20e3319ccf23e0331479526f02c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to identify and store the requested room (hence ball) by the human when it equals 100, it is set to its default value, and does not correspond to any ball <br /></td></tr>
+<tr class="memitem:a08e20e3319ccf23e0331479526f02c72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">play_ball_request</a> = 100</td></tr>
+<tr class="memdesc:a08e20e3319ccf23e0331479526f02c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to identify and store the requested room (hence ball) by the human when it equals 100, it is set to its default value, and does not correspond to any ball  <a href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">More...</a><br /></td></tr>
 <tr class="separator:a08e20e3319ccf23e0331479526f02c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top"><a id="a911ace87f83a3accfa7dce0146323822"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(4, 7)</td></tr>
-<tr class="memdesc:a911ace87f83a3accfa7dce0146323822"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to keep track of the robot's simulated battery charge <br /></td></tr>
+<tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(4, 7)</td></tr>
+<tr class="memdesc:a911ace87f83a3accfa7dce0146323822"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to keep track of the robot's simulated battery charge  <a href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">More...</a><br /></td></tr>
 <tr class="separator:a911ace87f83a3accfa7dce0146323822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Emulates the robotic dog's finite state machine internal architecture. </p>
-<p>The implemented states are <a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state definition.">Sleep</a>, <a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state definition.">Normal</a>, <a class="el" href="classdog__fsm_1_1Play.html" title="Play state definition.">Play</a> and <a class="el" href="classdog__fsm_1_1Find.html" title="Find state definition.">Find</a> </p>
+<p>The implemented states are <a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state: the robot gets home and sleeps for some time.">Sleep</a>, <a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a>, <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> and <a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a7be225c3a7a3e205b1b34d33e10f08e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7be225c3a7a3e205b1b34d33e10f08e7">&#9670;&nbsp;</a></span>main()</h2>
@@ -167,6 +155,225 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="names
 
 <p>Finite state machine's (fsm) main. </p>
 <p>It initializes the dog_fsm_node and setups a SMACH state machine along with all the 4 possible states </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00325">325</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a911ace87f83a3accfa7dce0146323822"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a911ace87f83a3accfa7dce0146323822">&#9670;&nbsp;</a></span>energy_timer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.energy_timer = random.randint(4, 7)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable used to keep track of the robot's simulated battery charge </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00054">54</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a01dfb5101d8897bc40b925534effb3e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01dfb5101d8897bc40b925534effb3e3">&#9670;&nbsp;</a></span>first_iteration</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_fsm.first_iteration = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable used to let the fsm behave differently for the very first state only </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00043">43</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a4888e11009af177900f20e31439a6472"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4888e11009af177900f20e31439a6472">&#9670;&nbsp;</a></span>home_x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.home_x = rospy.get_param('home/x')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire x-axis home position parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00032">32</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="aa811224fcbe617c2bdf1a8699ef8d8b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa811224fcbe617c2bdf1a8699ef8d8b5">&#9670;&nbsp;</a></span>home_y</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.home_y = rospy.get_param('home/y')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire y-axis home position parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00034">34</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="af39bbc3cbd28c88d5cfe021f10f28520"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af39bbc3cbd28c88d5cfe021f10f28520">&#9670;&nbsp;</a></span>map_x_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.map_x_max = rospy.get_param('map/x_max')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire maximum x-axis parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00023">23</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a7654888265a10a4cc1420ae249b9b772"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7654888265a10a4cc1420ae249b9b772">&#9670;&nbsp;</a></span>map_x_min</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.map_x_min = rospy.get_param('map/x_min')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire minimum x-axis parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00027">27</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a63776c94abe23016bd32304354602278"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63776c94abe23016bd32304354602278">&#9670;&nbsp;</a></span>map_y_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.map_y_max = rospy.get_param('map/y_max')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire maximum y-axis parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00025">25</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="ab89cd8b10d13ab7f2df3648c423230a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab89cd8b10d13ab7f2df3648c423230a8">&#9670;&nbsp;</a></span>map_y_min</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.map_y_min = rospy.get_param('map/y_min')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire minimum y-axis parameter from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00029">29</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a08e20e3319ccf23e0331479526f02c72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08e20e3319ccf23e0331479526f02c72">&#9670;&nbsp;</a></span>play_ball_request</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_fsm.play_ball_request = 100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable used to identify and store the requested room (hence ball) by the human when it equals 100, it is set to its default value, and does not correspond to any ball </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00051">51</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="acd61d2596faead01f1da1876fd719c20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd61d2596faead01f1da1876fd719c20">&#9670;&nbsp;</a></span>playtime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_fsm.playtime = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable used to state whether it is time to play or not </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00046">46</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a41639f163dc74212860ca622b9d6a7a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41639f163dc74212860ca622b9d6a7a7">&#9670;&nbsp;</a></span>room_list</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.room_list = rospy.get_param('room_list')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire the list of available rooms from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00037">37</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="a6fd52750765ee795252527dfbd6a8726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd52750765ee795252527dfbd6a8726">&#9670;&nbsp;</a></span>sim_scale</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">dog_fsm.sim_scale = rospy.get_param('sim_scale')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire simulation speed scaling factor from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00040">40</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>

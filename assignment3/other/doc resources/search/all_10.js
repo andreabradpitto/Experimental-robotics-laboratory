@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['yellow_5fsolved_67',['yellow_solved',['../namespacedog__vision.html#a3947a2f463291e7c4bee4be73c241059',1,'dog_vision']]],
-  ['yellowlower_68',['yellowLower',['../namespacedog__vision.html#a9a7823844939b56a831d55368fd4dda2',1,'dog_vision']]],
-  ['yellowupper_69',['yellowUpper',['../namespacedog__vision.html#aa84490813e65a83e9915cd6efe5192dd',1,'dog_vision']]]
+  ['vel_5fpub_99',['vel_pub',['../classdog__vision_1_1image__feature.html#a839db294863bcceb9e9121b96ae6ab91',1,'dog_vision::image_feature']]]
 ];

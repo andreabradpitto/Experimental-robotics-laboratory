@@ -3,6 +3,10 @@
 
 #include <costmap_2d/costmap_2d.h>
 
+/** 
+ * @brief Frontier exploration namespace
+ */
+
 namespace frontier_exploration
 {
 /**
@@ -32,7 +36,10 @@ public:
 
   /**
    * @brief Constructor for search task
-   * @param costmap Reference to costmap data to search.
+   * @param costmap Reference to costmap data to search
+   * @param potential_scale Defines, along with gain_scale, the cost function
+   * @param gain_scale Defines, along with potential_scale, the cost function
+   * @param min_frontier_size Specifies the minimum frontier size
    */
   FrontierSearch(costmap_2d::Costmap2D* costmap, double potential_scale,
                  double gain_scale, double min_frontier_size);

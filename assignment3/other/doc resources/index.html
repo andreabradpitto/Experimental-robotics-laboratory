@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Experimental robotics laboratory - Assignment 2: Experimental robotics laboratory - Assignment 3</title>
+<title>Experimental robotics laboratory - Assignment 3: Experimental robotics laboratory - Assignment 3</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="dog.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Experimental robotics laboratory - Assignment 2
+   <div id="projectname">Experimental robotics laboratory - Assignment 3
    </div>
   </td>
  </tr>
@@ -188,7 +188,7 @@ Assumptions, limitations and possible improvements</h1>
 <li>first of all, due to time constraints, I had no time completely test the code, i.e. I did not leave my program running for hours as suggested (also because my PC would have melted)</li>
 <li>during <b>Play</b> the robotic dog ignores (and discards) any new ball discovery: I made this choice in order to grants human orders higher priority with respect to mapping or any other task. That said, I could then have made so that the robot would store its position when a new ball is found during <b>Play</b>, and then get back to it once the state ends</li>
 <li>the robot's simulated battery is assumed to drain more rapidly while in <b>Play</b> than when in <b>Normal</b>, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the <b>Find</b> state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from <b>Play</b> to <b>Normal</b> after a certain drain threshold is reached, and then always carries out a single <b>Normal</b> state cycle (no matter how far it goes, which is of course another simpification) before going to <b>Sleep</b> to recharge its batteries</li>
-<li>the dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (<b>Play</b> state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code dog_fsm.py must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file</li>
+<li>the dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (<b>Play</b> state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code <a class="el" href="dog__fsm_8py.html">dog_fsm.py</a> must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file</li>
 <li>if, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md10"></a>

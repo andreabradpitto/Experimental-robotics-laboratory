@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Experimental robotics laboratory - Assignment 2: human Namespace Reference</title>
+<title>Experimental robotics laboratory - Assignment 3: human Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="dog.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Experimental robotics laboratory - Assignment 2
+   <div id="projectname">Experimental robotics laboratory - Assignment 3
    </div>
   </td>
  </tr>
@@ -76,23 +76,21 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aafd7ef3bb2e481deba422bb8520d448b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehuman.html#aafd7ef3bb2e481deba422bb8520d448b">human</a> ()</td></tr>
-<tr class="memdesc:aafd7ef3bb2e481deba422bb8520d448b"><td class="mdescLeft">&#160;</td><td class="mdescRight">After a pause, simulate the human behavior by randomly picking the next thing to do.  <a href="namespacehuman.html#aafd7ef3bb2e481deba422bb8520d448b">More...</a><br /></td></tr>
+<tr class="memdesc:aafd7ef3bb2e481deba422bb8520d448b"><td class="mdescLeft">&#160;</td><td class="mdescRight">After an initial pause, the human starts to check if the robot is prone to play.  <a href="namespacehuman.html#aafd7ef3bb2e481deba422bb8520d448b">More...</a><br /></td></tr>
 <tr class="separator:aafd7ef3bb2e481deba422bb8520d448b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a987a73057ff0442d2ca4ae3d61ee1cc4"><td class="memItemLeft" align="right" valign="top"><a id="a987a73057ff0442d2ca4ae3d61ee1cc4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehuman.html#a987a73057ff0442d2ca4ae3d61ee1cc4">room_list</a> = rospy.get_param('room_list')</td></tr>
-<tr class="memdesc:a987a73057ff0442d2ca4ae3d61ee1cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the list of available rooms from launch file. <br /></td></tr>
+<tr class="memitem:a987a73057ff0442d2ca4ae3d61ee1cc4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehuman.html#a987a73057ff0442d2ca4ae3d61ee1cc4">room_list</a> = rospy.get_param('room_list')</td></tr>
+<tr class="memdesc:a987a73057ff0442d2ca4ae3d61ee1cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the list of available rooms from launch file.  <a href="namespacehuman.html#a987a73057ff0442d2ca4ae3d61ee1cc4">More...</a><br /></td></tr>
 <tr class="separator:a987a73057ff0442d2ca4ae3d61ee1cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a61c77800fdeb5beca483239b6d3339"><td class="memItemLeft" align="right" valign="top"><a id="a5a61c77800fdeb5beca483239b6d3339"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehuman.html#a5a61c77800fdeb5beca483239b6d3339">sim_scale</a> = rospy.get_param('sim_scale')</td></tr>
-<tr class="memdesc:a5a61c77800fdeb5beca483239b6d3339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire simulation speed scaling factor from launch file. <br /></td></tr>
+<tr class="memitem:a5a61c77800fdeb5beca483239b6d3339"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehuman.html#a5a61c77800fdeb5beca483239b6d3339">sim_scale</a> = rospy.get_param('sim_scale')</td></tr>
+<tr class="memdesc:a5a61c77800fdeb5beca483239b6d3339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire simulation speed scaling factor from launch file.  <a href="namespacehuman.html#a5a61c77800fdeb5beca483239b6d3339">More...</a><br /></td></tr>
 <tr class="separator:a5a61c77800fdeb5beca483239b6d3339"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Emulates a human agent which randomly decides to play with the robotic dog. </p>
-<p>The human checks if the robot is able to play, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog is tired. All the communications sent to the robot are carried out via action a message publisher (over 'play_topic'), and all the orders are handled by dog_fsm.py </p>
+<p>The human checks if the robot is able to play, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog is tired. All the communications sent to the robot are carried out via action a message publisher (over 'play_topic'), and all the orders are handled by <a class="el" href="dog__fsm_8py.html">dog_fsm.py</a> </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="aafd7ef3bb2e481deba422bb8520d448b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafd7ef3bb2e481deba422bb8520d448b">&#9670;&nbsp;</a></span>human()</h2>
@@ -109,8 +107,47 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>After a pause, simulate the human behavior by randomly picking the next thing to do. </p>
-<p>The human can either hide or move the ball over the playing field After an initial pause, the human starts to check if the robot is prone to play. When the robotic dog is playing, the human first waits for it to come nearby, then sends it to a randomly chosen room among the pool of available ones, then waits for it to come back; then the cycle starts over. When the robot is tired, the human acknowledges it and takes a break too </p>
+<p>After an initial pause, the human starts to check if the robot is prone to play. </p>
+<p>When the robotic dog is playing, the human first waits for it to come nearby, then sends it to a randomly chosen room among the pool of available ones, then waits for it to come back; then the cycle starts over. When the robot is tired, the human acknowledges it and takes a break too </p>
+
+<p class="definition">Definition at line <a class="el" href="human_8py_source.html#l00030">30</a> of file <a class="el" href="human_8py_source.html">human.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a987a73057ff0442d2ca4ae3d61ee1cc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a987a73057ff0442d2ca4ae3d61ee1cc4">&#9670;&nbsp;</a></span>room_list</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">human.room_list = rospy.get_param('room_list')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire the list of available rooms from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="human_8py_source.html#l00020">20</a> of file <a class="el" href="human_8py_source.html">human.py</a>.</p>
+
+</div>
+</div>
+<a id="a5a61c77800fdeb5beca483239b6d3339"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a61c77800fdeb5beca483239b6d3339">&#9670;&nbsp;</a></span>sim_scale</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">human.sim_scale = rospy.get_param('sim_scale')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acquire simulation speed scaling factor from launch file. </p>
+
+<p class="definition">Definition at line <a class="el" href="human_8py_source.html#l00023">23</a> of file <a class="el" href="human_8py_source.html">human.py</a>.</p>
 
 </div>
 </div>

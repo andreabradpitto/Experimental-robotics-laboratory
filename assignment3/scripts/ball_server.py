@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ## @package ball_server
-# Implements BallService, i.e. a server providing the coordinates of the ball whose color
+# Implements a server providing the coordinates of the ball whose color
 # is matches the input room.
 # The received room must have already been coded in a specific single digit integer format
 # in order to be correctly parsed

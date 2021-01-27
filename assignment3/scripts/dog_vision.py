@@ -87,7 +87,6 @@ class image_feature:
 
     ## Class initialization: subscribe to topics and declare publishers
     def __init__(self):
-        ##Initialize ros publisher, ros subscriber
         rospy.init_node('dog_vision_node', anonymous = True)
 
         ## topic over which camera images get published

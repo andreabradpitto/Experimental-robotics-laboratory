@@ -22,8 +22,6 @@ room_list = rospy.get_param('room_list')
 ## Acquire simulation speed scaling factor from launch file
 sim_scale = rospy.get_param('sim_scale')
 
-## After a pause, simulate the human behavior by randomly picking the next
-# thing to do. The human can either hide or move the ball over the playing field
 ## After an initial pause, the human starts to check if the robot is prone to play.
 # When the robotic dog is playing, the human first waits for it to come nearby, then
 # sends it to a randomly chosen room among the pool of available ones, then waits for it

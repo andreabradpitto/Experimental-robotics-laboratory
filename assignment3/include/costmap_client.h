@@ -11,6 +11,9 @@
 
 namespace explore
 {
+/** 
+ * @brief Costmap2DClient class definition
+ */
 class Costmap2DClient
 {
 public:

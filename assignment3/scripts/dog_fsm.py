@@ -55,7 +55,7 @@ energy_timer = random.randint(4, 7)
 
 
 
-## Sleep state definition
+## Sleep state: the robot gets home and sleeps for some time
 class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes
     def __init__(self):
@@ -71,6 +71,7 @@ class Sleep(smach.State):
         # function called when exiting from the node, it can be blocking
         global first_iteration, energy_timer
         rospy.set_param('state','sleep')
+        ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## move_base client used to reach home position
         mb_sleep_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -97,7 +98,7 @@ class Sleep(smach.State):
 
 
 
-## Normal state definition
+## Normal state: the robot wanders randomly in the house via move_base calls
 class Normal(smach.State):
     ## Normal state initialization: set the outcomes and subscribe to the
     # 'play_topic' topic, on which human.py publishes its commands
@@ -120,6 +121,7 @@ class Normal(smach.State):
         # function called when exiting from the node, it can be blocking
         global playtime, energy_timer
         rospy.set_param('state', 'normal')
+        ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## move_base client used to send random positions as goals
         mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -161,7 +163,8 @@ class Normal(smach.State):
 
 
 
-## Play state definition
+## Play state: the robot gets to the human, waits for a room order, then gets back
+# to the human
 class Play(smach.State):
     ## Play state initialization: set the outcomes and subscribe to the
     # 'play_topic' topic, on which human.py publishes its commands
@@ -189,6 +192,7 @@ class Play(smach.State):
         # function called when exiting from the node, it can be blocking
         global play_ball_request, energy_timer
         rospy.set_param('state', 'play')
+        ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## move_base client that is used both to reach home location and the
         # room requested by the human
@@ -277,7 +281,7 @@ class Play(smach.State):
 
 
 
-## Find state definition
+## Find state: the robotic dog looks around for a specific room
 class Find(smach.State):
     ## Find state initialization: set the outcomes
     def __init__(self):
@@ -299,6 +303,7 @@ class Find(smach.State):
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         rospy.set_param('state', 'find')
+        ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## explore_lite service client that lets the algorithm start
         # exploring the robotic dog's surroundings

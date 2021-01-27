@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['home_5fx_117',['home_x',['../namespacedog__fsm.html#a4888e11009af177900f20e31439a6472',1,'dog_fsm']]],
-  ['home_5fy_118',['home_y',['../namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5',1,'dog_fsm']]]
+  ['global_5fframe_5f_177',['global_frame_',['../classexplore_1_1Costmap2DClient.html#a7a1947e93767e79127bf7579906aea00',1,'explore::Costmap2DClient']]],
+  ['green_5fsolved_178',['green_solved',['../namespacedog__vision.html#a66674c31e3aa62d80f3155f052485e4e',1,'dog_vision']]],
+  ['greenlower_179',['greenLower',['../namespacedog__vision.html#abca27b21beed5bfb0ee9a2af7bfab8df',1,'dog_vision']]],
+  ['greenupper_180',['greenUpper',['../namespacedog__vision.html#ac7c13108eb2911f90b6ed5628ef9c8ac',1,'dog_vision']]]
 ];

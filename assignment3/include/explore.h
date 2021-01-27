@@ -17,6 +17,10 @@
 
 #include <assignment3/Explore.h>
 
+/** 
+ * @brief Explore algorithm namespace
+ */
+
 namespace explore
 {
 /**
@@ -25,7 +29,7 @@ namespace explore
  * robot base to explore its environment.
  * 
  * Here I added the two service server declarations. The remaining changes I made are
- * all in explore.cpp, so refer to its documentation if needed
+ * all in explore.cpp
  */
 class Explore
 {
@@ -33,7 +37,13 @@ public:
   Explore();
   ~Explore();
 
+  /**
+   * @brief Method starting algorithm execution
+   */
   void start();
+    /**
+   * @brief Method stopping algorithm execution
+   */
   void stop();
 
   /**
@@ -47,6 +57,10 @@ public:
   bool srv_stop(assignment3::Explore::Request& req,
           assignment3::Explore::Response& res);
   
+  /**
+   * @brief Variable used to prevent the algorithm from running at launch; it
+   * will instead wait for a service client call
+   */
   int first_run = 0;
 
 private:
