@@ -89,7 +89,7 @@ The house</h2>
 <h2><a class="anchor" id="autotoc_md24"></a>
 The robotic dog</h2>
 <p>The robot I implemented is composed by basic geometric shapes, while trying to find a medium between looks and functionality. Indeed, it features two eyes, in order to resemble a real dog, but only one of them holds a sensor, i.e. a camera, which is used to spot the colored balls: the other one has no purpose other than giving some flavour to the model. The other sensor present on the robot is a laser scanner, which is mounted on its main chassis and is used to detect the obstacles in front of it. It is positioned much lower with respect to the camera in order to guarantee the best obstacle detection as possible: the tests I made clearly showed that having the two robot "eyes" as the two sensor spots was much harder to implement successfully.<br  />
- Here is a picture the robotic dog (again, taken from Gazibo):</p>
+ Here is a picture the robotic dog (again, taken from Gazebo):</p>
 <div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/robot.png" alt="" class="inline"/> </div><p>It is a two-wheeled differential drive robot. Apart from the wheels, all the joints are fixed, so the dog cannot, for intstance, rotate its head to look around. Notice the orange cube on the front, which is the shape representing the above mentioned laser scanner.</p>
 <h2><a class="anchor" id="autotoc_md25"></a>
 The environments</h2>
@@ -105,33 +105,40 @@ The environments</h2>
 <hr  />
 <h1><a class="anchor" id="autotoc_md27"></a>
 Architecture</h1>
-<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png" alt="" class="inline"/> </div><p>The architecture is made of five components:</p><ul>
-<li><b>Human</b>: it is implemented by <a href="scripts/human.py">human.py</a>, which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it</li>
-<li><b>Dog FSM</b>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
-<li><b>Dog control</b>: it is implemented by <a href="scripts/dog_control.py">dog_control.py</a>, which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state</li>
-<li><b>Dog control ball</b>: it is implemented by <a href="scripts/dog_control_ball.py">dog_control_ball.py</a>, which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped</li>
-<li><b>Go to point ball</b>: it is implemented by <a href="scripts/go_to_point_ball.py">go_to_point_ball.py</a>, and is used to move the ball along the playing field. Goal positions are issued randomly by <a href="scripts/human.py">human.py</a></li>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png" alt="" class="inline"/> </div><p>The architecture is made of these components:</p><ul>
+<li><em>Human</em>: it is implemented by <a href="scripts/human.py">human.py</a>, that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog is tired. All the communications sent to the robot are carried out via action a message publisher (over <code>play_topic</code>), and all the orders are handled by <a href="scripts/dog_fsm.py">dog_fsm.py</a></li>
+<li><em>Dog FSM</em>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
+<li><em>Dog vision</em>: it is implemented by <a href="scripts/dog_vision.py">dog_vision.py</a>, and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes</li>
+<li><em>Ball server</em>: it is implemented by <a href="scripts/ball_server.py">ball_server.py</a>; it is a server providing the coordinates of the ball whose color matches the input room. The received room must have already been coded in a specific single digit integer format in order to be correctly parsed</li>
+<li><em>A modified version of the <a href="http://wiki.ros.org/explore_lite">explore_lite</a> package</em>: it is implemented by <a href="src/explore.cpp">explore.cpp</a>, <a href="src/costmap_client.cpp">costmap_client.cpp</a>, and <a href="src/frontier_search.cpp">frontier_search.cpp</a>, along with their headers: <a href="include/explore.h">explore.h</a>, <a href="include/costmap_client.h">costmap_client.h</a>, <a href="include/frontier_search.h">frontier_search.h</a>, <a href="include/costmap_tools.h">costmap_tools.h</a>. It is the algorithm allowing the robot to explore the house during the <b>Find</b> state. I made some adjustments in order to let <a href="scripts/dog_vision.py">dog_vision.py</a> and <a href="scripts/dog_fsm.py">dog_fsm.py</a> send service calls in order to (re-)start or stop the exploration<br  />
+</li>
 </ul>
-<p>...qua dire gli algoritmi che uso e spiegare explore_lite inglobato... states description</p>
 <div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/fsm.png" alt="" class="inline"/> </div><p>The dog starts in the <b>Sleep</b> state.<br  />
- Topics involved:</p>
-<ul>
-<li><code>control_topic</code>: topic used by the FSM to order the <b>Dog_control</b> component to start simulating a movement</li>
-<li><code>motion_over_topic</code>: topic whose duty is to inform the FSM when the motion is over or interrupted by the sight of the ball</li>
-<li><code>ball_control_topic</code>: topic used by <b>Dog control ball</b> to communicate with <b>Dog FSM</b>: it sends information when the ball is first spotted by the robot, and then when the dog eventually loses track of it</li>
-</ul>
-<p>The actions used are:</p>
-<ul>
-<li><code>assignment2.msg/PlanningAction</code>: a simple action whose goals are of type <b>geometry_msgs/PoseStamped</b></li>
+ In the <b>Sleep</b> state, the robot goes to sleep once he gets back home. It relies on the <a href="http://wiki.ros.org/move_base">move_base</a> algorithm in order to move in the environment, and it does so by implementing an action client and asking it to reach the coordinates corresponding to home.<br  />
+ In the <b>Normal</b> state, the robot wanders randomly, by feeding the move_base algorithm with randomly generated positions. If, while moving around, the robot detects a new room/ball, it reaches it and stores the corresponding position. At any time, a play command can be received by the human: if so happens, the robotic dog transitions to the Play state. Every newly detected room, along with its subsequent data collection process, consumes robot battery. If the battery gets depleted, the robot goes to sleep, by transitioning to the <b>Sleep</b> state.<br  />
+ In the <b>Play</b> state, using the move_base algorithm, the robotic dog, gets back home (i.e. close to the human), then starts listening for the room request. Once received, it checks via a service implemented in <a href="scripts/ball_server.py">ball_server.py</a> which are the corresponing ball coordinates to reach. If the ball is not yet in the dog's database, it shifts to the Find state. If the ball has been seen before the dog starts moving to the chosen room, still relying on move_base. After reaching that position, it comes back to the user, again via move_base: whenever this process is completed, some battery is consumed. Furthermore, I assumed that a single cycle of this state consumes slightly more battery, on average, than one of the <b>Normal</b> state; for this reason, the threshold of remaining battery before going back to the <b>Normal</b> state is higher than in the previous case (i.e. from <b>Normal</b> to <b>Sleep</b>): this also allows me to make sure that the robot can go to sleep before completely depleting its battery.<br  />
+ Lastly, in the <b>Find</b> state, the robotic dog looks for the goal ball, determined in the <b>Play</b> state. In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. The code of the algorithm, which is contained inside the Explore class (see <a href="src/explore.cpp">explore.cpp</a>), has been adjusted with the inclusion of a method able to handle requests coming from this node. The exploration algorithm keeps running until <a href="scripts/dog_vision.py">dog_vision.py</a> stops its execution, i.e. a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the <b>Play</b> state. The human will then immediately call the dog back to its position, and another <b>Play</b> state cycle can begin.<br  />
+</p>
+<p><br  />
+ The usage of <a href="http://wiki.ros.org/rqt_graph">rqt_graph</a> shows all the nodes, topics and namespace involved:</p>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/rqt_graph_nodes+topics.png" alt="" class="inline"/> </div><p>There is only a single topic directly generated by this package:</p><ul>
+<li><code>play_topic</code>: it is used by the human node in order to communicate the willingness to play, and then also the room the robot should reach. The finiste state machine node subscribes to this topic, and so it is the one devoted to handling human requests.<br  />
+ <br  />
+</li>
 </ul>
 <p>The message types used are:</p>
 <ul>
-<li><code>std_msgs.msg/Int64</code>: imported message type consisting in an integer</li>
-<li><code>assignment2.msg/Coordinates</code>: message made of two integers <b>x</b> and <b>y</b></li>
+<li><code>assignment3.msg/Coordinates</code>: message made of two integers <b>x</b> and <b>y</b></li>
 </ul>
-<p>The latter of the two is of course a custom one, which has been coded for this project and is shipped with this package itself. Standard messages could have been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br  />
- Finally, here are the parameters (strictly related to the robotic dog) loaded in the ROS parameter server:</p>
+<p>An already-defined message could have also been used, but this new type creation had also been created as an extra exercise, in order to get more acquainted with the ROS environment.<br  />
+ <br  />
+</p>
+<p>The services message types used are:</p>
 <ul>
+<li><code>assignment3.srv/Explore</code>: a simple <a href="http://docs.ros.org/en/melodic/api/std_msgs/html/msg/Int64.html">int64</a> input and output service that is used to send (re-)start and stop request to the exploration algorithm</li>
+<li><code>assignment3.srv/BallService</code>: used by <a href="scripts/dog_fsm.py">dog_fsm.py</a> in order to ask for the goal ball's coordinates. If the answer (of type Coordintates) is (100, 100), the requested ball is still to be found, i.e. its coordinates are not yet present in the robotic dog's database. The server is <a href="scripts/ball_server.py">ball_server.py</a><br  />
+ <br  />
+ Finally, here are the parameters (strictly related to the robotic dog) loaded in the ROS parameter server:</li>
 <li><code>state</code>: parameter specifying robot current state</li>
 <li><code>map/x_max</code>: parameter specifying the maximum x-axis value for the map</li>
 <li><code>map/y_max</code>: parameter specifying the maximum y-axis value for the map</li>
@@ -179,7 +186,7 @@ Instructions</h1>
 <div class="line">$ chmod +x src/* </div>
 </div><!-- fragment --><p>In order to run the code, put the <em>assignment3</em> directory in your workspace, build, then open a terminal and type:</p>
 <div class="fragment"><div class="line">$ roslaunch assignment.launch </div>
-</div><!-- fragment --><p>This will start the simulation on both Gazebo and RViz.</p>
+</div><!-- fragment --><p>This will start the simulation on both Gazebo and RViz, and also open a window showing the robotic dog camera's output.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md33"></a>
 Assumptions, limitations and possible improvements</h1>
@@ -187,7 +194,7 @@ Assumptions, limitations and possible improvements</h1>
 <li>First of all, due to time constraints, I had no time completely test the code, i.e. I did not leave my program running for hours as suggested (also because my PC would have melted)</li>
 <li>During <b>Play</b> the robotic dog ignores (and discards) any new ball discovery: I made this choice in order to grants human orders higher priority with respect to mapping or any other task. That said, I could then have made so that the robot would store its position when a new ball is found during <b>Play</b>, and then get back to it once the state ends</li>
 <li>The robot's simulated battery is assumed to drain more rapidly while in <b>Play</b> than when in <b>Normal</b>, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the <b>Find</b> state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from <b>Play</b> to <b>Normal</b> after a certain drain threshold is reached, and then always carries out a single <b>Normal</b> state cycle (no matter how far it goes, which is of course another simpification) before going to <b>Sleep</b> to recharge its batteries</li>
-<li>The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (<b>Play</b> state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code <a class="el" href="dog__fsm_8py.html">dog_fsm.py</a> must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file</li>
+<li>The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (<b>Play</b> state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code <a href="scripts/dog_fsm.py">dog_fsm.py</a> must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file</li>
 <li>If, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases</li>
 </ul>
 <hr  />
