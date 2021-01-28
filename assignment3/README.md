@@ -62,9 +62,9 @@ On the left hand side of the image above, there are many the elements useful to 
 The architecture is made of five components:
 - **Human**: it is implemented by [human.py](scripts/human.py), which is used to simulate the dog owner. This component randomly whooses whether the human decides to move the ball along (throw) the playing field, or to hide it
 - **Dog FSM**: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
-- **Dog control**: it is implemented by [dog_control.py](scripts/dog_control.py), which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state
-- **Dog control ball**: it is implemented by [dog_control_ball.py](scripts/dog_control_ball.py), which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped
-- **Go to point ball**: it is implemented by [go_to_point_ball.py](scripts/go_to_point_ball.py), and is used to move the ball along the playing field. Goal positions are issued randomly by [human.py](scripts/human.py)
+- **Dog control**: it is implemented by [dog_vision.py](scripts/dog_vision.py), which is used to have the robotic dog reaching a random position during the Normal state, or its home during the Sleep state
+- **Dog control ball**: it is implemented by [ball_server.py](scripts/ball_server.py), which is used to make the dog follow the ball, or to look for it if it has lost track of the green sphere. It also makes the robotic dog turn its head when he perceives that the ball has stopped
+- **Go to point ball**: it is implemented by [explore.cpp](src/explore.cpp), and is used to move the ball along the playing field. Goal positions are issued randomly by [human.py](scripts/human.py)
 
 ...qua dire gli algoritmi che uso e spiegare explore_lite inglobato...
 states description
@@ -74,6 +74,12 @@ states description
 </div>
 
 The dog starts in the **Sleep** state.<br/>
+In the **Sleep** state, the robot goes to sleep once he gets back home. It relies on the move_base algorithm in order to move in the environment, and it does so by implementing an action client and asking it to reach the coordinates corresponding to home.<br/>
+In the **Normal** state, the robot wanders randomly, by feeding the move_base algorithm with randomly generated positions. If, while moving around, the robot detects a new room/ball, it reaches it and stores the corresponding position. At any time, a play command can be received by the human: if so happens, the robotic dog transitions to the Play state. Every newly detected room, along with its subsequent data collection process, consumes robot battery. If the battery gets depleted, the robot goes to sleep, by transitioning to the **Sleep** state.<br/>
+In the **Play** state, using the move_base algorithm, the robotic dog, gets back home (i.e. close to the human), then starts listening for the room request. Once received, it checks via a service implemented in ball_server.py which are the corresponing ball coordinates to reach. If the ball is not yet in the dog's database, it shifts to the Find state. If the ball has been seen before the dog starts moving to the chosen room, still relying on move_base. After reaching that position, it comes back to the user, again via move_base: whenever this process is completed, some battery is consumed. Furthermore, I assumed that a single cycle of this state consumes slightly more battery, on average, than one of the **Normal** state; for this reason, the threshold of remaining battery before going back to the **Normal** state is higher than in the previous case (i.e. from **Normal** to **Sleep**): this also allows me to make sure that the robot can go to sleep before completely depleting its battery.<br/>
+Lastly, in the **Find** state, the robotic dog looks for the goal ball, determined in the **Play** state. In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. The code of the algorithm, which is contained inside the Explore class (see explore.cpp), has been adjusted with the inclusion of a method able to handle requests coming from this node. The exploration algorithm keeps running until dog_vision.py stops its execution, i.e. a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the **Play** state. The human will then immediately call the dog back to its position, and another **Play** state cycle can begin.<br/>
+
+<br/>
 Topics involved:
 
 - `control_topic`: topic used by the FSM to order the **Dog_control** component to start simulating a movement

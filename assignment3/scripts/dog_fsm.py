@@ -116,7 +116,7 @@ class Normal(smach.State):
     # the robotic dog transitions to the Play state. Every newly detected room,
     # along with its subsequent data collection process, consumes robot battery.
     # If the battery gets depleted, the robot goes to sleep, by transitioning
-    # to the Sleep state.
+    # to the Sleep state
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
         global playtime, energy_timer
