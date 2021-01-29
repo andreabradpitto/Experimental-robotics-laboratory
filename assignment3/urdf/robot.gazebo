@@ -44,7 +44,7 @@
       <rosDebugLevel>na</rosDebugLevel>
       <wheelAcceleration>0</wheelAcceleration>
       <wheelTorque>5</wheelTorque>
-      <odometrySource>world</odometrySource> <!--1-->
+      <odometrySource>world</odometrySource>
       <publishOdomTF>true</publishOdomTF>
       <publishWheelTF>false</publishWheelTF>
       <publishWheelJointState>false</publishWheelJointState>
@@ -52,7 +52,7 @@
     </plugin>
   </gazebo>
 
-   <!-- camera -->
+  <!-- camera -->
   <gazebo reference="camera_link">
     <sensor type="camera" name="camera_sensor">
       <update_rate>30.0</update_rate>
