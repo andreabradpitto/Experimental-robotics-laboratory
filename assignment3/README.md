@@ -59,7 +59,7 @@ The computed world map is acquired by reading from the `map` topic, which is pub
 
 ## Architecture
 <div align="center">
-  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/architecture.png">
 </div>
 
 (Please notice that, in the picture, the two environments are not reported with their full input for the sake of simplicity)<br/>
@@ -140,7 +140,7 @@ All of these, as already pointed out, can be adjusted before runtime. Please not
 Finally, here is the list of all the files and folders featured in this package (up to depth level 2, in order to skip [Doxygen](https://www.doxygen.nl/index.html) resources):
 
 <div align="center">
-  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/tree.png">
 </div>
 
 ---
