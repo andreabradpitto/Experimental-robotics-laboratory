@@ -11,10 +11,7 @@
 import rospy
 import time
 import random
-import math
-import assignment3.msg
 from std_msgs.msg import String
-from geometry_msgs.msg import PoseStamped
 
 ## Acquire the list of available rooms from launch file
 room_list = rospy.get_param('room_list')

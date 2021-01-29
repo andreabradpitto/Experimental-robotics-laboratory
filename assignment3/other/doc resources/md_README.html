@@ -100,12 +100,17 @@ The environments</h2>
 <li>the green line is the local navigation plan</li>
 <li>the red lines are the current detections of the robot's laser</li>
 <li>the blue borders (and the green spheres, not shown here) are elements used by the exploration algorithm (see later on)</li>
-<li>the two white squares centered over the robot are the gloabl and local costmaps</li>
+<li>the two white squares centered over the robot are the gloabl and local costmaps <br  />
+</li>
 </ul>
+<p>The computed world map is acquired by reading from the <code>map</code> topic, which is published by the <a href="http://wiki.ros.org/gmapping">gmapping</a> laser-based <a href="https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> algorithm. It uses the laser scan data in order to chart the house walls.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md27"></a>
 Architecture</h1>
-<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png" alt="" class="inline"/> </div><p>The architecture is made of these components:</p><ul>
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture.png" alt="" class="inline"/> </div><p>(Please notice that, in the picture, the two environments are not reported with their full input for the sake of simplicity)<br  />
+ <br  />
+</p>
+<p>This is the list of the components that have been coded for the assignment:</p><ul>
 <li><em>Human</em>: it is implemented by <a href="scripts/human.py">human.py</a>, that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog is tired. All the communications sent to the robot are carried out via action a message publisher (over <code>play_topic</code>), and all the orders are handled by <a href="scripts/dog_fsm.py">dog_fsm.py</a></li>
 <li><em>Dog FSM</em>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
 <li><em>Dog vision</em>: it is implemented by <a href="scripts/dog_vision.py">dog_vision.py</a>, and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes</li>
@@ -168,8 +173,8 @@ Architecture</h1>
 <li><code>black/x</code>: parameter used to specify the x coordinate of the black ball, once discovered</li>
 <li><code>black/y</code>: parameter used to specify the y coordinate of the black ball, once discovered</li>
 </ul>
-<p>All of these, as already pointed out, can be adjusted before runtime.<br  />
- Finally, here is the list of all the files and folders featured in this package:</p>
+<p>All of these, as already pointed out, can be adjusted before runtime. Please notice that, as a general rule I applied, the value 100 for any of the above parameters always represents missing data or an undefined/default value for that specific parameter.<br  />
+ Finally, here is the list of all the files and folders featured in this package (up to depth level 2, in order to skip <a href="https://www.doxygen.nl/index.html">Doxygen</a> resources):</p>
 <div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png" alt="" class="inline"/> </div><hr  />
 <h1><a class="anchor" id="autotoc_md29"></a>
 Requirements</h1>
@@ -177,6 +182,7 @@ Requirements</h1>
 <li><a href="http://wiki.ros.org/kinetic">ROS Kinetic</a></li>
 <li><a href="http://wiki.ros.org/smach">SMACH</a></li>
 <li><a href="https://opencv.org/">OpenCV</a></li>
+<li><a href="http://wiki.ros.org/gmapping">gmapping</a></li>
 <li>A <a href="https://www.python.org/">Python</a> interpreter</li>
 </ul>
 <hr  />

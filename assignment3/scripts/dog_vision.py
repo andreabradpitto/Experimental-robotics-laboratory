@@ -8,21 +8,18 @@
 # the positions of the balls discovered, thus learning the displacement of the rooms
 # inside the house as time passes
 
-# Python libs
+# Python library
 import sys
-import time
 
-# numpy and scipy
+# numpy
 import numpy as np
-from scipy.ndimage import filters
 
 import imutils
 
 # OpenCV
 import cv2
 
-# Ros libraries
-import roslib
+# Ros library
 import rospy
 
 # Ros Messages
@@ -30,10 +27,9 @@ from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Twist
 
 import actionlib
-import assignment3.msg
 from assignment3.srv import Explore
 from nav_msgs.msg import Odometry
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from move_base_msgs.msg import MoveBaseAction
 
 ## set lower bound of the BGR color coding for blue ball recognition
 blueLower = (100, 50, 50)
@@ -681,7 +677,7 @@ class image_feature:
 
 ## Invokes the image_feature class and spins until interrupted by a keyboard command
 def main(args):
-    '''Initializes and cleanups ros node'''
+    #Initializes and cleanups ros node
     #ic = image_feature()
     image_feature()
     try:

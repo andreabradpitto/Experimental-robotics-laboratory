@@ -51,15 +51,21 @@ On the left hand side of the image above, there are many the elements useful to 
 - the red lines are the current detections of the robot's laser
 - the blue borders (and the green spheres, not shown here) are elements used by the exploration algorithm (see later on)
 - the two white squares centered over the robot are the gloabl and local costmaps
+<br/>
+
+The computed world map is acquired by reading from the `map` topic, which is published by the [gmapping](http://wiki.ros.org/gmapping) laser-based [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping) algorithm. It uses the laser scan data in order to chart the house walls.
 
 ---
 
 ## Architecture
 <div align="center">
-  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture%20and%20topics.png">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture.png">
 </div>
 
-The architecture is made of these components:
+(Please notice that, in the picture, the two environments are not reported with their full input for the sake of simplicity)<br/>
+<br/>
+
+This is the list of the components that have been coded for the assignment:
 - *Human*: it is implemented by [human.py](scripts/human.py), that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog is tired. All the communications sent to the robot are carried out via action a message publisher (over `play_topic`), and all the orders are handled by [dog_fsm.py](scripts/dog_fsm.py)
 - *Dog FSM*: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
 - *Dog vision*: it is implemented by [dog_vision.py](scripts/dog_vision.py), and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes
@@ -130,8 +136,8 @@ Finally, here are the parameters (strictly related to the robotic dog) loaded in
 - `black/x`: parameter used to specify the x coordinate of the black ball, once discovered
 - `black/y`: parameter used to specify the y coordinate of the black ball, once discovered
 
-All of these, as already pointed out, can be adjusted before runtime.<br/>
-Finally, here is the list of all the files and folders featured in this package:
+All of these, as already pointed out, can be adjusted before runtime. Please notice that, as a general rule I applied, the value 100 for any of the above parameters always represents missing data or an undefined/default value for that specific parameter.<br/>
+Finally, here is the list of all the files and folders featured in this package (up to depth level 2, in order to skip [Doxygen](https://www.doxygen.nl/index.html) resources):
 
 <div align="center">
   <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png">
@@ -144,6 +150,7 @@ In order to run this piece of software, it is needed to have a Linux distributio
 - [ROS Kinetic](http://wiki.ros.org/kinetic)
 - [SMACH](http://wiki.ros.org/smach)
 - [OpenCV](https://opencv.org/)
+- [gmapping](http://wiki.ros.org/gmapping)
 - A [Python](https://www.python.org/) interpreter
 
 ---

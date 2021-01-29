@@ -4,20 +4,15 @@
 # Emulates the robotic dog's finite state machine internal architecture. 
 # The implemented states are Sleep, Normal, Play and Find
 
-import roslib
 import rospy
 import smach
 import smach_ros
 import time
 import random
 import actionlib
-import assignment3
-import assignment3.msg
 from std_msgs.msg import String
 from assignment3.srv import BallService, Explore
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from actionlib_msgs.msg import GoalStatus
-from nav_msgs.msg import Odometry
 
 ## Acquire maximum x-axis parameter from launch file
 map_x_max = rospy.get_param('map/x_max')

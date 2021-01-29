@@ -7,13 +7,13 @@
      the world model inside Gazebo
      RViz
      the URDF human model inside Gazebo
-     all the parameter used by the robot nodes
+     all the parameters used by the robot nodes
      the URDF robot model inside both Gazebo and RViz
      the human.py script
      the dog_fsm.py script
      the dog_vision.py script
      the ball_server.py script
-     the explore.cpp action server, with the explore_lite algorithm nested in its callback
+     a custom version of the explore_lite package
 -->
 
 <launch>	
@@ -46,14 +46,14 @@
   <arg unless="$(arg debug)" name="script_type" value="gzserver"/>
   <arg     if="$(arg debug)" name="script_type" value="debug"/>
 
-  <!-- start gazebo server-->
+  <!-- start Gazebo server-->
   <group if="$(arg use_clock_frequency)">
     <param name="gazebo/pub_clock_frequency" value="$(arg pub_clock_frequency)" />
   </group>
   <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="$(arg respawn_gazebo)" output="screen"
 	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)" />
 	
-  <!-- start gazebo client -->
+  <!-- start Gazebo client -->
   <group if="$(arg gui)">
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
   </group>
@@ -134,7 +134,7 @@
 	    command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
 
   <!-- nodes -->
-    <!-- run a Python script to the send a service call to Gazebo_ros to spawn a URDF robot -->
+    <!-- run a Python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
 	    args="-urdf -model robot1 -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>
@@ -160,7 +160,6 @@
 
     <!-- node executing, when requested, the explore_lite algorithm -->
     <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node" output="screen">
-    <!--togliere output = screen-->
       <param name="robot_base_frame" value="link_chassis"/>
       <param name="costmap_topic" value="map"/>
       <param name="costmap_updates_topic" value="map_updates"/>

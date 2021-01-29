@@ -74,335 +74,330 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> roslib</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> rospy</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> smach</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">import</span> smach_ros</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">import</span> time</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">import</span> random</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">import</span> actionlib</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">import</span> assignment3</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">import</span> assignment3.msg</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">from</span> std_msgs.msg <span class="keyword">import</span> String</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">from</span> assignment3.srv <span class="keyword">import</span> BallService, Explore</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">from</span> move_base_msgs.msg <span class="keyword">import</span> MoveBaseAction, MoveBaseGoal</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">from</span> actionlib_msgs.msg <span class="keyword">import</span> GoalStatus</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">from</span> nav_msgs.msg <span class="keyword">import</span> Odometry</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> rospy</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> smach</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> smach_ros</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">import</span> time</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">import</span> random</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">import</span> actionlib</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">from</span> std_msgs.msg <span class="keyword">import</span> String</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">from</span> assignment3.srv <span class="keyword">import</span> BallService, Explore</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">from</span> move_base_msgs.msg <span class="keyword">import</span> MoveBaseAction, MoveBaseGoal</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#af39bbc3cbd28c88d5cfe021f10f28520">   18</a></span>&#160;map_x_max = rospy.get_param(<span class="stringliteral">&#39;map/x_max&#39;</span>)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a63776c94abe23016bd32304354602278">   20</a></span>&#160;map_y_max = rospy.get_param(<span class="stringliteral">&#39;map/y_max&#39;</span>)</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#af39bbc3cbd28c88d5cfe021f10f28520">   23</a></span>&#160;map_x_max = rospy.get_param(<span class="stringliteral">&#39;map/x_max&#39;</span>)</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a63776c94abe23016bd32304354602278">   25</a></span>&#160;map_y_max = rospy.get_param(<span class="stringliteral">&#39;map/y_max&#39;</span>)</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a7654888265a10a4cc1420ae249b9b772">   22</a></span>&#160;map_x_min = rospy.get_param(<span class="stringliteral">&#39;map/x_min&#39;</span>)</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#ab89cd8b10d13ab7f2df3648c423230a8">   24</a></span>&#160;map_y_min = rospy.get_param(<span class="stringliteral">&#39;map/y_min&#39;</span>)</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a7654888265a10a4cc1420ae249b9b772">   27</a></span>&#160;map_x_min = rospy.get_param(<span class="stringliteral">&#39;map/x_min&#39;</span>)</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a4888e11009af177900f20e31439a6472">   27</a></span>&#160;home_x = rospy.get_param(<span class="stringliteral">&#39;home/x&#39;</span>)</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#ab89cd8b10d13ab7f2df3648c423230a8">   29</a></span>&#160;map_y_min = rospy.get_param(<span class="stringliteral">&#39;map/y_min&#39;</span>)</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">   29</a></span>&#160;home_y = rospy.get_param(<span class="stringliteral">&#39;home/y&#39;</span>)</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a4888e11009af177900f20e31439a6472">   32</a></span>&#160;home_x = rospy.get_param(<span class="stringliteral">&#39;home/x&#39;</span>)</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">   32</a></span>&#160;room_list = rospy.get_param(<span class="stringliteral">&#39;room_list&#39;</span>)</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">   34</a></span>&#160;home_y = rospy.get_param(<span class="stringliteral">&#39;home/y&#39;</span>)</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">   35</a></span>&#160;sim_scale = rospy.get_param(<span class="stringliteral">&#39;sim_scale&#39;</span>)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">   37</a></span>&#160;room_list = rospy.get_param(<span class="stringliteral">&#39;room_list&#39;</span>)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a01dfb5101d8897bc40b925534effb3e3">   38</a></span>&#160;first_iteration = 1</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">   40</a></span>&#160;sim_scale = rospy.get_param(<span class="stringliteral">&#39;sim_scale&#39;</span>)</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">   41</a></span>&#160;playtime = 0</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a01dfb5101d8897bc40b925534effb3e3">   43</a></span>&#160;first_iteration = 1</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">   46</a></span>&#160;playtime = 0</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">   46</a></span>&#160;play_ball_request = 100</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">   51</a></span>&#160;play_ball_request = 100</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">   49</a></span>&#160;energy_timer = random.randint(4, 7)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">   54</a></span>&#160;energy_timer = random.randint(4, 7)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html">   59</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Sleep.html">Sleep</a>(smach.State):</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    </div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">   61</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">__init__</a>(self):</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        smach.State.__init__(self, </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                             outcomes=[<span class="stringliteral">&#39;wake_up&#39;</span>])</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    </div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">   70</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">execute</a>(self, userdata):</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">global</span> first_iteration, energy_timer</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>,<span class="stringliteral">&#39;sleep&#39;</span>)</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">   75</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">rate</a>rate = rospy.Rate(200)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        mb_sleep_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">if</span> first_iteration == 0:</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            home_pos = MoveBaseGoal()</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            home_pos.target_pose.pose.orientation.w = 1.0</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            home_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            home_pos.target_pose.header.stamp = rospy.Time.now()</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <span class="comment"># set target as the home position (x-axis)</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            home_pos.target_pose.pose.position.x = home_x</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="comment"># set target as the home position (y-axis)</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            home_pos.target_pose.pose.position.y = home_y</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am going to spleep!&#39;</span>)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            mb_sleep_client.send_goal(home_pos)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            mb_sleep_client.wait_for_result()</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: home position reached!&#39;</span>)</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            mb_sleep_client.wait_for_server() <span class="comment"># wait for all the other nodes to launch</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            first_iteration = 0    </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        time.sleep(random.randint(5, 10) / sim_scale) <span class="comment"># the dog is sleeping</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        energy_timer = random.randint(2, 7)</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: Good morning!&#39;</span>)</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&#39;wake_up&#39;</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html">  102</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Normal.html">Normal</a>(smach.State):</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    </div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">  105</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">__init__</a>(self):</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        smach.State.__init__(self, </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                             outcomes=[<span class="stringliteral">&#39;go_play&#39;</span>,<span class="stringliteral">&#39;go_sleep&#39;</span>])</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        rospy.Subscriber(<span class="stringliteral">&#39;play_topic&#39;</span>, String, self.<a class="code" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">normal_callback</a>normal_callback)</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    </div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">  120</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">execute</a>(self, userdata):</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">global</span> playtime, energy_timer</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;normal&#39;</span>)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        </div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">  125</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate = rospy.Rate(200)</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        mb_normal_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        goal_pos = MoveBaseGoal()</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        goal_pos.target_pose.pose.orientation.w = 1.0</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        goal_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keywordflow">while</span> (energy_timer != 0 <span class="keywordflow">and</span> playtime == 0 <span class="keywordflow">and</span> (<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> \</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;normal&#39;</span>):</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            goal_pos.target_pose.header.stamp = rospy.Time.now()</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            mb_normal_client.send_goal(goal_pos)</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am moving to %i %i&#39;</span>, \</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                 goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            mb_normal_client.wait_for_result()</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            if(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>) == 1):</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I have spotted a new room!&#39;</span>)</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            while(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>) == 1):</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate.sleep</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            energy_timer = energy_timer - 1 </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate.sleep</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">if</span> energy_timer == 0:</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am going to sleep!&#39;</span>)</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_sleep&#39;</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">elif</span> playtime == 1:</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_play&#39;</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    </div>
-<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">  156</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">normal_callback</a>(self, data):</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keyword">global</span> playtime</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;normal&#39;</span>):</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I have received a play request! Woof!&#39;</span>)</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            mb_normal_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            mb_normal_client.cancel_all_goals()</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            playtime = 1</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html">  168</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Play.html">Play</a>(smach.State):</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    </div>
-<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">  171</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">__init__</a>(self):</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        smach.State.__init__(self, </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                             outcomes=[<span class="stringliteral">&#39;game_over&#39;</span>,<span class="stringliteral">&#39;go_find&#39;</span>])</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        </div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        rospy.Subscriber(<span class="stringliteral">&#39;play_topic&#39;</span>, String, self.<a class="code" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">play_callback</a>play_callback)</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    </div>
-<div class="line"><a name="l00191"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">  191</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">execute</a>(self, userdata):</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="keyword">global</span> play_ball_request, energy_timer</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;play&#39;</span>)</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        </div>
-<div class="line"><a name="l00196"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">  196</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate = rospy.Rate(200)</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        mb_play_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        target_pos = MoveBaseGoal()</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        target_pos.target_pose.pose.orientation.w = 1.0</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        target_pos.target_pose.header.stamp = rospy.Time.now()</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        <span class="comment"># set target as the home position (x-axis)</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        target_pos.target_pose.pose.position.x = home_x</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="comment"># set target as the home position (y-axis)</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        target_pos.target_pose.pose.position.y = home_y</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 0)</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        mb_play_client.send_goal(target_pos)</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        mb_play_client.wait_for_result()</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: I reached your position&#39;</span>)</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 1)</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        <span class="keywordflow">while</span> ((<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> energy_timer != 1 \</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                        <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;play&#39;</span>):</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 0)</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            while(play_ball_request == 100):</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate.sleep</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            rospy.wait_for_service(<span class="stringliteral">&#39;BallService&#39;</span>)</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            </div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            ball_service_client = rospy.ServiceProxy(<span class="stringliteral">&#39;BallService&#39;</span>, BallService)</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            ball_location = ball_service_client(play_ball_request)</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            temp_unknown_ball = play_ball_request</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            play_ball_request = 100</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="keywordflow">if</span> (ball_location.x != 100 <span class="keywordflow">and</span> ball_location.y != 100):</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                target_pos.target_pose.pose.orientation.w = 1.0</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;                target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                target_pos.target_pose.header.stamp = rospy.Time.now()</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                target_pos.target_pose.pose.position.x = ball_location.x</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                target_pos.target_pose.pose.position.y = ball_location.y</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                mb_play_client.send_goal(target_pos)</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                mb_play_client.wait_for_result()</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I got to the room&#39;</span>)</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                target_pos.target_pose.pose.orientation.w = 1.0</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                target_pos.target_pose.header.stamp = rospy.Time.now()</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                <span class="comment"># set target as home position (x-axis)</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                target_pos.target_pose.pose.position.x = home_x</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                <span class="comment"># set target as home position (y-axis)</span></div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                target_pos.target_pose.pose.position.y = home_y</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                mb_play_client.send_goal(target_pos)</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                mb_play_client.wait_for_result()</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I am finally back to you&#39;</span>)</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 2)</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                energy_timer = energy_timer - 1</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                rospy.set_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>, temp_unknown_ball)</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                <span class="keywordflow">break</span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate.sleep</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html">   54</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Sleep.html">Sleep</a>(smach.State):</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    </div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">   56</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">__init__</a>(self):</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        smach.State.__init__(self, </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                             outcomes=[<span class="stringliteral">&#39;wake_up&#39;</span>])</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">   65</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">execute</a>(self, userdata):</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keyword">global</span> first_iteration, energy_timer</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>,<span class="stringliteral">&#39;sleep&#39;</span>)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">   70</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">rate</a>rate = rospy.Rate(200)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        mb_sleep_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">if</span> first_iteration == 0:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            home_pos = MoveBaseGoal()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            home_pos.target_pose.pose.orientation.w = 1.0</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            home_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            home_pos.target_pose.header.stamp = rospy.Time.now()</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="comment"># set target as the home position (x-axis)</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            home_pos.target_pose.pose.position.x = home_x</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            <span class="comment"># set target as the home position (y-axis)</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            home_pos.target_pose.pose.position.y = home_y</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am going to spleep!&#39;</span>)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            mb_sleep_client.send_goal(home_pos)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            mb_sleep_client.wait_for_result()</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: home position reached!&#39;</span>)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            mb_sleep_client.wait_for_server() <span class="comment"># wait for all the other nodes to launch</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            first_iteration = 0    </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        time.sleep(random.randint(5, 10) / sim_scale) <span class="comment"># the dog is sleeping</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        energy_timer = random.randint(2, 7)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: Good morning!&#39;</span>)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&#39;wake_up&#39;</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html">   97</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Normal.html">Normal</a>(smach.State):</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    </div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">  100</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">__init__</a>(self):</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        smach.State.__init__(self, </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                             outcomes=[<span class="stringliteral">&#39;go_play&#39;</span>,<span class="stringliteral">&#39;go_sleep&#39;</span>])</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        rospy.Subscriber(<span class="stringliteral">&#39;play_topic&#39;</span>, String, self.<a class="code" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">normal_callback</a>normal_callback)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    </div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">  115</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">execute</a>(self, userdata):</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keyword">global</span> playtime, energy_timer</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;normal&#39;</span>)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        </div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">  120</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate = rospy.Rate(200)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        mb_normal_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        goal_pos = MoveBaseGoal()</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        goal_pos.target_pose.pose.orientation.w = 1.0</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        goal_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">while</span> (energy_timer != 0 <span class="keywordflow">and</span> playtime == 0 <span class="keywordflow">and</span> (<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> \</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;normal&#39;</span>):</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            goal_pos.target_pose.header.stamp = rospy.Time.now()</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            mb_normal_client.send_goal(goal_pos)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am moving to %i %i&#39;</span>, \</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                 goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            mb_normal_client.wait_for_result()</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            if(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>) == 1):</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I have spotted a new room!&#39;</span>)</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            while(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>) == 1):</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate.sleep</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            energy_timer = energy_timer - 1 </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">rate</a>rate.sleep</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keywordflow">if</span> energy_timer == 0:</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am going to sleep!&#39;</span>)</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_sleep&#39;</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">elif</span> playtime == 1:</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_play&#39;</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    </div>
+<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">  151</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">normal_callback</a>(self, data):</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keyword">global</span> playtime</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;normal&#39;</span>):</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I have received a play request! Woof!&#39;</span>)</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            mb_normal_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            mb_normal_client.cancel_all_goals()</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            playtime = 1</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html">  163</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Play.html">Play</a>(smach.State):</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    </div>
+<div class="line"><a name="l00166"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">  166</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">__init__</a>(self):</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        smach.State.__init__(self, </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;                             outcomes=[<span class="stringliteral">&#39;game_over&#39;</span>,<span class="stringliteral">&#39;go_find&#39;</span>])</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        rospy.Subscriber(<span class="stringliteral">&#39;play_topic&#39;</span>, String, self.<a class="code" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">play_callback</a>play_callback)</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    </div>
+<div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">  186</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">execute</a>(self, userdata):</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keyword">global</span> play_ball_request, energy_timer</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;play&#39;</span>)</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        </div>
+<div class="line"><a name="l00191"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">  191</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate = rospy.Rate(200)</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        </div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        mb_play_client = actionlib.SimpleActionClient(<span class="stringliteral">&#39;move_base&#39;</span>, MoveBaseAction)</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        target_pos = MoveBaseGoal()</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        target_pos.target_pose.pose.orientation.w = 1.0</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        target_pos.target_pose.header.stamp = rospy.Time.now()</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="comment"># set target as the home position (x-axis)</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        target_pos.target_pose.pose.position.x = home_x</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="comment"># set target as the home position (y-axis)</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        target_pos.target_pose.pose.position.y = home_y</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 0)</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        mb_play_client.send_goal(target_pos)</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        mb_play_client.wait_for_result()</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: I reached your position&#39;</span>)</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 1)</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        <span class="keywordflow">while</span> ((<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> energy_timer != 1 \</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;                        <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;play&#39;</span>):</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;            rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 0)</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            while(play_ball_request == 100):</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate.sleep</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            rospy.wait_for_service(<span class="stringliteral">&#39;BallService&#39;</span>)</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            ball_service_client = rospy.ServiceProxy(<span class="stringliteral">&#39;BallService&#39;</span>, BallService)</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            ball_location = ball_service_client(play_ball_request)</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            temp_unknown_ball = play_ball_request</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            play_ball_request = 100</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="keywordflow">if</span> (ball_location.x != 100 <span class="keywordflow">and</span> ball_location.y != 100):</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                target_pos.target_pose.pose.orientation.w = 1.0</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;                target_pos.target_pose.header.stamp = rospy.Time.now()</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                target_pos.target_pose.pose.position.x = ball_location.x</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;                target_pos.target_pose.pose.position.y = ball_location.y</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                mb_play_client.send_goal(target_pos)</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;                mb_play_client.wait_for_result()</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I got to the room&#39;</span>)</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                target_pos.target_pose.pose.orientation.w = 1.0</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                target_pos.target_pose.header.frame_id = <span class="stringliteral">&quot;map&quot;</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                target_pos.target_pose.header.stamp = rospy.Time.now()</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                <span class="comment"># set target as home position (x-axis)</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                target_pos.target_pose.pose.position.x = home_x</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                <span class="comment"># set target as home position (y-axis)</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                target_pos.target_pose.pose.position.y = home_y</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                mb_play_client.send_goal(target_pos)</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                mb_play_client.wait_for_result()</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                rospy.loginfo(<span class="stringliteral">&#39;Dog: I am finally back to you&#39;</span>)</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 2)</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                energy_timer = energy_timer - 1</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                rospy.set_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>, temp_unknown_ball)</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                <span class="keywordflow">break</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">rate</a>rate.sleep</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">if</span> energy_timer == 1:</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am too tired to play any longer: &#39;</span> + \</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                             <span class="stringliteral">&#39;I will briefly go in Normal&#39;</span>)</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;game_over&#39;</span></div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <span class="keywordflow">if</span> energy_timer == 1:</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I am too tired to play any longer: &#39;</span> + \</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                             <span class="stringliteral">&#39;I will briefly go in Normal&#39;</span>)</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;game_over&#39;</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        <span class="keywordflow">elif</span> rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>) != 100:</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I don\&#39;t know where the %s is. &#39;</span> + \</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                             <span class="stringliteral">&#39;I\&#39;ll search around for it&#39;</span> + \</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                             room_list[rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>)])</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_find&#39;</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    </div>
-<div class="line"><a name="l00265"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">  265</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">play_callback</a>(self, data):</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keyword">global</span> play_ball_request</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;play&#39;</span>):</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I will try to go to the %s&#39;</span>, data.data)</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            <span class="keywordflow">if</span> data.data == room_list[0]:</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                play_ball_request = 0</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[1]:</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                play_ball_request = 1</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[2]:</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                play_ball_request = 2</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[3]:</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                play_ball_request = 3</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[4]:</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                play_ball_request = 4</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="keywordflow">else</span>:</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                play_ball_request = 5</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html">  285</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Find.html">Find</a>(smach.State):</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    </div>
-<div class="line"><a name="l00287"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">  287</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">__init__</a>(self):</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        smach.State.__init__(self, </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                             outcomes=[<span class="stringliteral">&#39;find_over&#39;</span>])</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    </div>
-<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">  303</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">execute</a>(self, userdata):</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;find&#39;</span>)</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        </div>
-<div class="line"><a name="l00307"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">  307</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">rate</a>rate = rospy.Rate(200)</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        rospy.wait_for_service(<span class="stringliteral">&#39;explore_start_service&#39;</span>)</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        explore_start = rospy.ServiceProxy(<span class="stringliteral">&#39;explore_start_service&#39;</span>, Explore)</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        explore_start(1)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: Exploration started&#39;</span>)</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keywordflow">while</span> ((<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;find&#39;</span> \</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;             <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>) != 100):</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">rate</a>rate.sleep</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: I found the room you asked for!&#39;</span>)</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 2)</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&#39;find_over&#39;</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <span class="keywordflow">elif</span> rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>) != 100:</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I don\&#39;t know where the %s is. &#39;</span> + \</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;                             <span class="stringliteral">&#39;I\&#39;ll search around for it&#39;</span> + \</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                             room_list[rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>)])</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&#39;go_find&#39;</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    </div>
+<div class="line"><a name="l00260"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">  260</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">play_callback</a>(self, data):</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="keyword">global</span> play_ball_request</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;play&#39;</span>):</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Dog: I will try to go to the %s&#39;</span>, data.data)</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            <span class="keywordflow">if</span> data.data == room_list[0]:</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                play_ball_request = 0</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[1]:</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                play_ball_request = 1</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[2]:</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                play_ball_request = 2</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[3]:</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                play_ball_request = 3</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordflow">elif</span> data.data == room_list[4]:</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                play_ball_request = 4</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <span class="keywordflow">else</span>:</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                play_ball_request = 5</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html">  280</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdog__fsm_1_1Find.html">Find</a>(smach.State):</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    </div>
+<div class="line"><a name="l00282"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">  282</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">__init__</a>(self):</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <span class="comment"># initialisation function, it should not wait</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        smach.State.__init__(self, </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                             outcomes=[<span class="stringliteral">&#39;find_over&#39;</span>])</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    </div>
+<div class="line"><a name="l00298"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">  298</a></span>&#160;    <span class="keyword">def </span><a class="code" href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">execute</a>(self, userdata):</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <span class="comment"># function called when exiting from the node, it can be blocking</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;state&#39;</span>, <span class="stringliteral">&#39;find&#39;</span>)</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        </div>
+<div class="line"><a name="l00302"></a><span class="lineno"><a class="line" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">  302</a></span>&#160;        self.<a class="code" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">rate</a>rate = rospy.Rate(200)</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        </div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        rospy.wait_for_service(<span class="stringliteral">&#39;explore_start_service&#39;</span>)</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        explore_start = rospy.ServiceProxy(<span class="stringliteral">&#39;explore_start_service&#39;</span>, Explore)</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        explore_start(1)</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: Exploration started&#39;</span>)</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        <span class="keywordflow">while</span> ((<span class="keywordflow">not</span> rospy.is_shutdown()) <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;find&#39;</span> \</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;             <span class="keywordflow">and</span> rospy.get_param(<span class="stringliteral">&#39;unknown_ball&#39;</span>) != 100):</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            self.<a class="code" href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">rate</a>rate.sleep</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Dog: I found the room you asked for!&#39;</span>)</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        rospy.set_param(<span class="stringliteral">&#39;play_task_status&#39;</span>, 2)</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&#39;find_over&#39;</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">  320</a></span>&#160;<span class="keyword">def </span><a class="code" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">main</a>():</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    rospy.init_node(<span class="stringliteral">&#39;dog_fsm_node&#39;</span>, anonymous = <span class="keyword">True</span>)</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00325"></a><span class="lineno"><a class="line" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">  325</a></span>&#160;<span class="keyword">def </span><a class="code" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">main</a>():</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    rospy.init_node(<span class="stringliteral">&#39;dog_fsm_node&#39;</span>, anonymous = <span class="keyword">True</span>)</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="comment"># Create a SMACH state machine</span></div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    sm = smach.StateMachine(outcomes=[<span class="stringliteral">&#39;container_interface&#39;</span>])</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="comment"># Open the container</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keyword">with</span> sm:</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="comment"># Add states to the container</span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;SLEEP&#39;</span>, <a class="code" href="classdog__fsm_1_1Sleep.html">Sleep</a>(), </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                               transitions={<span class="stringliteral">&#39;wake_up&#39;</span>:<span class="stringliteral">&#39;NORMAL&#39;</span>})</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;NORMAL&#39;</span>, <a class="code" href="classdog__fsm_1_1Normal.html">Normal</a>(), </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                               transitions={<span class="stringliteral">&#39;go_play&#39;</span>:<span class="stringliteral">&#39;PLAY&#39;</span>, </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                                            <span class="stringliteral">&#39;go_sleep&#39;</span>:<span class="stringliteral">&#39;SLEEP&#39;</span>})</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;PLAY&#39;</span>, <a class="code" href="classdog__fsm_1_1Play.html">Play</a>(), </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                               transitions={<span class="stringliteral">&#39;game_over&#39;</span>:<span class="stringliteral">&#39;NORMAL&#39;</span>,</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                                            <span class="stringliteral">&#39;go_find&#39;</span>:<span class="stringliteral">&#39;FIND&#39;</span>})</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;FIND&#39;</span>, <a class="code" href="classdog__fsm_1_1Find.html">Find</a>(), </div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                               transitions={<span class="stringliteral">&#39;find_over&#39;</span>:<span class="stringliteral">&#39;PLAY&#39;</span>})</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="comment"># Create and start the introspection server for visualization</span></div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    sis = smach_ros.IntrospectionServer(<span class="stringliteral">&#39;server_name&#39;</span>, sm, <span class="stringliteral">&#39;/SM_ROOT&#39;</span>)</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    sis.start()</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="comment"># outcome = sm.execute() # an output variable is to be used if</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                             <span class="comment"># this finite state machine is nested</span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                             <span class="comment"># inside another one</span></div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="comment"># Execute the state machine</span></div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    sm.execute()</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="comment"># Wait for ctrl-c to stop the application</span></div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    rospy.spin()</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    sis.stop()</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <a class="code" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">main</a>()</div>
-<div class="ttc" id="aclassdog__fsm_1_1Find_html"><div class="ttname"><a href="classdog__fsm_1_1Find.html">dog_fsm.Find</a></div><div class="ttdoc">Find state: the robotic dog looks around for a specific room.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00285">dog_fsm.py:285</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Find_html_a8614f6b9957991e72cfa90fff8f11bb5"><div class="ttname"><a href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">dog_fsm.Find.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Find state initialization: set the outcomes.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00287">dog_fsm.py:287</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Find_html_af8e71b31220f5379c30cb3024a158a54"><div class="ttname"><a href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">dog_fsm.Find.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00307">dog_fsm.py:307</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Find_html_afec64ec93fdc7b21b3d60324e62937a8"><div class="ttname"><a href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">dog_fsm.Find.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Find state execution: in this state, the robotic dog looks for the goal ball, determined in the Play ...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00303">dog_fsm.py:303</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Normal_html"><div class="ttname"><a href="classdog__fsm_1_1Normal.html">dog_fsm.Normal</a></div><div class="ttdoc">Normal state: the robot wanders randomly in the house via move_base calls.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00102">dog_fsm.py:102</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Normal_html_a14314082419d7b61d3658cf1623c63c0"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">dog_fsm.Normal.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Normal state execution: the robot wanders randomly, by feeding the move_base algorithm with randomly ...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00120">dog_fsm.py:120</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Normal_html_a93e0eb9e1063fefece651c639dfdcbab"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">dog_fsm.Normal.normal_callback</a></div><div class="ttdeci">def normal_callback(self, data)</div><div class="ttdoc">Normal state callback that prints a string acknowledging that the robotic dog has received a play req...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00156">dog_fsm.py:156</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Normal_html_aaa87f7da3d4edb087d1e1024bf74b14e"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">dog_fsm.Normal.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00125">dog_fsm.py:125</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Normal_html_adee862c2ee4626bc2b0c6b51fd331917"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">dog_fsm.Normal.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Normal state initialization: set the outcomes and subscribe to the 'play_topic' topic,...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00105">dog_fsm.py:105</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Play_html"><div class="ttname"><a href="classdog__fsm_1_1Play.html">dog_fsm.Play</a></div><div class="ttdoc">Play state: the robot gets to the human, waits for a room order, then gets back to the human.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00168">dog_fsm.py:168</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Play_html_a0c920496f167e7692d8475ea3c8375e2"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">dog_fsm.Play.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00196">dog_fsm.py:196</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Play_html_a43320ea638d63dea137a88f4a0e9cf12"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">dog_fsm.Play.play_callback</a></div><div class="ttdeci">def play_callback(self, data)</div><div class="ttdoc">Play state callback that is used to translate the room ordered by the human into the ball representin...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00265">dog_fsm.py:265</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Play_html_a685701e0f1620ccbc9b7803338300ac6"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">dog_fsm.Play.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Play state initialization: set the outcomes and subscribe to the 'play_topic' topic,...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00171">dog_fsm.py:171</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Play_html_a7f63cd3a8ce8f47a9bc453ea2c0c0892"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">dog_fsm.Play.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Play state execution: using the move_base algorithm, the robotic dog, gets back home (i....</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00191">dog_fsm.py:191</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Sleep_html"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html">dog_fsm.Sleep</a></div><div class="ttdoc">Sleep state: the robot gets home and sleeps for some time.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00059">dog_fsm.py:59</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_a32b636c25b3450dc474e8af5831d5ea6"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">dog_fsm.Sleep.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Sleep state execution: the robot goes to sleep once he gets back home.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00070">dog_fsm.py:70</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_a4310dd40054e57c8928e06569f5bc679"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">dog_fsm.Sleep.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Sleep state initialization: set the outcomes.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00061">dog_fsm.py:61</a></div></div>
-<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_aed9dca0579b93c3cdedd2de704603cba"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">dog_fsm.Sleep.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00075">dog_fsm.py:75</a></div></div>
-<div class="ttc" id="anamespacedog__fsm_html_a7be225c3a7a3e205b1b34d33e10f08e7"><div class="ttname"><a href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">dog_fsm.main</a></div><div class="ttdeci">def main()</div><div class="ttdoc">Finite state machine's (fsm) main.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00325">dog_fsm.py:325</a></div></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="comment"># Create a SMACH state machine</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    sm = smach.StateMachine(outcomes=[<span class="stringliteral">&#39;container_interface&#39;</span>])</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="comment"># Open the container</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keyword">with</span> sm:</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="comment"># Add states to the container</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;SLEEP&#39;</span>, <a class="code" href="classdog__fsm_1_1Sleep.html">Sleep</a>(), </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                               transitions={<span class="stringliteral">&#39;wake_up&#39;</span>:<span class="stringliteral">&#39;NORMAL&#39;</span>})</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;NORMAL&#39;</span>, <a class="code" href="classdog__fsm_1_1Normal.html">Normal</a>(), </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                               transitions={<span class="stringliteral">&#39;go_play&#39;</span>:<span class="stringliteral">&#39;PLAY&#39;</span>, </div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                                            <span class="stringliteral">&#39;go_sleep&#39;</span>:<span class="stringliteral">&#39;SLEEP&#39;</span>})</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;PLAY&#39;</span>, <a class="code" href="classdog__fsm_1_1Play.html">Play</a>(), </div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                               transitions={<span class="stringliteral">&#39;game_over&#39;</span>:<span class="stringliteral">&#39;NORMAL&#39;</span>,</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                                            <span class="stringliteral">&#39;go_find&#39;</span>:<span class="stringliteral">&#39;FIND&#39;</span>})</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        smach.StateMachine.add(<span class="stringliteral">&#39;FIND&#39;</span>, <a class="code" href="classdog__fsm_1_1Find.html">Find</a>(), </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                               transitions={<span class="stringliteral">&#39;find_over&#39;</span>:<span class="stringliteral">&#39;PLAY&#39;</span>})</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="comment"># Create and start the introspection server for visualization</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    sis = smach_ros.IntrospectionServer(<span class="stringliteral">&#39;server_name&#39;</span>, sm, <span class="stringliteral">&#39;/SM_ROOT&#39;</span>)</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    sis.start()</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="comment"># outcome = sm.execute() # an output variable is to be used if</span></div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                             <span class="comment"># this finite state machine is nested</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                             <span class="comment"># inside another one</span></div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="comment"># Execute the state machine</span></div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    sm.execute()</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="comment"># Wait for ctrl-c to stop the application</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    rospy.spin()</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    sis.stop()</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <a class="code" href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">main</a>()</div>
+<div class="ttc" id="aclassdog__fsm_1_1Find_html"><div class="ttname"><a href="classdog__fsm_1_1Find.html">dog_fsm.Find</a></div><div class="ttdoc">Find state: the robotic dog looks around for a specific room.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00280">dog_fsm.py:280</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Find_html_a8614f6b9957991e72cfa90fff8f11bb5"><div class="ttname"><a href="classdog__fsm_1_1Find.html#a8614f6b9957991e72cfa90fff8f11bb5">dog_fsm.Find.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Find state initialization: set the outcomes.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00282">dog_fsm.py:282</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Find_html_af8e71b31220f5379c30cb3024a158a54"><div class="ttname"><a href="classdog__fsm_1_1Find.html#af8e71b31220f5379c30cb3024a158a54">dog_fsm.Find.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00302">dog_fsm.py:302</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Find_html_afec64ec93fdc7b21b3d60324e62937a8"><div class="ttname"><a href="classdog__fsm_1_1Find.html#afec64ec93fdc7b21b3d60324e62937a8">dog_fsm.Find.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Find state execution: in this state, the robotic dog looks for the goal ball, determined in the Play ...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00298">dog_fsm.py:298</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Normal_html"><div class="ttname"><a href="classdog__fsm_1_1Normal.html">dog_fsm.Normal</a></div><div class="ttdoc">Normal state: the robot wanders randomly in the house via move_base calls.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00097">dog_fsm.py:97</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Normal_html_a14314082419d7b61d3658cf1623c63c0"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#a14314082419d7b61d3658cf1623c63c0">dog_fsm.Normal.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Normal state execution: the robot wanders randomly, by feeding the move_base algorithm with randomly ...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00115">dog_fsm.py:115</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Normal_html_a93e0eb9e1063fefece651c639dfdcbab"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#a93e0eb9e1063fefece651c639dfdcbab">dog_fsm.Normal.normal_callback</a></div><div class="ttdeci">def normal_callback(self, data)</div><div class="ttdoc">Normal state callback that prints a string acknowledging that the robotic dog has received a play req...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00151">dog_fsm.py:151</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Normal_html_aaa87f7da3d4edb087d1e1024bf74b14e"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#aaa87f7da3d4edb087d1e1024bf74b14e">dog_fsm.Normal.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00120">dog_fsm.py:120</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Normal_html_adee862c2ee4626bc2b0c6b51fd331917"><div class="ttname"><a href="classdog__fsm_1_1Normal.html#adee862c2ee4626bc2b0c6b51fd331917">dog_fsm.Normal.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Normal state initialization: set the outcomes and subscribe to the 'play_topic' topic,...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00100">dog_fsm.py:100</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Play_html"><div class="ttname"><a href="classdog__fsm_1_1Play.html">dog_fsm.Play</a></div><div class="ttdoc">Play state: the robot gets to the human, waits for a room order, then gets back to the human.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00163">dog_fsm.py:163</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Play_html_a0c920496f167e7692d8475ea3c8375e2"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a0c920496f167e7692d8475ea3c8375e2">dog_fsm.Play.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00191">dog_fsm.py:191</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Play_html_a43320ea638d63dea137a88f4a0e9cf12"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a43320ea638d63dea137a88f4a0e9cf12">dog_fsm.Play.play_callback</a></div><div class="ttdeci">def play_callback(self, data)</div><div class="ttdoc">Play state callback that is used to translate the room ordered by the human into the ball representin...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00260">dog_fsm.py:260</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Play_html_a685701e0f1620ccbc9b7803338300ac6"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a685701e0f1620ccbc9b7803338300ac6">dog_fsm.Play.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Play state initialization: set the outcomes and subscribe to the 'play_topic' topic,...</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00166">dog_fsm.py:166</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Play_html_a7f63cd3a8ce8f47a9bc453ea2c0c0892"><div class="ttname"><a href="classdog__fsm_1_1Play.html#a7f63cd3a8ce8f47a9bc453ea2c0c0892">dog_fsm.Play.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Play state execution: using the move_base algorithm, the robotic dog, gets back home (i....</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00186">dog_fsm.py:186</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Sleep_html"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html">dog_fsm.Sleep</a></div><div class="ttdoc">Sleep state: the robot gets home and sleeps for some time.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00054">dog_fsm.py:54</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_a32b636c25b3450dc474e8af5831d5ea6"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#a32b636c25b3450dc474e8af5831d5ea6">dog_fsm.Sleep.execute</a></div><div class="ttdeci">def execute(self, userdata)</div><div class="ttdoc">Sleep state execution: the robot goes to sleep once he gets back home.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00065">dog_fsm.py:65</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_a4310dd40054e57c8928e06569f5bc679"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#a4310dd40054e57c8928e06569f5bc679">dog_fsm.Sleep.__init__</a></div><div class="ttdeci">def __init__(self)</div><div class="ttdoc">Sleep state initialization: set the outcomes.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00056">dog_fsm.py:56</a></div></div>
+<div class="ttc" id="aclassdog__fsm_1_1Sleep_html_aed9dca0579b93c3cdedd2de704603cba"><div class="ttname"><a href="classdog__fsm_1_1Sleep.html#aed9dca0579b93c3cdedd2de704603cba">dog_fsm.Sleep.rate</a></div><div class="ttdeci">rate</div><div class="ttdoc">define loop rate for the state</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00070">dog_fsm.py:70</a></div></div>
+<div class="ttc" id="anamespacedog__fsm_html_a7be225c3a7a3e205b1b34d33e10f08e7"><div class="ttname"><a href="namespacedog__fsm.html#a7be225c3a7a3e205b1b34d33e10f08e7">dog_fsm.main</a></div><div class="ttdeci">def main()</div><div class="ttdoc">Finite state machine's (fsm) main.</div><div class="ttdef"><b>Definition:</b> <a href="dog__fsm_8py_source.html#l00320">dog_fsm.py:320</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
