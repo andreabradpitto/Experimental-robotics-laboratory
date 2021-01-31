@@ -159,7 +159,7 @@
       name='ball_server_node' output='screen' respawn="false"/>
 
     <!-- node executing, when requested, the explore_lite algorithm -->
-    <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node" output="screen">
+    <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node">
       <param name="robot_base_frame" value="link_chassis"/>
       <param name="costmap_topic" value="map"/>
       <param name="costmap_updates_topic" value="map_updates"/>
