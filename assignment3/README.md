@@ -161,6 +161,7 @@ It might be needed to make all the nodes executable, before actually being able 
 ```
 $ chmod +x scripts/*
 $ chmod +x src/*
+$ chmod +x launch/*
 ```
 
 In order to run the code, put the *assignment3* directory in your workspace, build, then open a terminal and type:
@@ -179,6 +180,7 @@ This will start the simulation on both Gazebo and RViz, and also open a window s
 - The robot's simulated battery is assumed to drain more rapidly while in **Play** than when in **Normal**, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the **Find** state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from **Play** to **Normal** after a certain drain threshold is reached, and then always carries out a single **Normal** state cycle (no matter how far it goes, which is of course another simpification) before going to **Sleep** to recharge its batteries
 - The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (**Play** state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code [dog_fsm.py](scripts/dog_fsm.py) must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file
 - If, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases
+- It may happen, on rare occasions, that the robot confuses the chair on which the human is sitting as being green, thus subsequently starting to try and determine livingroom location. This might occur if the robot moves really close to the chair, for instance while trying to reach a location behind it
 
 ---
 

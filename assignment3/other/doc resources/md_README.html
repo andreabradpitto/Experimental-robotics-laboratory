@@ -107,7 +107,7 @@ The environments</h2>
 <hr  />
 <h1><a class="anchor" id="autotoc_md27"></a>
 Architecture</h1>
-<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/architecture.png" alt="" class="inline"/> </div><p>(Please notice that, in the picture, the two environments are not reported with their full input for the sake of simplicity)<br  />
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/architecture.png" alt="" class="inline"/> </div><p>(Please notice that, in the picture, the two environments are not reported with their full input for the sake of simplicity)<br  />
  <br  />
 </p>
 <p>This is the list of the components that have been coded for the assignment:</p><ul>
@@ -175,7 +175,7 @@ Architecture</h1>
 </ul>
 <p>All of these, as already pointed out, can be adjusted before runtime. Please notice that, as a general rule I applied, the value 100 for any of the above parameters always represents missing data or an undefined/default value for that specific parameter.<br  />
  Finally, here is the list of all the files and folders featured in this package (up to depth level 2, in order to skip <a href="https://www.doxygen.nl/index.html">Doxygen</a> resources):</p>
-<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment2/images/tree.png" alt="" class="inline"/> </div><hr  />
+<div align="center"> <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/tree.png" alt="" class="inline"/> </div><hr  />
 <h1><a class="anchor" id="autotoc_md29"></a>
 Requirements</h1>
 <p>In order to run this piece of software, it is needed to have a Linux distribution that supports (and has them installed):</p><ul>
@@ -190,7 +190,8 @@ Requirements</h1>
 Instructions</h1>
 <p>It might be needed to make all the nodes executable, before actually being able to run them. So, after reaching this assignment's folder via a terminal, type:</p>
 <div class="fragment"><div class="line">$ chmod +x scripts/*</div>
-<div class="line">$ chmod +x src/* </div>
+<div class="line">$ chmod +x src/*</div>
+<div class="line">$ chmod +x launch/* </div>
 </div><!-- fragment --><p>In order to run the code, put the <em>assignment3</em> directory in your workspace, build, then open a terminal and type:</p>
 <div class="fragment"><div class="line">$ roslaunch assignment.launch </div>
 </div><!-- fragment --><p>This will start the simulation on both Gazebo and RViz, and also open a window showing the robotic dog camera's output.</p>
@@ -203,6 +204,7 @@ Assumptions, limitations and possible improvements</h1>
 <li>The robot's simulated battery is assumed to drain more rapidly while in <b>Play</b> than when in <b>Normal</b>, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the <b>Find</b> state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from <b>Play</b> to <b>Normal</b> after a certain drain threshold is reached, and then always carries out a single <b>Normal</b> state cycle (no matter how far it goes, which is of course another simpification) before going to <b>Sleep</b> to recharge its batteries</li>
 <li>The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (<b>Play</b> state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code <a href="scripts/dog_fsm.py">dog_fsm.py</a> must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file</li>
 <li>If, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases</li>
+<li>It may happen, on rare occasions, that the robot confuses the chair on which the human is sitting as being green, thus subsequently starting to try and determine livingroom location. This might occur if the robot moves really close to the chair, for instance while trying to reach a location behind it</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md35"></a>

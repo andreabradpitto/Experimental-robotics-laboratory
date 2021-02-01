@@ -64,8 +64,6 @@ find_package (OpenCV REQUIRED)
 add_message_files(
   FILES
   Coordinates.msg
-#   Message1.msg
-#   Message2.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -73,7 +71,6 @@ add_message_files(
    FILES
    BallService.srv
    Explore.srv
-#   Service2.srv
  )
 
 ## Generate actions in the 'action' folder

@@ -127,7 +127,8 @@
     <param name='play_task_status' type='int' value='0'/>
 
     <!-- list of the available rooms -->
-    <param name="room_list" value="['entrance', 'closet', 'livingroom', 'kitchen', 'bathroom', 'bedroom']"/>
+    <rosparam param="room_list">['entrance', 'closet', 'livingroom',
+                                 'kitchen', 'bathroom', 'bedroom']</rosparam>
 
     <!-- parameter required by the urdf_spawner -->
     <param name="robot_description" 

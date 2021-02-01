@@ -27,11 +27,11 @@ sim_scale = rospy.get_param('sim_scale')
 def human():
     rospy.init_node('human_node', anonymous = True)
     rate = rospy.Rate(200)
-    ## topic used to coomunicate orders to dog_fsm.py
+    ## topic used to communicate orders to dog_fsm.py
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
     time.sleep(random.randint(80, 120) / sim_scale)
     while not rospy.is_shutdown():
-        while (rospy.get_param('state') != 'normal' or rospy.get_param('state') != 'play'):
+        while (rospy.get_param('state') == 'sleep' or rospy.get_param('state') == 'find'):
             rate.sleep()
         if rospy.get_param('state') == 'normal':
             voice_pub.publish('play')
@@ -44,7 +44,7 @@ def human():
             while (rospy.get_param('play_task_status') ==  0):
                 rate.sleep()
             room_choice = random.randint(0, 5)
-            rospy.loginfo('Human: GoTo %s', room_list[room_choice])
+            rospy.loginfo('Human: Go to the %s', room_list[room_choice])
             voice_pub.publish(room_list[room_choice])
             # when 'play_task_status' equals 2, the robot has completed its job
             while (rospy.get_param('play_task_status') !=  2):

@@ -118,9 +118,10 @@ class image_feature:
     # detected. If this is not the case, the robot checks if that ball is present
     # in its database and, if so, it ignores it. If the ball preceived is a new discovery,
     # the callback cancels all current move_base goals through an action client, and
-    # takes control of the dog motion; it leads the robot close to the ball,
+    # takes control of the dog motion: it leads the robot close to the ball,
     # and then stores its coordinates. While this process is being carried out,
-    # the callback locks the triggering of new ball discovery processes,
+    # the code draws both a colored dot centered on the ball and a circle outlining the
+    # latter; the callback also locks the triggering of new ball discovery processes,
     # and frees them only once it is completed. The callback behavior for the Find state
     # is similar to the one of the Normal state, but this time the goal cancelling
     # is sent to the explore_lite algorithm via a service client. The code also
@@ -171,7 +172,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -181,6 +182,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -188,6 +191,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -207,7 +211,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -217,6 +221,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -224,6 +230,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -243,7 +250,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -253,6 +260,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -260,6 +269,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -279,7 +289,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a magenta circle
@@ -289,6 +299,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -296,6 +308,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -315,7 +328,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -325,6 +338,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -332,6 +347,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -351,7 +367,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -361,6 +377,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -368,6 +386,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
 
@@ -406,7 +425,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -416,6 +435,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -423,6 +444,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 0:
@@ -453,7 +475,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -463,6 +485,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -470,6 +494,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 1:
@@ -500,7 +525,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -510,6 +535,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -517,6 +544,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 2:
@@ -547,7 +575,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a magenta circle
@@ -557,6 +585,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -564,6 +594,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 3:
@@ -594,7 +625,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -604,6 +635,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -611,6 +644,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 4:
@@ -641,7 +675,7 @@ class image_feature:
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if(center != 400 or radius != 100):
+                if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
                     # draw a yellow circle
@@ -651,6 +685,8 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
+                    if(vel.linear.x > 0.8):
+                        vel.linear.x = 0.8
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -658,6 +694,7 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
+                    rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 5:

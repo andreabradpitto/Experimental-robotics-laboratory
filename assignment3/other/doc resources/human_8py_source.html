@@ -93,7 +93,7 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    voice_pub = rospy.Publisher(<span class="stringliteral">&#39;play_topic&#39;</span>, String, queue_size=10)</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    time.sleep(random.randint(80, 120) / sim_scale)</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">while</span> <span class="keywordflow">not</span> rospy.is_shutdown():</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) != <span class="stringliteral">&#39;normal&#39;</span> <span class="keywordflow">or</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) != <span class="stringliteral">&#39;play&#39;</span>):</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;sleep&#39;</span> <span class="keywordflow">or</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;find&#39;</span>):</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            rate.sleep()</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">if</span> rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;normal&#39;</span>:</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            voice_pub.publish(<span class="stringliteral">&#39;play&#39;</span>)</div>
@@ -106,7 +106,7 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_status&#39;</span>) ==  0):</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                rate.sleep()</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            room_choice = random.randint(0, 5)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Human: GoTo %s&#39;</span>, room_list[room_choice])</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Human: Go to the %s&#39;</span>, room_list[room_choice])</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            voice_pub.publish(room_list[room_choice])</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="comment"># when &#39;play_task_status&#39; equals 2, the robot has completed its job</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_status&#39;</span>) !=  2):</div>

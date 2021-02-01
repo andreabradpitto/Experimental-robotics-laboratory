@@ -81,11 +81,12 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.y = home_y
             rospy.loginfo('Dog: I am going to spleep!')
             mb_sleep_client.send_goal(home_pos)
-            mb_sleep_client.wait_for_result()
-            rospy.loginfo('Dog: home position reached!')
+            while(mb_sleep_client.get_state() != 3):
+                self.rate.sleep
+            rospy.loginfo('Dog: Home position reached!')
         else:
             mb_sleep_client.wait_for_server() # wait for all the other nodes to launch
-            first_iteration = 0    
+            first_iteration = 0
         time.sleep(random.randint(5, 10) / sim_scale) # the dog is sleeping
         energy_timer = random.randint(2, 7)
         rospy.loginfo('Dog: Good morning!')
@@ -125,18 +126,29 @@ class Normal(smach.State):
         goal_pos.target_pose.header.frame_id = "map"
         while (energy_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
             rospy.get_param('state') == 'normal'):
+            stop_var = 0
             goal_pos.target_pose.header.stamp = rospy.Time.now()
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
             goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                  goal_pos.target_pose.pose.position.x, goal_pos.target_pose.pose.position.y)
-            mb_normal_client.wait_for_result()
-            if(rospy.get_param('new_ball_detected') == 1):
-                rospy.loginfo('Dog: I have spotted a new room!')
-            while(rospy.get_param('new_ball_detected') == 1):
+            while (mb_normal_client.get_state() != 3 and stop_var != 1):
+                if(rospy.get_param('new_ball_detected') == 1):
+                    rospy.loginfo('Dog: I have spotted a new room!')
+                    while(rospy.get_param('new_ball_detected') == 1):
+                        stop_var = 1
+                        self.rate.sleep
+                elif (mb_normal_client.get_state() > 3):
+                    rospy.loginfo('Dog: I aborted reaching the last random target')
+                    break
+                if(playtime == 1):
+                    break
                 self.rate.sleep
-            energy_timer = energy_timer - 1	
+            if(mb_normal_client.get_state() == 3):
+                rospy.loginfo('Dog: target position reached!')
+            mb_normal_client.cancel_all_goals()
+            energy_timer = energy_timer - 1
             self.rate.sleep
 
         if energy_timer == 0:
@@ -144,6 +156,7 @@ class Normal(smach.State):
             return 'go_sleep'
 
         elif playtime == 1:
+            playtime = 0
             return 'go_play'
 
     ## Normal state callback that prints a string acknowledging that the robotic dog
@@ -202,9 +215,11 @@ class Play(smach.State):
         target_pos.target_pose.pose.position.y = home_y
         rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
-        mb_play_client.wait_for_result()
+        while(mb_play_client.get_state() != 3):
+            self.rate.sleep
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_status', 1)
+        rospy.wait_for_message('play_topic', String)
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                         and rospy.get_param('state') == 'play'):
             rospy.set_param('play_task_status', 0)
@@ -217,14 +232,17 @@ class Play(smach.State):
             ball_location = ball_service_client(play_ball_request)
             temp_unknown_ball = play_ball_request
             play_ball_request = 100
-            if (ball_location.x != 100 and ball_location.y != 100):
+            if (ball_location.res.x != 100):
+                rospy.loginfo('Dog: starting my journey towards the %s', \
+                        room_list[temp_unknown_ball])
                 target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
-                target_pos.target_pose.pose.position.x = ball_location.x
-                target_pos.target_pose.pose.position.y = ball_location.y
+                target_pos.target_pose.pose.position.x = ball_location.res.x
+                target_pos.target_pose.pose.position.y = ball_location.res.y
                 mb_play_client.send_goal(target_pos)
-                mb_play_client.wait_for_result()
+                while(mb_play_client.get_state() != 3):
+                    self.rate.sleep
                 rospy.loginfo('Dog: I got to the room')
                 target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
@@ -234,7 +252,8 @@ class Play(smach.State):
                 # set target as home position (y-axis)
                 target_pos.target_pose.pose.position.y = home_y
                 mb_play_client.send_goal(target_pos)
-                mb_play_client.wait_for_result()
+                while(mb_play_client.get_state() != 3):
+                    self.rate.sleep
                 rospy.loginfo('Dog: I am finally back to you')
                 rospy.set_param('play_task_status', 2)
                 energy_timer = energy_timer - 1
@@ -250,7 +269,7 @@ class Play(smach.State):
 
         elif rospy.get_param('unknown_ball') != 100:
             rospy.loginfo('Dog: I don\'t know where the %s is. ' + \
-                             'I\'ll search around for it' + \
+                             'I\'ll search around for it', \
                              room_list[rospy.get_param('unknown_ball')])
             return 'go_find'
 
@@ -259,7 +278,7 @@ class Play(smach.State):
     # reached or searched by the robotic dog
     def play_callback(self, data):
         global play_ball_request
-        if (rospy.get_param('state') == 'play'):
+        if (rospy.get_param('state') == 'play' and data.data != 'play'):
             rospy.loginfo('Dog: I will try to go to the %s', data.data)
             if data.data == room_list[0]:
                 play_ball_request = 0
@@ -311,6 +330,7 @@ class Find(smach.State):
             self.rate.sleep
         rospy.loginfo('Dog: I found the room you asked for!')
         rospy.set_param('play_task_status', 2)
+        rospy.set_param('unknown_ball', 100)
         return 'find_over'
 
 
