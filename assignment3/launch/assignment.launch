@@ -6,13 +6,12 @@
 <launch>
     <!-- parameter used to scale simulation velocity -->
     <param name='sim_scale' type='int' value='1'/>
+
     <!-- include the launch file comprising the handling of most of the components
          of the package -->
 	<include file="$(find assignment3)/launch/sim.launch"></include>
-
-    <!-- include the launch file for the gmapping algorithm -->
-	<!--<include file="$(find assignment3)/launch/gmapping.launch"></include>-->
-    <!-- include the launch file for the gmapping algorithm (without any screen output)-->
+    <!-- execute the shell script for the gmapping algorithm
+         (without any screen output)-->
     <node pkg="assignment3" type="gmapping_no_output.sh" name="gmapping_no_output">
         <param name="cmd" value="assignment3/scripts/gmapping_no_output.sh"/>
     </node>

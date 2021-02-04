@@ -61,7 +61,7 @@ public:
    * @brief Variable used to prevent the algorithm from running at launch; it
    * will instead wait for a service client call
    */
-  int first_run = 0;
+  int first_run {1};
 
 private:
   /**
