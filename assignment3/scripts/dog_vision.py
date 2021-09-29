@@ -133,7 +133,7 @@ class image_feature:
     # that I added as methods of the original code
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
-                yellow_solved, magenta_solved, black_solved
+               yellow_solved, magenta_solved, black_solved
 
         ## Direct conversion to CV2
         np_arr = np.fromstring(ros_data.data, np.uint8)
@@ -157,8 +157,8 @@ class image_feature:
             # only proceed if at least one contour was found
 
             if(len(blueCnts) > 0 and blue_solved != 2 \
-                     and red_solved != 1 and green_solved != 1 and yellow_solved != 1 \
-                     and magenta_solved != 1 and black_solved != 1):
+               and red_solved != 1 and green_solved != 1 and yellow_solved != 1 \
+               and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -196,8 +196,8 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
 
             elif(len(redCnts) > 0 and red_solved != 2 \
-                     and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -235,8 +235,8 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -274,8 +274,8 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -313,8 +313,8 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
-                     and yellow_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                 and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -352,8 +352,8 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1
-                     and yellow_solved != 1 and magenta_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1
+                 and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## action client used only to stop move_base execution
                 mb_vision_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -408,8 +408,8 @@ class image_feature:
             # only proceed if at least one contour was found
 
             if(len(blueCnts) > 0 and blue_solved != 2 \
-                     and red_solved != 1 and green_solved != 1 and yellow_solved != 1
-                     and magenta_solved != 1 and black_solved != 1):
+               and red_solved != 1 and green_solved != 1 and yellow_solved != 1
+               and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -447,9 +447,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 0:
+                    if rospy.get_param('unknown_ball') == 'blue':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings
@@ -458,8 +458,8 @@ class image_feature:
                         explore_start(1)
 
             elif(len(redCnts) > 0 and red_solved != 2 \
-                     and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -497,9 +497,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 1:
+                    if rospy.get_param('unknown_ball') == 'red':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings
@@ -508,8 +508,8 @@ class image_feature:
                         explore_start(1)
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -547,9 +547,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 2:
+                    if rospy.get_param('unknown_ball') == 'green':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings
@@ -558,8 +558,8 @@ class image_feature:
                         explore_start(1)
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
-                     and magenta_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                 and magenta_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -597,9 +597,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 3:
+                    if rospy.get_param('unknown_ball') == 'yellow':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings
@@ -608,8 +608,8 @@ class image_feature:
                         explore_start(1)
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
-                     and yellow_solved != 1 and black_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                 and yellow_solved != 1 and black_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -647,9 +647,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 4:
+                    if rospy.get_param('unknown_ball') == 'magenta':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings
@@ -658,8 +658,8 @@ class image_feature:
                         explore_start(1)
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
-                     and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
-                     and yellow_solved != 1 and magenta_solved != 1):
+                 and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
+                 and yellow_solved != 1 and magenta_solved != 1):
                 rospy.set_param('new_ball_detected', 1)
                 ## explore lite service client used to
                 # stop explore_lite algorithm execution
@@ -697,9 +697,9 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
-                    if rospy.get_param('unknown_ball') == 5:
+                    if rospy.get_param('unknown_ball') == 'black':
                         # this is the ball the robot had to find
-                        rospy.set_param('unknown_ball', 100)
+                        rospy.set_param('unknown_ball', 'none')
                     else:
                         ## explore_lite service client that lets the algorithm start
                         # exploring the robotic dog's surroundings

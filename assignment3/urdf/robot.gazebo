@@ -34,7 +34,7 @@
       <updateRate>1000</updateRate>
       <leftJoint>joint_left_wheel</leftJoint>
       <rightJoint>joint_right_wheel</rightJoint>
-      <wheelSeparation>0.3</wheelSeparation>
+      <wheelSeparation>0.34</wheelSeparation>
       <wheelDiameter>0.2</wheelDiameter>
       <torque>0.1</torque>
       <commandTopic>cmd_vel</commandTopic>
@@ -42,7 +42,7 @@
       <odometryFrame>odom</odometryFrame>
       <robotBaseFrame>link_chassis</robotBaseFrame>
       <rosDebugLevel>na</rosDebugLevel>
-      <wheelAcceleration>0</wheelAcceleration>
+      <wheelAcceleration>0.0</wheelAcceleration>
       <wheelTorque>5</wheelTorque>
       <odometrySource>world</odometrySource>
       <publishOdomTF>true</publishOdomTF>

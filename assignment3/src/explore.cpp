@@ -255,6 +255,7 @@ void Explore::reachedGoal(const actionlib::SimpleClientGoalState& status,
 
 void Explore::start()
 {
+  frontier_blacklist_.clear();
   exploring_timer_.start();
 }
 

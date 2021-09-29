@@ -28,8 +28,8 @@ namespace explore
  * @brief A class adhering to the robot_actions::Action interface that moves the
  * robot base to explore its environment.
  * 
- * Here I added the two service server declarations. The remaining changes I made are
- * all in explore.cpp
+ * Here I added the two service servers declarations as methods of this class.
+ * The remaining changes I made are all in explore.cpp
  */
 class Explore
 {

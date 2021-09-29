@@ -12,7 +12,6 @@
      the human.py script
      the dog_fsm.py script
      the dog_vision.py script
-     the ball_server.py script
      a custom version of the explore_lite package
 -->
 
@@ -87,34 +86,39 @@
     <!-- parameter specifying robot home position (y coordinate).
          Home is assumed to be a place near the human position    -->
     <param name='home/y' type='int' value='8'/>
+    <!-- argument used to define a placeholder coordinate, used
+         to check whether a ball has already been discovered
+         or not. It must be a value that is strictly greater than
+         "map/x_max". Needed by all ball coordinate parameters    -->
+    <arg name='placeholder_coord' value='50.0'/>
     <!-- parameter used to specify the x coordinate of the blue ball, once discovered -->
-    <param name='blue/x' type='double' value='100'/>
+    <param name='blue/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the blue ball, once discovered -->
-    <param name='blue/y' type='double' value='100'/>
+    <param name='blue/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the x coordinate of the red ball, once discovered -->
-    <param name='red/x' type='double' value='100'/>
+    <param name='red/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the red ball, once discovered -->
-    <param name='red/y' type='double' value='100'/>
+    <param name='red/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the x coordinate of the green ball, once discovered -->
-    <param name='green/x' type='double' value='100'/>
+    <param name='green/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the green ball, once discovered -->
-    <param name='green/y' type='double' value='100'/>
+    <param name='green/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the x coordinate of the yellow ball, once discovered -->
-    <param name='yellow/x' type='double' value='100'/>
+    <param name='yellow/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the yellow ball, once discovered -->
-    <param name='yellow/y' type='double' value='100'/>
+    <param name='yellow/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the x coordinate of the magenta ball, once discovered -->
-    <param name='magenta/x' type='double' value='100'/>
+    <param name='magenta/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the magenta ball, once discovered -->
-    <param name='magenta/y' type='double' value='100'/>
+    <param name='magenta/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the x coordinate of the black ball, once discovered -->
-    <param name='black/x' type='double' value='100'/>
+    <param name='black/x' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify the y coordinate of the black ball, once discovered -->
-    <param name='black/y' type='double' value='100'/>
+    <param name='black/y' type='double' value='$(arg placeholder_coord)'/>
     <!-- parameter used to specify whether a new ball has been detected or not -->
     <param name='new_ball_detected' type='int' value='0'/>
     <!-- parameter used to identify which ball has to be looked for -->
-    <param name='unknown_ball' type='int' value='100'/>
+    <param name='unknown_ball' type='string' value='none'/>
     
     <!-- parameter used to specify Play state progress
          A value of 0 means that the state is not active or
@@ -135,7 +139,7 @@
 	    command="$(find xacro)/xacro --inorder $(find assignment3)/urdf/robot.xacro"/>
 
   <!-- nodes -->
-    <!-- run a Python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <!-- run a Python script to send a service call to gazebo_ros to spawn a URDF robot -->
   	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
       respawn="false" output="screen"
 	    args="-urdf -model robot1 -param robot_description -x -5 -y 8 -Y -1.57 -z 0.05"/>
@@ -144,20 +148,15 @@
     <node pkg='assignment3' type='dog_fsm.py'
       name='dog_fsm_node' output='screen' respawn="false"/>
 
-    <!-- node used to have the robot cisually process its surroundings,
-         looking for balls. It also takes control of the robotic dog movements
-         when needed -->
+    <!-- node used to have the robot visually process its surroundings,
+         looking for colored balls. It also takes control of the robotic
+         dog movements when needed -->
     <node pkg='assignment3' type='dog_vision.py'
       name='dog_vision_node' output='screen' respawn="false"/>
 
     <!-- node used to simulate random room requests made by the human -->
     <node pkg='assignment3' type='human.py'
       name='human_node' output='screen' respawn="false"/>
-
-    <!-- node used to implement the ball server, providing the
-         coordinates for the ball of a specific color -->
-    <node pkg='assignment3' type='ball_server.py'
-      name='ball_server_node' output='screen' respawn="false"/>
 
     <!-- node executing, when requested, the explore_lite algorithm -->
     <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node">
