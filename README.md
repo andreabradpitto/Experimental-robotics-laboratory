@@ -1,6 +1,6 @@
 # :file_folder: Andrea Pitto's Experimental robotics laboratory repository
 
-This is the repository for all the exercises and assignments I have performed relative to the Robotics engineering class "Experimental robotics laboratory" 2020/2021, held at the University of Genoa
+This is the repository for all the exercises and assignments I have performed relative to the Robotics Engineering class "Experimental robotics laboratory" 2020/2021, held at the University of Genoa
 
 ---
 
