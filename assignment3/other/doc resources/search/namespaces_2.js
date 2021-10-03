@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['explore_116',['explore',['../namespaceexplore.html',1,'']]]
+  ['frontier_5fexploration_113',['frontier_exploration',['../namespacefrontier__exploration.html',1,'']]]
 ];

@@ -110,7 +110,7 @@
   </link>
 
   <link name="link_neck">
-    <xacro:default_inertial mass="0.2"/>
+    <xacro:default_inertial mass="0.02"/>
     <collision name="link_neck_collision">
       <origin rpy="1.5707 1.5707 0" xyz="0 0.05 0"/>
       <geometry>
@@ -127,7 +127,7 @@
   </link>
 
   <link name="link_head">
-    <xacro:default_inertial mass="0.2"/>
+    <xacro:default_inertial mass="0.02"/>
 	    <collision>
 	      <origin xyz="0 0 0" rpy="0 0 0"/>
 	      <geometry>
@@ -216,7 +216,6 @@
     <origin rpy="1.5707 0 0" xyz="0 0 0.035"/>
     <child link="link_neck"/>
     <parent link="link_chassis"/>
-    <axis rpy="0 0 0" xyz="0 0 0"/>
   </joint>
 
   <joint name="joint_right_wheel" type="continuous">
@@ -238,29 +237,25 @@
   </joint>
   
   <joint name="head_joint" type="fixed">
-      <axis xyz="0 1 0"/>
 	    <origin xyz="0 0.15 0" rpy="0 0 0"/>
 	    <parent link="link_neck"/>
 	    <child link="link_head"/>
 	</joint>
 
   <joint name="camera_joint" type="fixed">
-      <axis xyz="0 1 0"/>
       <origin xyz="0.05 0 -0.02" rpy="-1.5707 0 0"/> <!-- left eye of the robot (camera) -->
 	    <parent link="link_head"/>
 	    <child link="camera_link"/>
 	</joint>
 
   <joint name="eye_joint" type="fixed">
-      <axis xyz="0 1 0"/>
       <origin xyz="0.05 0 0.02" rpy="-1.5707 0 0"/> <!-- right eye of the robot (empty) -->
 	    <parent link="link_head"/>
 	    <child link="link_eye"/>
 	</joint>
 
   <joint name="laser_joint" type="fixed">
-      <axis xyz="0 1 0"/>
-      <origin xyz="0.212 0 0.021" rpy="0 0 0"/>
+      <origin xyz="0.226 0 0.036" rpy="0 0 0"/>
 	    <parent link="link_chassis"/>
 	    <child link="laser_link"/>
 	</joint>

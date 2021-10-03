@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['explore_2ecpp_126',['explore.cpp',['../explore_8cpp.html',1,'']]],
-  ['explore_2eh_127',['explore.h',['../explore_8h.html',1,'']]]
+  ['frontier_5fsearch_2ecpp_123',['frontier_search.cpp',['../frontier__search_8cpp.html',1,'']]],
+  ['frontier_5fsearch_2eh_124',['frontier_search.h',['../frontier__search_8h.html',1,'']]]
 ];

@@ -321,71 +321,72 @@ $(function() {
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
 <div class="line"><a name="l00256"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016">  256</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016">Explore::start</a>()</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;{</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  exploring_timer_.start();</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;}</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">  261</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">Explore::stop</a>()</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;{</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  move_base_client_.cancelAllGoals();</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  exploring_timer_.stop();</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  ROS_INFO(<span class="stringliteral">&quot;Exploration stopped&quot;</span>);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;}</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">  270</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">Explore::srv_start</a>(assignment3::Explore::Request&amp; req,</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                 assignment3::Explore::Response&amp; res)</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;{</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;  res.output = req.input;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#abb76c17d6e8943567b18079f07534dcb">first_run</a> = 0;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016">start</a>();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;}</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">  281</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">Explore::srv_stop</a>(assignment3::Explore::Request&amp; req,</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                 assignment3::Explore::Response&amp; res)</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;{</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  res.output = req.input;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">stop</a>();</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;}</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}  <span class="comment">// namespace explore</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno"><a class="line" href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">  291</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;{</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  ros::init(argc, argv, <span class="stringliteral">&quot;explore_server_node&quot;</span>);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;  <span class="comment">// Instantiating an object of the Explore class</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  <a class="code" href="classexplore_1_1Explore.html">explore::Explore</a> <a class="code" href="namespaceexplore.html">explore</a>;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="namespaceexplore.html">explore</a>.first_run == 1)</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  {</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <a class="code" href="namespaceexplore.html">explore</a>.stop();</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;  }</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  ros::NodeHandle n1;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  ros::NodeHandle n2;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  ros::ServiceServer startService =</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      n1.advertiseService(<span class="stringliteral">&quot;explore_start_service&quot;</span>, &amp;<a class="code" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">explore::Explore::srv_start</a>, &amp;<a class="code" href="namespaceexplore.html">explore</a>);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;  ros::ServiceServer stopService =</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      n2.advertiseService(<span class="stringliteral">&quot;explore_stop_service&quot;</span>, &amp;<a class="code" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">explore::Explore::srv_stop</a>, &amp;<a class="code" href="namespaceexplore.html">explore</a>);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  ros::spin();</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;}</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  frontier_blacklist_.clear();</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  exploring_timer_.start();</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;}</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
+<div class="line"><a name="l00262"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">  262</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">Explore::stop</a>()</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;{</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  move_base_client_.cancelAllGoals();</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  exploring_timer_.stop();</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  ROS_INFO(<span class="stringliteral">&quot;Exploration stopped&quot;</span>);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;}</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">  271</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">Explore::srv_start</a>(assignment3::Explore::Request&amp; req,</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;                 assignment3::Explore::Response&amp; res)</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;{</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  res.output = req.input;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#abb76c17d6e8943567b18079f07534dcb">first_run</a> = 0;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016">start</a>();</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00282"></a><span class="lineno"><a class="line" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">  282</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">Explore::srv_stop</a>(assignment3::Explore::Request&amp; req,</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                 assignment3::Explore::Response&amp; res)</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;{</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  res.output = req.input;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <a class="code" href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">stop</a>();</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}  <span class="comment">// namespace explore</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno"><a class="line" href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">  292</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;{</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  ros::init(argc, argv, <span class="stringliteral">&quot;explore_server_node&quot;</span>);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  <span class="comment">// Instantiating an object of the Explore class</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  <a class="code" href="classexplore_1_1Explore.html">explore::Explore</a> <a class="code" href="namespaceexplore.html">explore</a>;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="namespaceexplore.html">explore</a>.first_run == 1)</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <a class="code" href="namespaceexplore.html">explore</a>.stop();</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  }</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  ros::NodeHandle n1;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  ros::NodeHandle n2;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  ros::ServiceServer startService =</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      n1.advertiseService(<span class="stringliteral">&quot;explore_start_service&quot;</span>, &amp;<a class="code" href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">explore::Explore::srv_start</a>, &amp;<a class="code" href="namespaceexplore.html">explore</a>);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  ros::ServiceServer stopService =</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;      n2.advertiseService(<span class="stringliteral">&quot;explore_stop_service&quot;</span>, &amp;<a class="code" href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">explore::Explore::srv_stop</a>, &amp;<a class="code" href="namespaceexplore.html">explore</a>);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;  ros::spin();</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;}</div>
 <div class="ttc" id="aclassexplore_1_1Costmap2DClient_html_a02a8befe4fb9ac9057b89f14379a735c"><div class="ttname"><a href="classexplore_1_1Costmap2DClient.html#a02a8befe4fb9ac9057b89f14379a735c">explore::Costmap2DClient::getGlobalFrameID</a></div><div class="ttdeci">const std::string &amp; getGlobalFrameID() const</div><div class="ttdoc">Returns the global frame of the costmap.</div><div class="ttdef"><b>Definition:</b> <a href="costmap__client_8h_source.html#l00064">costmap_client.h:64</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Costmap2DClient_html_a6c2cb3946a589eb2708092b762a0ca19"><div class="ttname"><a href="classexplore_1_1Costmap2DClient.html#a6c2cb3946a589eb2708092b762a0ca19">explore::Costmap2DClient::getCostmap</a></div><div class="ttdeci">costmap_2d::Costmap2D * getCostmap()</div><div class="ttdoc">Return a pointer to the &quot;master&quot; costmap which receives updates from all the layers.</div><div class="ttdef"><b>Definition:</b> <a href="costmap__client_8h_source.html#l00044">costmap_client.h:44</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Costmap2DClient_html_ae5a535c3ee0df9bb24cc2f962dcacad9"><div class="ttname"><a href="classexplore_1_1Costmap2DClient.html#ae5a535c3ee0df9bb24cc2f962dcacad9">explore::Costmap2DClient::getRobotPose</a></div><div class="ttdeci">geometry_msgs::Pose getRobotPose() const</div><div class="ttdoc">Get the pose of the robot in the global frame of the costmap.</div><div class="ttdef"><b>Definition:</b> <a href="costmap__client_8cpp_source.html#l00154">costmap_client.cpp:154</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Explore_html"><div class="ttname"><a href="classexplore_1_1Explore.html">explore::Explore</a></div><div class="ttdoc">A class adhering to the robot_actions::Action interface that moves the robot base to explore its envi...</div><div class="ttdef"><b>Definition:</b> <a href="explore_8h_source.html#l00034">explore.h:35</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Explore_html_a25c9e2c8405191f3df7f86216daa7654"><div class="ttname"><a href="classexplore_1_1Explore.html#a25c9e2c8405191f3df7f86216daa7654">explore::Explore::Explore</a></div><div class="ttdeci">Explore()</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00026">explore.cpp:26</a></div></div>
-<div class="ttc" id="aclassexplore_1_1Explore_html_a7bfe8dd552d3816166e7ff32aaee47b6"><div class="ttname"><a href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">explore::Explore::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdoc">Method stopping algorithm execution.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00261">explore.cpp:261</a></div></div>
-<div class="ttc" id="aclassexplore_1_1Explore_html_a871b2e1a8b0c2d9b0b9c4798eb08a6cd"><div class="ttname"><a href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">explore::Explore::srv_start</a></div><div class="ttdeci">bool srv_start(assignment3::Explore::Request &amp;req, assignment3::Explore::Response &amp;res)</div><div class="ttdoc">Exploration algorithm start service server declaration.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00270">explore.cpp:270</a></div></div>
+<div class="ttc" id="aclassexplore_1_1Explore_html_a7bfe8dd552d3816166e7ff32aaee47b6"><div class="ttname"><a href="classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6">explore::Explore::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdoc">Method stopping algorithm execution.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00262">explore.cpp:262</a></div></div>
+<div class="ttc" id="aclassexplore_1_1Explore_html_a871b2e1a8b0c2d9b0b9c4798eb08a6cd"><div class="ttname"><a href="classexplore_1_1Explore.html#a871b2e1a8b0c2d9b0b9c4798eb08a6cd">explore::Explore::srv_start</a></div><div class="ttdeci">bool srv_start(assignment3::Explore::Request &amp;req, assignment3::Explore::Response &amp;res)</div><div class="ttdoc">Exploration algorithm start service server declaration.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00271">explore.cpp:271</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Explore_html_abb76c17d6e8943567b18079f07534dcb"><div class="ttname"><a href="classexplore_1_1Explore.html#abb76c17d6e8943567b18079f07534dcb">explore::Explore::first_run</a></div><div class="ttdeci">int first_run</div><div class="ttdoc">Variable used to prevent the algorithm from running at launch; it will instead wait for a service cli...</div><div class="ttdef"><b>Definition:</b> <a href="explore_8h_source.html#l00064">explore.h:64</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Explore_html_add4e807fa7294de7c23bc69df2b17016"><div class="ttname"><a href="classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016">explore::Explore::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Method starting algorithm execution.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00256">explore.cpp:256</a></div></div>
-<div class="ttc" id="aclassexplore_1_1Explore_html_adff6e68eac4850b1667fff809038c0b3"><div class="ttname"><a href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">explore::Explore::srv_stop</a></div><div class="ttdeci">bool srv_stop(assignment3::Explore::Request &amp;req, assignment3::Explore::Response &amp;res)</div><div class="ttdoc">Exploration algorithm stop service server declaration.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00281">explore.cpp:281</a></div></div>
+<div class="ttc" id="aclassexplore_1_1Explore_html_adff6e68eac4850b1667fff809038c0b3"><div class="ttname"><a href="classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3">explore::Explore::srv_stop</a></div><div class="ttdeci">bool srv_stop(assignment3::Explore::Request &amp;req, assignment3::Explore::Response &amp;res)</div><div class="ttdoc">Exploration algorithm stop service server declaration.</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00282">explore.cpp:282</a></div></div>
 <div class="ttc" id="aclassexplore_1_1Explore_html_afed6d2d29f9b51d78c9b594204518631"><div class="ttname"><a href="classexplore_1_1Explore.html#afed6d2d29f9b51d78c9b594204518631">explore::Explore::~Explore</a></div><div class="ttdeci">~Explore()</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00063">explore.cpp:63</a></div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1FrontierSearch_html"><div class="ttname"><a href="classfrontier__exploration_1_1FrontierSearch.html">frontier_exploration::FrontierSearch</a></div><div class="ttdoc">Thread-safe implementation of a frontier-search task for an input costmap.</div><div class="ttdef"><b>Definition:</b> <a href="frontier__search_8h_source.html#l00030">frontier_search.h:31</a></div></div>
 <div class="ttc" id="aclassfrontier__exploration_1_1FrontierSearch_html_ac28ed3ce13ab687ed002f74338189f48"><div class="ttname"><a href="classfrontier__exploration_1_1FrontierSearch.html#ac28ed3ce13ab687ed002f74338189f48">frontier_exploration::FrontierSearch::searchFrom</a></div><div class="ttdeci">std::vector&lt; Frontier &gt; searchFrom(geometry_msgs::Point position)</div><div class="ttdoc">Runs search implementation, outward from the start position.</div><div class="ttdef"><b>Definition:</b> <a href="frontier__search_8cpp_source.html#l00027">frontier_search.cpp:27</a></div></div>
-<div class="ttc" id="aexplore_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00291">explore.cpp:291</a></div></div>
+<div class="ttc" id="aexplore_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="explore_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> <a href="explore_8cpp_source.html#l00292">explore.cpp:292</a></div></div>
 <div class="ttc" id="aexplore_8h_html"><div class="ttname"><a href="explore_8h.html">explore.h</a></div></div>
 <div class="ttc" id="anamespaceexplore_html"><div class="ttname"><a href="namespaceexplore.html">explore</a></div><div class="ttdoc">Explore algorithm namespace.</div><div class="ttdef"><b>Definition:</b> <a href="costmap__client_8h_source.html#l00012">costmap_client.h:13</a></div></div>
 <div class="ttc" id="astructfrontier__exploration_1_1Frontier_html"><div class="ttname"><a href="structfrontier__exploration_1_1Frontier.html">frontier_exploration::Frontier</a></div><div class="ttdoc">Represents a frontier.</div><div class="ttdef"><b>Definition:</b> <a href="frontier__search_8h_source.html#l00016">frontier_search.h:16</a></div></div>

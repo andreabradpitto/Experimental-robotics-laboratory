@@ -85,16 +85,12 @@ class image_feature:
     def __init__(self):
         rospy.init_node('dog_vision_node', anonymous = True)
 
-        ## topic over which camera images get published
-        self.image_pub = rospy.Publisher("output/image_raw/compressed",
-                                         CompressedImage, queue_size=1)
         ## topic used to publish robot velocity commands
-        self.vel_pub = rospy.Publisher("cmd_vel",
-                                       Twist, queue_size=1)
+        self.vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=1)
 
         ## subscribed topic, used to check if balls are present nearby
-        self.subscriber = rospy.Subscriber("camera1/image_raw/compressed",
-                                           CompressedImage, self.callback,  queue_size=1)
+        self.subscriber = rospy.Subscriber("eye_camera/image_raw/compressed",
+                                           CompressedImage, self.callback, queue_size=1)
 
     ## Function used to compute the amount of image contours comprised inside
     # a specific color's bounds
@@ -182,8 +178,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -221,8 +219,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -260,8 +260,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -299,8 +301,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -338,8 +342,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -377,8 +383,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -435,8 +443,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -485,8 +495,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -535,8 +547,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -585,8 +599,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -635,8 +651,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates
@@ -685,8 +703,10 @@ class image_feature:
                     vel = Twist()
                     vel.angular.z = -0.002 * (center[0] - 400)
                     vel.linear.x = -0.01 * (radius - 100)
-                    if(vel.linear.x > 0.8):
-                        vel.linear.x = 0.8
+                    if(vel.linear.x > 0.4):
+                        vel.linear.x = 0.4
+                    elif(vel.linear.x < -0.4):
+                        vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                 else:
                     # the robot reached the ball: store coordinates

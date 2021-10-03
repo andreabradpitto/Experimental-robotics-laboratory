@@ -92,9 +92,6 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a4bb1d2335b5c0c6f96e876e328067945"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__vision_1_1image__feature.html#a4bb1d2335b5c0c6f96e876e328067945">image_pub</a></td></tr>
-<tr class="memdesc:a4bb1d2335b5c0c6f96e876e328067945"><td class="mdescLeft">&#160;</td><td class="mdescRight">topic over which camera images get published  <a href="classdog__vision_1_1image__feature.html#a4bb1d2335b5c0c6f96e876e328067945">More...</a><br /></td></tr>
-<tr class="separator:a4bb1d2335b5c0c6f96e876e328067945"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a839db294863bcceb9e9121b96ae6ab91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdog__vision_1_1image__feature.html#a839db294863bcceb9e9121b96ae6ab91">vel_pub</a></td></tr>
 <tr class="memdesc:a839db294863bcceb9e9121b96ae6ab91"><td class="mdescLeft">&#160;</td><td class="mdescRight">topic used to publish robot velocity commands  <a href="classdog__vision_1_1image__feature.html#a839db294863bcceb9e9121b96ae6ab91">More...</a><br /></td></tr>
 <tr class="separator:a839db294863bcceb9e9121b96ae6ab91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,7 +157,7 @@ Public Attributes</h2></td></tr>
 <p>Callback of the subscribed topic, used to constantly show on screen what the robotic dog is seeing. </p>
 <p>This callback also performs image conversion and feature detection. It has a different algorithm depending on the robotic dog current state. When the robot is in the Sleep or Play state, this callback just provides visual feedback on screen about what the robot is currently seeing. With this choice, the robot's Play state actually prioritizes the current human request over any possible new ball detection, i.e. they are ignored. When the robot is in Normal state, this callback does nothing if no balls are detected. If this is not the case, the robot checks if that ball is present in its database and, if so, it ignores it. If the ball preceived is a new discovery, the callback cancels all current move_base goals through an action client, and takes control of the dog motion: it leads the robot close to the ball, and then stores its coordinates. While this process is being carried out, the code draws both a colored dot centered on the ball and a circle outlining the latter; the callback also locks the triggering of new ball discovery processes, and frees them only once it is completed. The callback behavior for the Find state is similar to the one of the Normal state, but this time the goal cancelling is sent to the explore_lite algorithm via a service client. The code also checks if the ball found and reached was actually the wanted one: if so, the finding process is over, otherwise the callback restarts the explore_lite algorithm, with another service client, in order to find another new ball. The two service clients used to communicate with the Explore class (which hosts the exploration algorithm) rely on as many service servers, that I added as methods of the original code </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00134">134</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00130">130</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 
 </div>
 </div>
@@ -204,29 +201,11 @@ Public Attributes</h2></td></tr>
 
 <p>Function used to compute the amount of image contours comprised inside a specific color's bounds. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00101">101</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00097">97</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a4bb1d2335b5c0c6f96e876e328067945"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bb1d2335b5c0c6f96e876e328067945">&#9670;&nbsp;</a></span>image_pub</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">dog_vision.image_feature.image_pub</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>topic over which camera images get published </p>
-
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00089">89</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
-
-</div>
-</div>
 <a id="acaa9c0650a430ec2302c3f1ad4d77d81"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acaa9c0650a430ec2302c3f1ad4d77d81">&#9670;&nbsp;</a></span>subscriber</h2>
 
@@ -241,7 +220,7 @@ Public Attributes</h2></td></tr>
 
 <p>subscribed topic, used to check if balls are present nearby </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00096">96</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00092">92</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 
 </div>
 </div>
@@ -259,7 +238,7 @@ Public Attributes</h2></td></tr>
 
 <p>topic used to publish robot velocity commands </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00092">92</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00089">89</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 
 </div>
 </div>

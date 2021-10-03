@@ -29,14 +29,14 @@
   
   <gazebo>
     <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-      <legacyMode>true</legacyMode>
+      <legacyMode>true</legacyMode> <!-- swaps left and right wheels -->
       <alwaysOn>true</alwaysOn>
-      <updateRate>100.0</updateRate>
+      <updateRate>20</updateRate>
       <leftJoint>joint_left_wheel</leftJoint>
       <rightJoint>joint_right_wheel</rightJoint>
       <wheelSeparation>0.34</wheelSeparation>
       <wheelDiameter>0.2</wheelDiameter>
-      <torque>0.1</torque>
+      <torque>0.05</torque>
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
@@ -76,7 +76,7 @@
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>camera1</cameraName>
+        <cameraName>eye_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
@@ -101,8 +101,8 @@
           <horizontal>
             <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>-1.396263</min_angle> <!-- ~= -80 degrees -->
-            <max_angle>1.396263</max_angle> <!-- ~= 80 degrees -->
+            <min_angle>-1.570796</min_angle> <!-- ~= -90 degrees -->
+            <max_angle>1.570796</max_angle> <!-- ~= 90 degrees -->
           </horizontal>
         </scan>
         <range>

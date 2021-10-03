@@ -11,7 +11,7 @@ import time
 import random
 import actionlib
 from std_msgs.msg import String
-from assignment3.srv import BallService, Explore
+from assignment3.srv import Explore
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
 ## Acquire maximum x-axis parameter from launch file
@@ -59,8 +59,7 @@ class Sleep(smach.State):
     ## Sleep state initialization: set the outcomes
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, 
-                             outcomes=['wake_up'])
+        smach.State.__init__(self, outcomes=['wake_up'])
 
     ## Sleep state execution: the robot goes to sleep once he gets back home.
     # It relies on the move_base algorithm in order to move in the environment,
@@ -83,6 +82,7 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.x = home_x
             # set target as the home position (y-axis)
             home_pos.target_pose.pose.position.y = home_y
+            home_pos.target_pose.pose.position.z = 0
             rospy.loginfo('Dog: I am going to spleep!')
             mb_sleep_client.send_goal(home_pos)
             while(mb_sleep_client.get_state() != 3):
@@ -104,10 +104,10 @@ class Normal(smach.State):
     # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, 
-                             outcomes=['go_play','go_sleep'])
+        smach.State.__init__(self, outcomes=['go_play','go_sleep'])
+
         ## subscribed topic, used to receive commands from the human.py node
-        rospy.Subscriber('play_topic', String, self.normal_callback)
+        rospy.Subscriber('play_topic', String, self.play_req_callback)
     
     ## Normal state execution: the robot wanders randomly, by feeding
     # the move_base algorithm with randomly generated positions. If, while moving around,
@@ -128,12 +128,45 @@ class Normal(smach.State):
         goal_pos = MoveBaseGoal()
         goal_pos.target_pose.pose.orientation.w = 1.0
         goal_pos.target_pose.header.frame_id = "map"
+        '''
+        # --- TODO PARTE TEMPORANEA ---
+        from geometry_msgs.msg import Twist
+        import time
+        self.vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=1)
+        vel = Twist()
+        #vel.angular.z = 0
+        #vel.linear.x = 0.4
+        #self.vel_pub.publish(vel)
+        #while(1):
+            #time.sleep(1000)
+        while(1):
+            #vel.angular.z = 0.4
+            #vel.linear.x = -0.4
+            vel.angular.z = 0.4
+            vel.linear.x = 0
+            self.vel_pub.publish(vel)
+            time.sleep(10)
+            vel.angular.z = -0.4
+            vel.linear.x = 0
+            self.vel_pub.publish(vel)
+            time.sleep(3)
+            vel.angular.z = 0
+            vel.linear.x = 0 #-0.4
+            self.vel_pub.publish(vel)
+            time.sleep(3)
+            vel.angular.z = 0
+            vel.linear.x = 0 #0.4
+            self.vel_pub.publish(vel)
+            time.sleep(3)
+        # --- TODO FINE PARTE TEMPORANEA ---
+        '''
         while (energy_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
                rospy.get_param('state') == 'normal'):
             stop_var = 0
             goal_pos.target_pose.header.stamp = rospy.Time.now()
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
             goal_pos.target_pose.pose.position.y = random.randint(map_y_max, map_y_max)
+            goal_pos.target_pose.pose.position.z = 0
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                           goal_pos.target_pose.pose.position.x, \
@@ -166,14 +199,13 @@ class Normal(smach.State):
 
     ## Normal state callback that prints a string acknowledging that the robotic dog
     # has received a play request
-    def normal_callback(self, data):
+    def play_req_callback(self, data):
         global playtime
         if (rospy.get_param('state') == 'normal'):
             rospy.loginfo('Dog: I have received a play request! Woof!')
             mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
             mb_normal_client.cancel_all_goals()
             playtime = 1
-
 
 
 ## Play state: the robot gets to the human, waits for a room order, then gets back
@@ -183,10 +215,10 @@ class Play(smach.State):
     # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, 
-                             outcomes=['game_over','go_find'])
+        smach.State.__init__(self, outcomes=['game_over','go_find'])
+
         ## subscribed topic, used to receive commands from the human.py node                    
-        rospy.Subscriber('play_topic', String, self.play_callback)
+        rospy.Subscriber('play_topic', String, self.room_color_callback)
 
     ## Play state execution: using the move_base algorithm, the robotic dog, gets
     # back home (i.e. close to the human), then starts listening for the
@@ -218,6 +250,7 @@ class Play(smach.State):
         target_pos.target_pose.pose.position.x = home_x
         # set target as the home position (y-axis)
         target_pos.target_pose.pose.position.y = home_y
+        target_pos.target_pose.pose.position.z = 0
         rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
         while(mb_play_client.get_state() != 3):
@@ -244,6 +277,7 @@ class Play(smach.State):
                 target_pos.target_pose.header.stamp = rospy.Time.now()
                 target_pos.target_pose.pose.position.x = ball_location_x
                 target_pos.target_pose.pose.position.y = ball_location_y
+                target_pos.target_pose.pose.position.z = 0
                 mb_play_client.send_goal(target_pos)
                 while(mb_play_client.get_state() != 3):
                     self.rate.sleep
@@ -255,6 +289,7 @@ class Play(smach.State):
                 target_pos.target_pose.pose.position.x = home_x
                 # set target as home position (y-axis)
                 target_pos.target_pose.pose.position.y = home_y
+                target_pos.target_pose.pose.position.z = 0
                 mb_play_client.send_goal(target_pos)
                 while(mb_play_client.get_state() != 3):
                     self.rate.sleep
@@ -280,7 +315,7 @@ class Play(smach.State):
     ## Play state callback that is used to translate the room asked by the
     # human into the ball corresponding to that same room, and it will then be
     # either reached or searched by the robotic dog
-    def play_callback(self, data):
+    def room_color_callback(self, data):
         global play_ball_request, room_number
         if (rospy.get_param('state') == 'play' and data.data != 'play'):
             rospy.loginfo('Dog: I will try to go to the %s', data.data)
@@ -310,8 +345,7 @@ class Find(smach.State):
     ## Find state initialization: set the outcomes
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, 
-                             outcomes=['find_over'])
+        smach.State.__init__(self, outcomes=['find_over'])
 
     ## Find state execution: in this state, the robotic dog looks for the goal ball,
     # determined in the Play state. In order to do so, this state relies on the
@@ -377,7 +411,7 @@ def main():
     # Execute the state machine
     sm.execute()
 
-    # Wait for ctrl-c to stop the application
+    # Wait for ctrl+c to stop the application
     rospy.spin()
     sis.stop()
 

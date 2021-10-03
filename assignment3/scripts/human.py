@@ -2,11 +2,11 @@
 
 ## @package human
 # Emulates a human agent which randomly decides to play with the robotic dog.
-# The human checks if the robot is able to play, waits for it to come nearby,
+# The human checks if the robot is able to play; if so, waits for it to come nearby,
 # then orders it to move to a random room of the house, and finally waits for
-# it come back. The game ends when the robotic dog is tired.
-# All the communications sent to the robot are carried out via action a
-# message publisher (over 'play_topic'), and all the orders are handled by dog_fsm.py
+# it come back. The game ends when the robotic dog gets tired.
+# All the communications sent to the robot are carried out via a message
+# publisher (over the 'play_topic'), and all the orders are handled by dog_fsm.py
 
 import rospy
 import time

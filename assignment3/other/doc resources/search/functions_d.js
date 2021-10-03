@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7eexplore_164',['~Explore',['../classexplore_1_1Explore.html#afed6d2d29f9b51d78c9b594204518631',1,'explore::Explore']]]
+  ['updatefullmap_155',['updateFullMap',['../classexplore_1_1Costmap2DClient.html#aea42456429533a2d1b2534ba2a2a3c38',1,'explore::Costmap2DClient']]],
+  ['updatepartialmap_156',['updatePartialMap',['../classexplore_1_1Costmap2DClient.html#a9ced9410da0b202133977a1ac30042bb',1,'explore::Costmap2DClient']]]
 ];

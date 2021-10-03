@@ -127,9 +127,12 @@ Variables</h2></td></tr>
 <tr class="memitem:acd61d2596faead01f1da1876fd719c20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">playtime</a> = 0</td></tr>
 <tr class="memdesc:acd61d2596faead01f1da1876fd719c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to state whether it is time to play or not  <a href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">More...</a><br /></td></tr>
 <tr class="separator:acd61d2596faead01f1da1876fd719c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08e20e3319ccf23e0331479526f02c72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">play_ball_request</a> = 100</td></tr>
-<tr class="memdesc:a08e20e3319ccf23e0331479526f02c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to identify and store the requested room (hence ball) by the human when it equals 100, it is set to its default value, and does not correspond to any ball  <a href="namespacedog__fsm.html#a08e20e3319ccf23e0331479526f02c72">More...</a><br /></td></tr>
-<tr class="separator:a08e20e3319ccf23e0331479526f02c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683b1b7258310babfbe88775432c7cc4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a683b1b7258310babfbe88775432c7cc4">play_ball_request</a> = 'none'</td></tr>
+<tr class="memdesc:a683b1b7258310babfbe88775432c7cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to identify and store the requested room (hence ball) by the human when it equals 'none', it is set to its default value, and does not correspond to any ball  <a href="namespacedog__fsm.html#a683b1b7258310babfbe88775432c7cc4">More...</a><br /></td></tr>
+<tr class="separator:a683b1b7258310babfbe88775432c7cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbbb60fb08009984d72026bd54acd046"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#abbbb60fb08009984d72026bd54acd046">room_number</a> = 100</td></tr>
+<tr class="memdesc:abbbb60fb08009984d72026bd54acd046"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state.  <a href="namespacedog__fsm.html#abbbb60fb08009984d72026bd54acd046">More...</a><br /></td></tr>
+<tr class="separator:abbbb60fb08009984d72026bd54acd046"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(4, 7)</td></tr>
 <tr class="memdesc:a911ace87f83a3accfa7dce0146323822"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to keep track of the robot's simulated battery charge  <a href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">More...</a><br /></td></tr>
 <tr class="separator:a911ace87f83a3accfa7dce0146323822"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,7 +159,7 @@ Variables</h2></td></tr>
 <p>Finite state machine's (fsm) main. </p>
 <p>It initializes the dog_fsm_node and setups a SMACH state machine along with all the 4 possible states </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00340">340</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00384">384</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -175,7 +178,7 @@ Variables</h2></td></tr>
 
 <p>variable used to keep track of the robot's simulated battery charge </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00049">49</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00053">53</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -305,19 +308,19 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a08e20e3319ccf23e0331479526f02c72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08e20e3319ccf23e0331479526f02c72">&#9670;&nbsp;</a></span>play_ball_request</h2>
+<a id="a683b1b7258310babfbe88775432c7cc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a683b1b7258310babfbe88775432c7cc4">&#9670;&nbsp;</a></span>play_ball_request</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int dog_fsm.play_ball_request = 100</td>
+          <td class="memname">string dog_fsm.play_ball_request = 'none'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>variable used to identify and store the requested room (hence ball) by the human when it equals 100, it is set to its default value, and does not correspond to any ball </p>
+<p>variable used to identify and store the requested room (hence ball) by the human when it equals 'none', it is set to its default value, and does not correspond to any ball </p>
 
 <p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00046">46</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
@@ -356,6 +359,25 @@ Variables</h2></td></tr>
 <p>Acquire the list of available rooms from launch file. </p>
 
 <p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00032">32</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="abbbb60fb08009984d72026bd54acd046"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbbb60fb08009984d72026bd54acd046">&#9670;&nbsp;</a></span>room_number</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_fsm.room_number = 100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. </p>
+<p>A value of 100 stands for "undefined" </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00050">50</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
