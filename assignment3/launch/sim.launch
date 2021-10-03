@@ -151,15 +151,15 @@
     <!-- node used to have the robot visually process its surroundings,
          looking for colored balls. It also takes control of the robotic
          dog movements when needed -->
-    <node pkg='assignment3' type='dog_vision.py'
-      name='dog_vision_node' output='screen' respawn="false"/>
+    <!--<node pkg='assignment3' type='dog_vision.py'
+      name='dog_vision_node' output='screen' respawn="false"/>-->
 
     <!-- node used to simulate random room requests made by the human -->
-    <node pkg='assignment3' type='human.py'
-      name='human_node' output='screen' respawn="false"/>
+    <!--<node pkg='assignment3' type='human.py'
+      name='human_node' output='screen' respawn="false"/>-->
 
     <!-- node executing, when requested, the explore_lite algorithm -->
-    <node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node">
+    <!--<node pkg="assignment3" type="assignment3_node" respawn="false" name="explore_node">
       <param name="robot_base_frame" value="link_chassis"/>
       <param name="costmap_topic" value="map"/>
       <param name="costmap_updates_topic" value="map_updates"/>
@@ -171,6 +171,6 @@
       <param name="gain_scale" value="1.0"/>
       <param name="transform_tolerance" value="0.3"/>
       <param name="min_frontier_size" value="0.75"/>
-    </node>
+    </node>-->
 
 </launch>

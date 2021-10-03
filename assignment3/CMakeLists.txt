@@ -69,7 +69,6 @@ add_message_files(
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
-   BallService.srv
    Explore.srv
  )
 
@@ -206,7 +205,6 @@ target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
    scripts/human.py
    scripts/dog_fsm.py
    scripts/dog_vision.py
-   scripts/ball_server.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

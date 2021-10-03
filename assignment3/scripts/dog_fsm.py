@@ -145,7 +145,7 @@ class Normal(smach.State):
                         stop_var = 1
                         self.rate.sleep
                 elif (mb_normal_client.get_state() > 3):
-                    rospy.loginfo('Dog: I aborted reaching the last random target')
+                    rospy.loginfo('Dog: I could not reach the last random target')
                     break
                 if(playtime == 1):
                     break
