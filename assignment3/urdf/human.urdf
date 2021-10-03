@@ -188,10 +188,10 @@
     <limit effort="10.0" lower="-3.14159265359" upper="3.14159265359" velocity="5.0"/>
   </joint>
   <gazebo reference="front_right_steer_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <gazebo reference="front_right_wheel_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <link name="front_left_steer_link">
     <inertial>
@@ -221,10 +221,10 @@
     <limit effort="10.0" lower="-3.14159265359" upper="3.14159265359" velocity="5.0"/>
   </joint>
   <gazebo reference="front_left_steer_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <gazebo reference="front_left_wheel_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <link name="rear_right_steer_link">
     <inertial>
@@ -254,7 +254,7 @@
     <limit effort="10.0" lower="-3.14159265359" upper="3.14159265359" velocity="5.0"/>
   </joint>
   <gazebo reference="rear_right_steer_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <link name="rear_left_steer_link">
     <inertial>
@@ -284,7 +284,7 @@
     <limit effort="10.0" lower="-3.14159265359" upper="3.14159265359" velocity="5.0"/>
   </joint>
   <gazebo reference="rear_left_steer_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <!--
   <front_wheel name="rear_right" parent="base" radius="${wheel_radius}" thickness="${thickness}" 
@@ -886,10 +886,10 @@
   </joint>
   <!-- Colour -->
   <gazebo reference="base_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <gazebo reference="back_link">
-    <material>Gazebo/WoodFloor</material>
+    <material>Gazebo/White</material>
   </gazebo>
   <gazebo reference="panelfront_link">
     <material>Gazebo/White</material>

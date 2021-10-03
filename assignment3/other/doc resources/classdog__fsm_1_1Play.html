@@ -105,7 +105,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state: the robot gets to the human, waits for a room order, then gets back to the human. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00213">213</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00178">178</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a685701e0f1620ccbc9b7803338300ac6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a685701e0f1620ccbc9b7803338300ac6">&#9670;&nbsp;</a></span>__init__()</h2>
@@ -125,7 +125,7 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state initialization: set the outcomes and subscribe to the 'play_topic' topic, on which <a class="el" href="human_8py.html">human.py</a> publishes its commands. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00216">216</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00181">181</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -159,7 +159,7 @@ Public Attributes</h2></td></tr>
 <p><a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state execution: using the move_base algorithm, the robotic dog, gets back home (i.e. </p>
 <p>close to the human), then starts listening for the room request. Once received, it checks via a service implemented in ball_server.py which are the corresponing ball coordinates to reach. If the ball is not yet in the dog's database, it shifts to the <a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> state. If the ball has been seen before, the dog starts moving to the chosen room, still relying on move_base. After reaching that position, it comes back to the user, again via move_base: whenever this process is completed, some battery is consumed. Furthermore, I assumed that a single cycle of this state consumes slightly more battery, on average, than one of the <a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state; for this reason, the threshold of remaining battery before going back to the <a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state is higher than in the previous case (i.e. from <a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> to <a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state: the robot gets home and sleeps for some time.">Sleep</a>): this also allows me to make sure that the robot can go to sleep before completely depleting its battery </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00236">236</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00201">201</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -191,7 +191,7 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state callback that is used to translate the room asked by the human into the ball corresponding to that same room, and it will then be either reached or searched by the robotic dog. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00318">318</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00280">280</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -210,7 +210,7 @@ Public Attributes</h2></td></tr>
 
 <p>define loop rate for the state </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00241">241</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00206">206</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>

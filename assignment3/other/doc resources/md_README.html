@@ -68,7 +68,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="autotoc_md18"></a>
 Introduction</h1>
-<p>This is the repository for the third and last assignment of the Robotics engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held in the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with <a href="https://www.python.org/download/releases/2.7/">Python 2.7</a>/<a href="https://www.cplusplus.com/">C++</a> and it intended to be run on <a href="http://wiki.ros.org/kinetic">ROS Kinetic</a> and <a href="https://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>.</p>
+<p>This is the repository for the third and last assignment of the Robotics Engineering "Experimental robotics laboratory" course, a.y. 2020/2021, held at the University of Genoa. This work is focused on the implemetation of a ROS-based finite state machine (FSM) nested within a more complex architecture. This project has been coded with <a href="https://www.python.org/download/releases/2.7/">Python 2.7</a>/<a href="https://www.cplusplus.com/">C++</a> and it intended to be run on <a href="http://wiki.ros.org/kinetic">ROS Kinetic</a> and <a href="https://releases.ubuntu.com/16.04/">Ubuntu 16.04</a>.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md20"></a>
 :warning: Documentation</h1>
@@ -101,10 +101,10 @@ The environments</h2>
 <li>the blue line is the current goal of the robot (does not apply to the Find state)</li>
 <li>the green line is the local navigation plan</li>
 <li>the yellow line is the global navigation plan</li>
-<li>the blue segmentss (and the green spheres, not shown here) are the elements used by the exploration algorithm (only applies to the Find state)</li>
+<li>the blue segments and the green spheres (not shown here) are the elements used by the exploration algorithm (only applies to the Find state)</li>
 <li>the two white squares, centered on the robot, are the local and global costmaps</li>
 </ul>
-<p>The computed world map is acquired by reading from the <code>map</code> topic, which is published by the <a href="http://wiki.ros.org/gmapping">gmapping</a> laser-based <a href="https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> algorithm. It relies on the laser scan data in order to chart the house walls.</p>
+<p>The computed world map is acquired by reading from the <code>/map</code> topic, which is published by the <a href="http://wiki.ros.org/gmapping">gmapping</a> laser-based <a href="https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> algorithm. It relies on the laser scan data in order to chart the house walls.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md27"></a>
 Architecture</h1>
@@ -157,11 +157,13 @@ Architecture</h1>
 <li><code>new_ ball_detected</code>: parameter used to specify whether a new ball has been detected or not</li>
 <li><code>unknown_ball</code>: parameter used to identify which ball has to be looked for</li>
 <li><code>room_list</code>: list of the available rooms</li>
-<li><code>play_task_status</code>: parameter used to specify <b>Play</b> state progress <br  />
- A value of 0 means that the state is not active or at in initialization phase <br  />
- A 1 stands for it being in progress <br  />
- A value of 2 means that it has completed one iteration <br  />
- The last value is also used by the <b>Find</b> state, in case the location of the room asked by the human was not present in the robot's database</li>
+<li><code>play_task_status</code>: parameter used to specify <b>Play</b> state progress<ul>
+<li>A value of 0 means that the state is not active or at in initialization phase</li>
+<li>A 1 stands for it being in progress</li>
+<li>A value of 2 means that it has completed one iteration</li>
+<li>The last value is also used by the <b>Find</b> state, in case the location of the room asked by the human was not present in the robot's database</li>
+</ul>
+</li>
 <li><code>blue/x</code>: parameter used to specify the x coordinate of the blue ball, once discovered</li>
 <li><code>blue/y</code>: parameter used to specify the y coordinate of the blue ball, once discovered</li>
 <li><code>red/x</code>: parameter used to specify the x coordinate of the red ball, once discovered</li>

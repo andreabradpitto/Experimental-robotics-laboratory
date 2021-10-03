@@ -31,16 +31,17 @@ def human():
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
     time.sleep(random.randint(80, 120) / sim_scale)
     while not rospy.is_shutdown():
-        while (rospy.get_param('state') == 'sleep' or rospy.get_param('state') == 'find'):
+        while (rospy.get_param('state') == 'sleep'):
             rate.sleep()
-        if rospy.get_param('state') == 'normal':
-            voice_pub.publish('play')
-            rospy.loginfo('Human: I want to play')
-            while (rospy.get_param('state') != 'play'):
-                rate.sleep()
+        while (rospy.get_param('state') != 'normal'):
+            rate.sleep()
+        rospy.loginfo('Human: I want to play')
+        voice_pub.publish('play')
+        while (rospy.get_param('state') != 'play'):
+            rate.sleep()
         # here I am assuming the human can see when the robot turns into the play state
         # (i.e. thanks to an external LED mounted on its back)
-        while (rospy.get_param('state') == 'play' or rospy.get_param('state') == 'find'):
+        while (rospy.get_param('state') == 'play'):
             while (rospy.get_param('play_task_status') ==  0):
                 rate.sleep()
             room_choice = random.randint(0, 5)
@@ -48,6 +49,10 @@ def human():
             voice_pub.publish(room_list[room_choice])
             # when 'play_task_status' equals 2, the robot has completed its job
             while (rospy.get_param('play_task_status') !=  2):
+                rate.sleep()
+            # this while is necessary in order to give dog_fsm.py the time to
+            # transition from Find to Play
+            while (rospy.get_param('state') == 'find'):
                 rate.sleep()
             rate.sleep()
         rospy.loginfo('Human: The robot has stopped playing')

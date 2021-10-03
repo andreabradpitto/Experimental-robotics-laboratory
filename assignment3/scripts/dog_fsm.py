@@ -82,7 +82,6 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.x = home_x
             # set target as the home position (y-axis)
             home_pos.target_pose.pose.position.y = home_y
-            home_pos.target_pose.pose.position.z = 0
             rospy.loginfo('Dog: I am going to spleep!')
             mb_sleep_client.send_goal(home_pos)
             while(mb_sleep_client.get_state() != 3):
@@ -128,45 +127,12 @@ class Normal(smach.State):
         goal_pos = MoveBaseGoal()
         goal_pos.target_pose.pose.orientation.w = 1.0
         goal_pos.target_pose.header.frame_id = "map"
-        '''
-        # --- TODO PARTE TEMPORANEA ---
-        from geometry_msgs.msg import Twist
-        import time
-        self.vel_pub = rospy.Publisher("cmd_vel", Twist, queue_size=1)
-        vel = Twist()
-        #vel.angular.z = 0
-        #vel.linear.x = 0.4
-        #self.vel_pub.publish(vel)
-        #while(1):
-            #time.sleep(1000)
-        while(1):
-            #vel.angular.z = 0.4
-            #vel.linear.x = -0.4
-            vel.angular.z = 0.4
-            vel.linear.x = 0
-            self.vel_pub.publish(vel)
-            time.sleep(10)
-            vel.angular.z = -0.4
-            vel.linear.x = 0
-            self.vel_pub.publish(vel)
-            time.sleep(3)
-            vel.angular.z = 0
-            vel.linear.x = 0 #-0.4
-            self.vel_pub.publish(vel)
-            time.sleep(3)
-            vel.angular.z = 0
-            vel.linear.x = 0 #0.4
-            self.vel_pub.publish(vel)
-            time.sleep(3)
-        # --- TODO FINE PARTE TEMPORANEA ---
-        '''
         while (energy_timer != 0 and playtime == 0 and (not rospy.is_shutdown()) and \
                rospy.get_param('state') == 'normal'):
             stop_var = 0
             goal_pos.target_pose.header.stamp = rospy.Time.now()
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
             goal_pos.target_pose.pose.position.y = random.randint(map_y_max, map_y_max)
-            goal_pos.target_pose.pose.position.z = 0
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                           goal_pos.target_pose.pose.position.x, \
@@ -201,11 +167,10 @@ class Normal(smach.State):
     # has received a play request
     def play_req_callback(self, data):
         global playtime
-        if (rospy.get_param('state') == 'normal'):
-            rospy.loginfo('Dog: I have received a play request! Woof!')
-            mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-            mb_normal_client.cancel_all_goals()
-            playtime = 1
+        rospy.loginfo('Dog: I have received a play request! Woof!')
+        mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+        mb_normal_client.cancel_all_goals()
+        playtime = 1
 
 
 ## Play state: the robot gets to the human, waits for a room order, then gets back
@@ -250,7 +215,6 @@ class Play(smach.State):
         target_pos.target_pose.pose.position.x = home_x
         # set target as the home position (y-axis)
         target_pos.target_pose.pose.position.y = home_y
-        target_pos.target_pose.pose.position.z = 0
         rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
         while(mb_play_client.get_state() != 3):
@@ -277,7 +241,6 @@ class Play(smach.State):
                 target_pos.target_pose.header.stamp = rospy.Time.now()
                 target_pos.target_pose.pose.position.x = ball_location_x
                 target_pos.target_pose.pose.position.y = ball_location_y
-                target_pos.target_pose.pose.position.z = 0
                 mb_play_client.send_goal(target_pos)
                 while(mb_play_client.get_state() != 3):
                     self.rate.sleep
@@ -289,7 +252,6 @@ class Play(smach.State):
                 target_pos.target_pose.pose.position.x = home_x
                 # set target as home position (y-axis)
                 target_pos.target_pose.pose.position.y = home_y
-                target_pos.target_pose.pose.position.z = 0
                 mb_play_client.send_goal(target_pos)
                 while(mb_play_client.get_state() != 3):
                     self.rate.sleep
@@ -317,26 +279,25 @@ class Play(smach.State):
     # either reached or searched by the robotic dog
     def room_color_callback(self, data):
         global play_ball_request, room_number
-        if (rospy.get_param('state') == 'play' and data.data != 'play'):
-            rospy.loginfo('Dog: I will try to go to the %s', data.data)
-            if data.data == room_list[0]:
-                play_ball_request = 'blue'
-                room_number = 0
-            elif data.data == room_list[1]:
-                play_ball_request = 'red'
-                room_number = 1
-            elif data.data == room_list[2]:
-                play_ball_request = 'green'
-                room_number = 2
-            elif data.data == room_list[3]:
-                play_ball_request = 'yellow'
-                room_number = 3
-            elif data.data == room_list[4]:
-                play_ball_request = 'magenta'
-                room_number = 4
-            else:
-                play_ball_request = 'black'
-                room_number = 5
+        rospy.loginfo('Dog: I will try to go to the %s', data.data)
+        if data.data == room_list[0]:
+            play_ball_request = 'blue'
+            room_number = 0
+        elif data.data == room_list[1]:
+            play_ball_request = 'red'
+            room_number = 1
+        elif data.data == room_list[2]:
+            play_ball_request = 'green'
+            room_number = 2
+        elif data.data == room_list[3]:
+            play_ball_request = 'yellow'
+            room_number = 3
+        elif data.data == room_list[4]:
+            play_ball_request = 'magenta'
+            room_number = 4
+        else:
+            play_ball_request = 'black'
+            room_number = 5
 
 
 
