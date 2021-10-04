@@ -42,11 +42,11 @@ On the left side of the above image there are many the elements useful to track 
 
 - the black elements are the obstacles detected by the robot
 - the red lines are the current wall detections incoming from the robot's laser
-- the blue line is the current goal of the robot (does not apply to the Find state)
+- the blue line is the current goal of the robot (not shown here; does not apply to the Find state)
 - the green line is the local navigation plan
 - the yellow line is the global navigation plan
 - the blue segments and the green spheres (not shown here) are the elements used by the exploration algorithm (only applies to the Find state)
-- the two white squares, centered on the robot, are the local and global costmaps
+- the three white squares are, in size-wise increasing order, the local costmap, the global costmap. and the currently comupted world map
 
 The computed world map is acquired by reading from the `/map` topic, which is published by the [gmapping](http://wiki.ros.org/gmapping) laser-based [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping) algorithm. It relies on the laser scan data in order to chart the house walls.
 
@@ -145,8 +145,8 @@ In order to run this piece of software, it is needed to have a Linux distributio
 - [OpenCV](https://opencv.org/)
 - [gmapping](http://wiki.ros.org/gmapping)
 - [move_base](http://wiki.ros.org/move_base)
-- A [Python](https://www.python.org/) interpreter (2.7.x versions recommended; already present on Ubuntu)
-- A [C++](https://www.cplusplus.com/) compiler (already present on Ubuntu)
+- A [Python](https://www.python.org/) interpreter (2.7.x versions recommended; already installed on Ubuntu)
+- A [C++](https://www.cplusplus.com/) compiler (already installed on Ubuntu)
 
 ---
 
@@ -181,7 +181,7 @@ This will start the simulation on both Gazebo and RViz, and also open a window s
 - The robot's simulated battery is assumed to drain more rapidly while in **Play** than when in **Normal**, single-cycle-wise. This would be actually true in reality most often than not, but of course it would not always be the case. Furthermore, the **Find** state does not drain battery directly, which is a significant simplification. Anyway, in order to make sure that the robot is always able to get back to its charging station (i.e. home), and also to account for the major battery drain assumption, the robotic dog transitions from **Play** to **Normal** after a certain drain threshold is reached, and then always carries out a single **Normal** state cycle (no matter how far it goes, which is of course another simpification) before going to **Sleep** to recharge its batteries
 - The dog is assumed to start in its home position and, more importantly, the position the robot reaches when it gets close to the human (**Play** state) is again its home, as the mannequin (i.e. the human location) is close the charging station. This is somewhat "hardcoded" in the above mentioned state and, if the mannequin is moved to a location which is far from "home", a couple of lines in the code [dog_fsm.py](scripts/dog_fsm.py) must be changed. In that case, it is thus not sufficient to just adapt the parameters in the sim.launch launch file
 - If, for some reason, the robot loses track of a ball while it is reaching it, there is no way the robot can recover from there. However, the chances of this happening are very slim. A more realistic issue could be that, again while trying to reach a new ball, the robot could hit a wall, as in that situation it ignores incoming laser data. This happens when a wall corner covers the trajectory from the robot position to the ball, so that the latter is still partially visible from the dog's point of view. As this scenario mostly results in somewhat tangential crashes, the robot could still reach its target location in some cases
-- It may happen, on rare occasions, that the robot confuses the chair on which the human is sitting as being green, thus subsequently starting to try and determine livingroom location. This might occur if the robot moves really close to the chair, for instance while trying to reach a location behind it
+- It may happen, on rare occasions, that the robot confuses the chair on which the human is sitting as being red or magenta, thus subsequently starting to try and determine the corresponding room. This might occur if the robot moves really close to the chair, for instance while trying to reach a location behind it. This has been fixed by changing the chair texture from wooden to plain white, like for the human mannequin
 
 ---
 

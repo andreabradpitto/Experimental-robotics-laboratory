@@ -75,6 +75,9 @@ magenta_solved = 0
 # (0 = not yet discovered; 1 = in progress; 2 = completed)
 black_solved = 0
 
+## variable used to try and trigger a predetermined procedure if the robot gets stuck
+stuck_counter = 0
+
 ## Class used to visualize what the the robotic dog see during motion. It uses
 # OpenCV in order to acquire images of the house, and takes control of the
 # robot movements as soon as a new ball is spotted, with the aim of getting near it
@@ -129,7 +132,7 @@ class image_feature:
     # that I added as methods of the original code
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
-               yellow_solved, magenta_solved, black_solved
+               yellow_solved, magenta_solved, black_solved, stuck_counter
 
         ## Direct conversion to CV2
         np_arr = np.fromstring(ros_data.data, np.uint8)
@@ -171,6 +174,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -183,6 +187,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -192,6 +207,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
             elif(len(redCnts) > 0 and red_solved != 2 \
                  and blue_solved != 1 and green_solved != 1 and yellow_solved != 1 \
@@ -212,6 +228,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -224,6 +241,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -233,6 +261,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
@@ -253,6 +282,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -265,6 +295,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -274,6 +315,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1
@@ -294,6 +336,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a magenta circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
                     # draw a red dot
@@ -306,6 +349,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -315,6 +369,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1
@@ -335,6 +390,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -347,6 +403,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -356,6 +423,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1
@@ -376,6 +444,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -388,6 +457,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -397,6 +477,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
+                    stuck_counter = 0
 
 
 
@@ -436,6 +517,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -448,6 +530,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -466,6 +559,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
             elif(len(redCnts) > 0 and red_solved != 2 \
                  and blue_solved != 1 and green_solved != 1 and yellow_solved != 1
@@ -488,6 +582,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -500,6 +595,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -518,6 +624,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
             elif(len(greenCnts) > 0 and green_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and yellow_solved != 1 \
@@ -540,6 +647,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -552,6 +660,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -570,6 +689,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
             elif(len(yellowCnts) > 0 and yellow_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -592,6 +712,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a magenta circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
                     # draw a red dot
@@ -604,6 +725,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -622,6 +754,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
             elif(len(magentaCnts) > 0 and magenta_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -644,6 +777,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -656,6 +790,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -674,6 +819,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
             elif(len(blackCnts) > 0 and black_solved != 2 \
                  and blue_solved != 1 and red_solved != 1 and green_solved != 1 \
@@ -696,6 +842,7 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
+                    stuck_counter = stuck_counter + 1
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -708,6 +855,17 @@ class image_feature:
                     elif(vel.linear.x < -0.4):
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
+                    # try to free the robot
+                    if stuck_counter > 100:
+                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5):
+                            vel.angular.x = 0
+                            vel.angular.z = 0.4
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
                     # corresponding to its color
@@ -726,6 +884,7 @@ class image_feature:
                         rospy.wait_for_service('explore_start_service')
                         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
                         explore_start(1)
+                    stuck_counter = 0
 
 
 

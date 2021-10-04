@@ -8,5 +8,6 @@ var searchData=
   ['srv_5fstop_88',['srv_stop',['../classexplore_1_1Explore.html#adff6e68eac4850b1667fff809038c0b3',1,'explore::Explore']]],
   ['start_89',['start',['../classexplore_1_1Explore.html#add4e807fa7294de7c23bc69df2b17016',1,'explore::Explore']]],
   ['stop_90',['stop',['../classexplore_1_1Explore.html#a7bfe8dd552d3816166e7ff32aaee47b6',1,'explore::Explore']]],
-  ['subscriber_91',['subscriber',['../classdog__vision_1_1image__feature.html#acaa9c0650a430ec2302c3f1ad4d77d81',1,'dog_vision::image_feature']]]
+  ['stuck_5fcounter_91',['stuck_counter',['../namespacedog__vision.html#a528d4d056d42069aa5ae2140de922504',1,'dog_vision']]],
+  ['subscriber_92',['subscriber',['../classdog__vision_1_1image__feature.html#acaa9c0650a430ec2302c3f1ad4d77d81',1,'dog_vision::image_feature']]]
 ];
