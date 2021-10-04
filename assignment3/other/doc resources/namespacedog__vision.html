@@ -143,8 +143,10 @@ Variables</h2></td></tr>
 <tr class="memdesc:ab9e13a13ee23b91c392e696b373556c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">defines the current knowledge state of the coordinates corresponding to the black ball (0 = not yet discovered; 1 = in progress; 2 = completed)  <a href="namespacedog__vision.html#ab9e13a13ee23b91c392e696b373556c3">More...</a><br /></td></tr>
 <tr class="separator:ab9e13a13ee23b91c392e696b373556c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a528d4d056d42069aa5ae2140de922504"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__vision.html#a528d4d056d42069aa5ae2140de922504">stuck_counter</a> = 0</td></tr>
-<tr class="memdesc:a528d4d056d42069aa5ae2140de922504"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to try and trigger a predetermined procedure if the robot gets stuck  <a href="namespacedog__vision.html#a528d4d056d42069aa5ae2140de922504">More...</a><br /></td></tr>
+<tr class="memdesc:a528d4d056d42069aa5ae2140de922504"><td class="mdescLeft">&#160;</td><td class="mdescRight">variables used to try and trigger a predetermined procedure if the robot gets stuck  <a href="namespacedog__vision.html#a528d4d056d42069aa5ae2140de922504">More...</a><br /></td></tr>
 <tr class="separator:a528d4d056d42069aa5ae2140de922504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99b5d955ced2b9968deb5e4eb7a074d2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__vision.html#a99b5d955ced2b9968deb5e4eb7a074d2">previous_radius</a> = 0</td></tr>
+<tr class="separator:a99b5d955ced2b9968deb5e4eb7a074d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. </p>
@@ -168,7 +170,7 @@ Variables</h2></td></tr>
 
 <p>Invokes the <a class="el" href="classdog__vision_1_1image__feature.html" title="Class used to visualize what the the robotic dog see during motion.">image_feature</a> class and spins until interrupted by a keyboard command. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00895">895</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00921">921</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 
 </div>
 </div>
@@ -389,6 +391,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a99b5d955ced2b9968deb5e4eb7a074d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99b5d955ced2b9968deb5e4eb7a074d2">&#9670;&nbsp;</a></span>previous_radius</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_vision.previous_radius = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00080">80</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
+
+</div>
+</div>
 <a id="a87f8a152332ce7ed2b923761d3313f58"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a87f8a152332ce7ed2b923761d3313f58">&#9670;&nbsp;</a></span>red_solved</h2>
 
@@ -455,7 +473,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>variable used to try and trigger a predetermined procedure if the robot gets stuck </p>
+<p>variables used to try and trigger a predetermined procedure if the robot gets stuck </p>
 
 <p class="definition">Definition at line <a class="el" href="dog__vision_8py_source.html#l00079">79</a> of file <a class="el" href="dog__vision_8py_source.html">dog_vision.py</a>.</p>
 

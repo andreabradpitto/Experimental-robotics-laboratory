@@ -75,8 +75,9 @@ magenta_solved = 0
 # (0 = not yet discovered; 1 = in progress; 2 = completed)
 black_solved = 0
 
-## variable used to try and trigger a predetermined procedure if the robot gets stuck
+## variables used to try and trigger a predetermined procedure if the robot gets stuck
 stuck_counter = 0
+previous_radius = 0
 
 ## Class used to visualize what the the robotic dog see during motion. It uses
 # OpenCV in order to acquire images of the house, and takes control of the
@@ -132,7 +133,8 @@ class image_feature:
     # that I added as methods of the original code
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
-               yellow_solved, magenta_solved, black_solved, stuck_counter
+               yellow_solved, magenta_solved, black_solved, \
+               stuck_counter, previous_radius
 
         ## Direct conversion to CV2
         np_arr = np.fromstring(ros_data.data, np.uint8)
@@ -174,7 +176,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -228,7 +232,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -282,7 +288,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -336,7 +344,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a magenta circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
                     # draw a red dot
@@ -390,7 +400,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -444,7 +456,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -517,7 +531,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -582,7 +598,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -647,7 +665,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
@@ -712,7 +732,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a magenta circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (255, 0, 255), 2)
                     # draw a red dot
@@ -777,7 +799,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a green dot
@@ -842,7 +866,9 @@ class image_feature:
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
                     # draw the circle and centroid on the frame,
                     # then update the list of tracked points
-                    stuck_counter = stuck_counter + 1
+                    if previous_radius == radius:
+                        stuck_counter = stuck_counter + 1
+                    previous_radius = radius
                     # draw a yellow circle
                     cv2.circle(image_np, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     # draw a red dot
