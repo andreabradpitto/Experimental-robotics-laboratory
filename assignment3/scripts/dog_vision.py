@@ -130,7 +130,9 @@ class image_feature:
     # explore_lite algorithm, with another service client, in order to find
     # another new ball. The two service clients used to communicate with the Explore
     # class (which hosts the exploration algorithm) rely on as many service servers,
-    # that I added as methods of the original code
+    # that I added as methods of the class of the original code. This callback is
+    # particularly long code-wise, as I tried to make it as fast as possible, limiting
+    # function calls and argument substitutions, at the cost of being a bit less readable
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
                yellow_solved, magenta_solved, black_solved, \
@@ -192,7 +194,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -248,7 +251,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -304,7 +308,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -360,7 +365,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -416,7 +422,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -472,7 +479,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -547,7 +555,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -614,7 +623,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -681,7 +691,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -748,7 +759,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -815,7 +827,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -882,7 +895,8 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 100:
+                    if stuck_counter > 500:
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (old_pos.pose.pose.orientation.z -
@@ -914,7 +928,7 @@ class image_feature:
 
 
 
-        cv2.imshow('window', image_np)
+        cv2.imshow('Dog camera', image_np)
         cv2.waitKey(2)
 
 ## Invokes the image_feature class and spins until interrupted by a keyboard command

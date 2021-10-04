@@ -115,9 +115,9 @@ Variables</h2></td></tr>
 <tr class="memitem:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">home_y</a> = rospy.get_param('home/y')</td></tr>
 <tr class="memdesc:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire y-axis home position parameter from launch file.  <a href="namespacedog__fsm.html#aa811224fcbe617c2bdf1a8699ef8d8b5">More...</a><br /></td></tr>
 <tr class="separator:aa811224fcbe617c2bdf1a8699ef8d8b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41639f163dc74212860ca622b9d6a7a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">room_list</a> = rospy.get_param('room_list')</td></tr>
-<tr class="memdesc:a41639f163dc74212860ca622b9d6a7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the list of available rooms from launch file.  <a href="namespacedog__fsm.html#a41639f163dc74212860ca622b9d6a7a7">More...</a><br /></td></tr>
-<tr class="separator:a41639f163dc74212860ca622b9d6a7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e23750cba9ae46323eb1fa2a48b4928"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a2e23750cba9ae46323eb1fa2a48b4928">room_dict</a> = rospy.get_param('room_dict')</td></tr>
+<tr class="memdesc:a2e23750cba9ae46323eb1fa2a48b4928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire the dictionary of the room and colored ball pairings from launch file.  <a href="namespacedog__fsm.html#a2e23750cba9ae46323eb1fa2a48b4928">More...</a><br /></td></tr>
+<tr class="separator:a2e23750cba9ae46323eb1fa2a48b4928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fd52750765ee795252527dfbd6a8726"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">sim_scale</a> = rospy.get_param('sim_scale')</td></tr>
 <tr class="memdesc:a6fd52750765ee795252527dfbd6a8726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire simulation speed scaling factor from launch file.  <a href="namespacedog__fsm.html#a6fd52750765ee795252527dfbd6a8726">More...</a><br /></td></tr>
 <tr class="separator:a6fd52750765ee795252527dfbd6a8726"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,12 +127,9 @@ Variables</h2></td></tr>
 <tr class="memitem:acd61d2596faead01f1da1876fd719c20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">playtime</a> = 0</td></tr>
 <tr class="memdesc:acd61d2596faead01f1da1876fd719c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to state whether it is time to play or not  <a href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">More...</a><br /></td></tr>
 <tr class="separator:acd61d2596faead01f1da1876fd719c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a683b1b7258310babfbe88775432c7cc4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a683b1b7258310babfbe88775432c7cc4">play_ball_request</a> = 'none'</td></tr>
-<tr class="memdesc:a683b1b7258310babfbe88775432c7cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to identify and store the requested room (hence ball) by the human when it equals 'none', it is set to its default value, and does not correspond to any ball  <a href="namespacedog__fsm.html#a683b1b7258310babfbe88775432c7cc4">More...</a><br /></td></tr>
-<tr class="separator:a683b1b7258310babfbe88775432c7cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbb60fb08009984d72026bd54acd046"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#abbbb60fb08009984d72026bd54acd046">room_number</a> = 100</td></tr>
-<tr class="memdesc:abbbb60fb08009984d72026bd54acd046"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state.  <a href="namespacedog__fsm.html#abbbb60fb08009984d72026bd54acd046">More...</a><br /></td></tr>
-<tr class="separator:abbbb60fb08009984d72026bd54acd046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c291f7c64a1890ffa9ce7868db159f1"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a6c291f7c64a1890ffa9ce7868db159f1">room_name</a> = 'none'</td></tr>
+<tr class="memdesc:a6c291f7c64a1890ffa9ce7868db159f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state.  <a href="namespacedog__fsm.html#a6c291f7c64a1890ffa9ce7868db159f1">More...</a><br /></td></tr>
+<tr class="separator:a6c291f7c64a1890ffa9ce7868db159f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(4, 7)</td></tr>
 <tr class="memdesc:a911ace87f83a3accfa7dce0146323822"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to keep track of the robot's simulated battery charge  <a href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">More...</a><br /></td></tr>
 <tr class="separator:a911ace87f83a3accfa7dce0146323822"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,7 +156,7 @@ Variables</h2></td></tr>
 <p>Finite state machine's (fsm) main. </p>
 <p>It initializes the dog_fsm_node and setups a SMACH state machine along with all the 4 possible states </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00345">345</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00322">322</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -178,7 +175,7 @@ Variables</h2></td></tr>
 
 <p>variable used to keep track of the robot's simulated battery charge </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00053">53</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00049">49</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -308,24 +305,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a683b1b7258310babfbe88775432c7cc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a683b1b7258310babfbe88775432c7cc4">&#9670;&nbsp;</a></span>play_ball_request</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string dog_fsm.play_ball_request = 'none'</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>variable used to identify and store the requested room (hence ball) by the human when it equals 'none', it is set to its default value, and does not correspond to any ball </p>
-
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00046">46</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
-
-</div>
-</div>
 <a id="acd61d2596faead01f1da1876fd719c20"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd61d2596faead01f1da1876fd719c20">&#9670;&nbsp;</a></span>playtime</h2>
 
@@ -344,40 +323,40 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a41639f163dc74212860ca622b9d6a7a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41639f163dc74212860ca622b9d6a7a7">&#9670;&nbsp;</a></span>room_list</h2>
+<a id="a2e23750cba9ae46323eb1fa2a48b4928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e23750cba9ae46323eb1fa2a48b4928">&#9670;&nbsp;</a></span>room_dict</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">dog_fsm.room_list = rospy.get_param('room_list')</td>
+          <td class="memname">dog_fsm.room_dict = rospy.get_param('room_dict')</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Acquire the list of available rooms from launch file. </p>
+<p>Acquire the dictionary of the room and colored ball pairings from launch file. </p>
 
 <p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00032">32</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
-<a id="abbbb60fb08009984d72026bd54acd046"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbbb60fb08009984d72026bd54acd046">&#9670;&nbsp;</a></span>room_number</h2>
+<a id="a6c291f7c64a1890ffa9ce7868db159f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c291f7c64a1890ffa9ce7868db159f1">&#9670;&nbsp;</a></span>room_name</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int dog_fsm.room_number = 100</td>
+          <td class="memname">string dog_fsm.room_name = 'none'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. </p>
-<p>A value of 100 stands for "undefined" </p>
+<p>When it equals 'none' it is set to its default value, and does not correspond to any room/ball pair </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00050">50</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00046">46</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>

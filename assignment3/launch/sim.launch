@@ -107,12 +107,17 @@
          A value of 2 means that it has completed one iteration
          The last value is also used by the Find state,
          in case the location of the room asked by the human
-         was not present in the robot's database                -->
+         was not present in the robot's database
+         when it had been requested                             -->
     <param name='play_task_status' type='int' value='0'/>
 
-    <!-- list of the available rooms -->
-    <rosparam param="room_list">['entrance', 'closet', 'livingroom',
-                                 'kitchen', 'bathroom', 'bedroom']
+    <!-- dictionary paring each room to the corresponding colored ball -->
+    <rosparam param="room_dict">{'entrance': 'blue',
+                                 'closet': 'red',
+                                 'livingroom': 'green',
+                                 'kitchen': 'yellow',
+                                 'bathroom': 'magenta',
+                                 'bedroom': 'black'}
     </rosparam>
     
     <!-- set use_sim_time flag -->

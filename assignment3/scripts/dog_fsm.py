@@ -28,8 +28,8 @@ home_x = rospy.get_param('home/x')
 ## Acquire y-axis home position parameter from launch file
 home_y = rospy.get_param('home/y')
 
-## Acquire the list of available rooms from launch file
-room_list = rospy.get_param('room_list')
+## Acquire the dictionary of the room and colored ball pairings from launch file
+room_dict = rospy.get_param('room_dict')
 
 ## Acquire simulation speed scaling factor from launch file
 sim_scale = rospy.get_param('sim_scale')
@@ -40,14 +40,10 @@ first_iteration = 1
 ## variable used to state whether it is time to play or not
 playtime = 0
 
-## variable used to identify and store the requested room (hence ball) by the human
-# when it equals 'none', it is set to its default value, and does not correspond to
-# any ball
-play_ball_request = 'none'
-
 ## variable needed to keep track of the requested room by the human during
-# the Play state. A value of 100 stands for "undefined"
-room_number = 100
+# the Play state. When it equals 'none' it is set to its default value,
+# and does not correspond to any room/ball pair
+room_name = 'none'
 
 ## variable used to keep track of the robot's simulated battery charge
 energy_timer = random.randint(4, 7)
@@ -200,8 +196,9 @@ class Play(smach.State):
     # that the robot can go to sleep before completely depleting its battery
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
-        global play_ball_request, energy_timer, room_number
+        global room_name, energy_timer
         rospy.set_param('state', 'play')
+        rospy.set_param('play_task_status', 0)
         ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## move_base client that is used both to reach home location and the
@@ -215,7 +212,6 @@ class Play(smach.State):
         target_pos.target_pose.pose.position.x = home_x
         # set target as the home position (y-axis)
         target_pos.target_pose.pose.position.y = home_y
-        rospy.set_param('play_task_status', 0)
         mb_play_client.send_goal(target_pos)
         while(mb_play_client.get_state() != 3):
             self.rate.sleep
@@ -224,18 +220,16 @@ class Play(smach.State):
         rospy.wait_for_message('play_topic', String)
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                and rospy.get_param('state') == 'play'):
-            rospy.set_param('play_task_status', 0)
-            while(play_ball_request == 'none'):
+            while(room_name == 'none'):
                 self.rate.sleep
             ## Acquire the coordinates of the ball corresponding to
             # the requested room by the human
-            ball_location_x = rospy.get_param(play_ball_request + '/x')
-            ball_location_y = rospy.get_param(play_ball_request + '/y')
+            ball_location_x = rospy.get_param(room_dict[room_name] + '/x')
+            ball_location_y = rospy.get_param(room_dict[room_name] + '/y')
             ## Check whether the ball location is known or not. The
             # if condition works thanks to the guidelines imposed in "sim.launch"
             if (ball_location_x < map_x_max):
-                rospy.loginfo('Dog: starting my journey towards the %s', \
-                              room_list[room_number])
+                rospy.loginfo('Dog: starting my journey towards the %s', room_name)
                 target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
@@ -259,9 +253,9 @@ class Play(smach.State):
                 rospy.set_param('play_task_status', 2)
                 energy_timer = energy_timer - 1
             else:
-                rospy.set_param('unknown_ball', play_ball_request)
+                rospy.set_param('unknown_ball', room_dict[room_name])
                 break
-            play_ball_request = 'none'
+            room_name = 'none'
             self.rate.sleep
 
         if energy_timer == 1:
@@ -271,33 +265,16 @@ class Play(smach.State):
 
         elif rospy.get_param('unknown_ball') != 'none':
             rospy.loginfo('Dog: I don\'t know where the %s is. ' + \
-                          'I\'ll search around for it', room_list[room_number])
+                          'I\'ll search around for it', room_name)
             return 'go_find'
 
     ## Play state callback that is used to translate the room asked by the
     # human into the ball corresponding to that same room, and it will then be
     # either reached or searched by the robotic dog
     def room_color_callback(self, data):
-        global play_ball_request, room_number
-        rospy.loginfo('Dog: I will try to go to the %s', data.data)
-        if data.data == room_list[0]:
-            play_ball_request = 'blue'
-            room_number = 0
-        elif data.data == room_list[1]:
-            play_ball_request = 'red'
-            room_number = 1
-        elif data.data == room_list[2]:
-            play_ball_request = 'green'
-            room_number = 2
-        elif data.data == room_list[3]:
-            play_ball_request = 'yellow'
-            room_number = 3
-        elif data.data == room_list[4]:
-            play_ball_request = 'magenta'
-            room_number = 4
-        else:
-            play_ball_request = 'black'
-            room_number = 5
+        global room_name
+        room_name = data.data
+        rospy.loginfo('Dog: I will try to go to the %s', room_name)
 
 
 

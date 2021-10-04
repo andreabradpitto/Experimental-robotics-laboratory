@@ -105,7 +105,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state: the robot wanders randomly in the house via move_base calls. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00101">101</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00097">97</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adee862c2ee4626bc2b0c6b51fd331917"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adee862c2ee4626bc2b0c6b51fd331917">&#9670;&nbsp;</a></span>__init__()</h2>
@@ -125,7 +125,7 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state initialization: set the outcomes and subscribe to the 'play_topic' topic, on which <a class="el" href="human_8py.html">human.py</a> publishes its commands. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00104">104</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00100">100</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -159,7 +159,7 @@ Public Attributes</h2></td></tr>
 <p><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state execution: the robot wanders randomly, by feeding the move_base algorithm with randomly generated positions. </p>
 <p>If, while moving around, the robot detects a new room/ball, it reaches it and stores the corresponding position. At any time, a play command can be received by the human: if so happens, the robotic dog transitions to the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. Every newly detected room, along with its subsequent data collection process, consumes robot battery. If the battery gets depleted, the robot goes to sleep, by transitioning to the <a class="el" href="classdog__fsm_1_1Sleep.html" title="Sleep state: the robot gets home and sleeps for some time.">Sleep</a> state </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00119">119</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00115">115</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -191,7 +191,7 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classdog__fsm_1_1Normal.html" title="Normal state: the robot wanders randomly in the house via move_base calls.">Normal</a> state callback that prints a string acknowledging that the robotic dog has received a play request. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00168">168</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00164">164</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -210,7 +210,7 @@ Public Attributes</h2></td></tr>
 
 <p>define loop rate for the state </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00124">124</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00120">120</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
