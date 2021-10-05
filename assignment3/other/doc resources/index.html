@@ -111,6 +111,11 @@ The environments</h2>
 <li>the three white squares are, in size-wise increasing order, the local costmap, the global costmap. and the currently comupted world map</li>
 </ul>
 <p>The computed world map is acquired by reading from the <code>/map</code> topic, which is published by the <a href="http://wiki.ros.org/gmapping">gmapping</a> laser-based <a href="https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> algorithm. It relies on the laser scan data in order to chart the house walls.</p>
+<p>Finally, here is a sample image of a possible terminal output provided by the package:</p>
+<div class="image">
+<img src="terminal.png" alt=""/>
+</div>
+<p>Run the assignement to discover more phrases!</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md8"></a>
 Architecture</h1>
@@ -120,7 +125,7 @@ Architecture</h1>
 <ul>
 <li><em>Human</em>: it is implemented by <a href="scripts/human.py">human.py</a>, that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play; if so, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog gets tired. All the communications sent to the robot are carried out via a message publisher (over the <code>play_topic</code>), and all the orders are handled by <a href="scripts/dog_fsm.py">dog_fsm.py</a></li>
 <li><em>Dog FSM</em>: it is implemented by <a href="scripts/dog_fsm.py">dog_fsm.py</a>, which is used to handle the robotic dog's FSM internal architecture</li>
-<li><em>Dog vision</em>: it is implemented by <a href="scripts/dog_vision.py">dog_vision.py</a>, and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes</li>
+<li><em>Dog vision</em>: it is implemented by <a href="scripts/dog_vision.py">dog_vision.py</a>, and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes. A simple algorithm has been added to the script in order to unstick the robotic dog as the ball chasing behavior may cause a collision with other entities in the house</li>
 <li><em>A modified version of the <a href="http://wiki.ros.org/explore_lite">explore_lite</a> package</em>: it is implemented by <a href="src/explore.cpp">explore.cpp</a>, <a href="src/costmap_client.cpp">costmap_client.cpp</a>, and <a href="src/frontier_search.cpp">frontier_search.cpp</a>, along with their headers: <a href="include/explore.h">explore.h</a>, <a href="include/costmap_client.h">costmap_client.h</a>, <a href="include/frontier_search.h">frontier_search.h</a>, <a href="include/costmap_tools.h">costmap_tools.h</a>. It is the algorithm allowing the robot to explore the house during the <b>Find</b> state. I made some adjustments in order to let <a href="scripts/dog_vision.py">dog_vision.py</a> and <a href="scripts/dog_fsm.py">dog_fsm.py</a> send service calls in order to (re-)start or stop the exploration</li>
 </ul>
 <div class="image">

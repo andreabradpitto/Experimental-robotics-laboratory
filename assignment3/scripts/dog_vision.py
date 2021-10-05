@@ -6,7 +6,9 @@
 # This node is able to take control, when needed, of the robot movements, allowing it
 # to reach a room when a corresponding new ball is discovered. It also stores
 # the positions of the balls discovered, thus learning the displacement of the rooms
-# inside the house as time passes
+# inside the house as time passes. A simple algorithm has been added to the script
+# in order to unstick the robotic dog as the ball chasing behavior may cause a
+# collision with other entities in the house
 
 # Python library
 import sys
@@ -78,6 +80,9 @@ black_solved = 0
 ## variables used to try and trigger a predetermined procedure if the robot gets stuck
 stuck_counter = 0
 previous_radius = 0
+
+## Constant determining how many callbacks to wait before trying to unstick the robot
+STUCK_PATIENCE = 500
 
 ## Class used to visualize what the the robotic dog see during motion. It uses
 # OpenCV in order to acquire images of the house, and takes control of the
@@ -171,8 +176,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blueCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -194,16 +199,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -228,8 +242,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle centroid
                 c = max(redCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -251,16 +265,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -285,8 +308,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(greenCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -308,16 +331,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -342,8 +374,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(yellowCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -365,16 +397,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -399,8 +440,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(magentaCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -422,16 +463,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -456,8 +506,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blackCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -479,16 +529,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -532,8 +591,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blueCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -555,16 +614,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -604,8 +672,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(redCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -627,16 +695,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -676,8 +753,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(greenCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -699,16 +776,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -748,8 +834,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(yellowCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -771,16 +857,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -820,8 +915,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(magentaCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -843,16 +938,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -892,8 +996,8 @@ class image_feature:
                 # it to compute the minimum enclosing circle and centroid
                 c = max(blackCnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
-                M = cv2.moments(c)
-                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                m_mat = cv2.moments(c)
+                center = (int(m_mat["m10"] / m_mat["m00"]), int(m_mat["m01"] / m_mat["m00"]))
 
                 # only proceed if the radius meets a minimum size
                 if(center[0] < 396 or center[0] > 404 or radius < 99 or radius > 101):
@@ -915,16 +1019,25 @@ class image_feature:
                         vel.linear.x = -0.4
                     self.vel_pub.publish(vel)
                     # try to free the robot
-                    if stuck_counter > 500:
+                    if stuck_counter > STUCK_PATIENCE:
                         rospy.loginfo('Dog: I am stuck. I will try to free myself')
                         old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5):
+                        while (abs(old_pos.pose.pose.position.x -
+                               new_pos.pose.pose.position.x < 1)):
+                            vel.angular.x = -0.4
+                            vel.angular.z = 0
+                            self.vel_pub.publish(vel)
+                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        while (abs(old_pos.pose.pose.orientation.z -
+                               new_pos.pose.pose.orientation.z < 0.5)):
                             vel.angular.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
+                        vel.angular.x = 0
+                        vel.angular.z = 0
+                        self.vel_pub.publish(vel)
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates

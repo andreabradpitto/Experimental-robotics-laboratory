@@ -62,6 +62,14 @@ On the left side of the above image there are many the elements useful to track 
 
 The computed world map is acquired by reading from the `/map` topic, which is published by the [gmapping](http://wiki.ros.org/gmapping) laser-based [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping) algorithm. It relies on the laser scan data in order to chart the house walls.
 
+Finally, here is a sample image of a possible terminal output provided by the package:
+
+<div align="center">
+  <img src="https://github.com/andreabradpitto/Experimental-robotics-laboratory/blob/main/assignment3/images/terminal.png">
+</div>
+
+Run the assignement to discover more phrases!
+
 ---
 
 ## Architecture
@@ -76,7 +84,7 @@ This is the list of the components that have been coded for the assignment:
 
 - *Human*: it is implemented by [human.py](scripts/human.py), that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play; if so, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog gets tired. All the communications sent to the robot are carried out via a message publisher (over the `play_topic`), and all the orders are handled by [dog_fsm.py](scripts/dog_fsm.py)
 - *Dog FSM*: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
-- *Dog vision*: it is implemented by [dog_vision.py](scripts/dog_vision.py), and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes
+- *Dog vision*: it is implemented by [dog_vision.py](scripts/dog_vision.py), and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes. A simple algorithm has been added to the script in order to unstick the robotic dog as the ball chasing behavior may cause a collision with other entities in the house
 - *A modified version of the [explore_lite](http://wiki.ros.org/explore_lite) package*: it is implemented by [explore.cpp](src/explore.cpp), [costmap_client.cpp](src/costmap_client.cpp), and [frontier_search.cpp](src/frontier_search.cpp), along with their headers: [explore.h](include/explore.h), [costmap_client.h](include/costmap_client.h), [frontier_search.h](include/frontier_search.h), [costmap_tools.h](include/costmap_tools.h). It is the algorithm allowing the robot to explore the house during the **Find** state. I made some adjustments in order to let [dog_vision.py](scripts/dog_vision.py) and [dog_fsm.py](scripts/dog_fsm.py) send service calls in order to (re-)start or stop the exploration  
 
 <div align="center">
@@ -92,7 +100,6 @@ In the **Play** state, using the move_base algorithm, the robotic dog gets back 
 
 Lastly, in the **Find** state, the robotic dog looks for the goal ball determined in the **Play** state. In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. Indeed, the core of the algorithm, which is contained inside the Explore class (see [explore.cpp](src/explore.cpp)), has been adjusted with the inclusion of a method able to handle requests incoming from the `dog_fsm_node` node (see [dog_fsm.py](scripts/dog_fsm.py)). The exploration algorithm keeps running until [dog_vision.py](scripts/dog_vision.py) stops its execution, i.e., a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the **Play** state. The robot will then head over to the human position, and another **Play** state cycle can begin.  
   
-
 The usage of [rqt_graph](http://wiki.ros.org/rqt_graph) shows all the nodes, topics and namespaces involved in the package execution:
 
 <div align="center">

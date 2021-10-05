@@ -102,7 +102,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> state: the robotic dog looks around for a specific room. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00287">287</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00289">289</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8614f6b9957991e72cfa90fff8f11bb5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8614f6b9957991e72cfa90fff8f11bb5">&#9670;&nbsp;</a></span>__init__()</h2>
@@ -122,7 +122,7 @@ Public Attributes</h2></td></tr>
 
 <p><a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> state initialization: set the outcomes. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00289">289</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00291">291</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -156,7 +156,7 @@ Public Attributes</h2></td></tr>
 <p><a class="el" href="classdog__fsm_1_1Find.html" title="Find state: the robotic dog looks around for a specific room.">Find</a> state execution: in this state, the robotic dog looks for the goal ball, determined in the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. </p>
 <p>In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. The code of the algorithm, which is contained inside the Explore class (see <a class="el" href="explore_8cpp.html">explore.cpp</a>), has been adjusted with the inclusion of a method able to handle requests coming from this node. The exploration algorithm keeps running until <a class="el" href="dog__vision_8py.html">dog_vision.py</a> stops its execution, i.e. a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. The human will then immediately call the dog back to its position, and another <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state cycle can begin </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00304">304</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00306">306</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -175,7 +175,7 @@ Public Attributes</h2></td></tr>
 
 <p>define loop rate for the state </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00308">308</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00310">310</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>

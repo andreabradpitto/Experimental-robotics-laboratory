@@ -224,8 +224,10 @@ class Play(smach.State):
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                and rospy.get_param('state') == 'play'):
             rospy.set_param('play_task_done', 0)
+            rospy.set_param('play_task_ready', 1)
             while(room_name == 'none'):
                 self.rate.sleep
+            rospy.set_param('play_task_ready', 0)
             ## Acquire the coordinates of the ball corresponding to
             # the requested room by the human
             ball_location_x = rospy.get_param(room_dict[room_name] + '/x')
