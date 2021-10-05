@@ -141,7 +141,7 @@ class image_feature:
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
                yellow_solved, magenta_solved, black_solved, \
-               stuck_counter, previous_radius
+               stuck_counter, previous_radius, STUCK_PATIENCE
 
         ## Direct conversion to CV2
         np_arr = np.fromstring(ros_data.data, np.uint8)
