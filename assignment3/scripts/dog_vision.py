@@ -82,7 +82,7 @@ stuck_counter = 0
 previous_radius = 0
 
 ## Constant determining how many callbacks to wait before trying to unstick the robot
-STUCK_PATIENCE = 500
+STUCK_PATIENCE = 50
 
 ## Class used to visualize what the the robotic dog see during motion. It uses
 # OpenCV in order to acquire images of the house, and takes control of the
@@ -205,17 +205,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -271,17 +271,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -337,17 +337,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -403,17 +403,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -469,17 +469,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -535,17 +535,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -620,17 +620,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -643,7 +643,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
@@ -701,17 +701,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -724,7 +724,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
@@ -782,17 +782,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -805,7 +805,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
@@ -863,17 +863,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -886,7 +886,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
@@ -944,17 +944,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -967,7 +967,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
@@ -1025,17 +1025,17 @@ class image_feature:
                         new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.position.x -
                                new_pos.pose.pose.position.x < 1)):
-                            vel.angular.x = -0.4
+                            vel.linear.x = -0.4
                             vel.angular.z = 0
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                         while (abs(old_pos.pose.pose.orientation.z -
                                new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.angular.x = 0
+                            vel.linear.x = 0
                             vel.angular.z = 0.4
                             self.vel_pub.publish(vel)
                             new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.angular.x = 0
+                        vel.linear.x = 0
                         vel.angular.z = 0
                         self.vel_pub.publish(vel)
                         stuck_counter = 0
@@ -1048,7 +1048,7 @@ class image_feature:
                     rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
                     vel = Twist()
-                    vel.angular.x = 0
+                    vel.linear.x = 0
                     vel.angular.z = 0
                     self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
