@@ -42,17 +42,16 @@ def human():
         # here I am assuming the human can see when the robot turns into the play state
         # (i.e. thanks to an external LED mounted on its back)
         while (rospy.get_param('state') == 'play'):
-            while (rospy.get_param('play_task_status') ==  0):
+            while (rospy.get_param('play_task_ready') == 0):
+                if (rospy.get_param('state') == 'sleep'):
+                    break
                 rate.sleep()
             room_choice = random.choice(room_dict.keys())
             rospy.loginfo('Human: Go to the %s', room_choice)
             voice_pub.publish(room_choice)
-            # when 'play_task_status' equals 2, the robot has completed its job
-            while (rospy.get_param('play_task_status') ==  1):
-                rate.sleep()
-            # this while is necessary in order to give dog_fsm.py the time to
-            # transition from Find to Play
-            while (rospy.get_param('play_task_status') != 0):
+            while (rospy.get_param('play_task_done') ==  0):
+                if (rospy.get_param('state') == 'sleep'):
+                    break
                 rate.sleep()
             rate.sleep()
         rospy.loginfo('Human: The robot has stopped playing')

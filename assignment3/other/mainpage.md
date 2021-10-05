@@ -40,12 +40,12 @@ In addition to the window showing what the robot sees in real time, this package
 
 On the left side of the above image there are many the elements useful to track and assess the robot self localization, mapping and exploration capabilities. The image in the middle also shows a lot important of information:
 
-- the black elements are the obstacles detected by the robot
+- the black elements are the obstacles detected by the robot (i.e., walls and decorative elements; only the colored balls are untangible)
 - the red lines are the current wall detections incoming from the robot's laser
-- the blue line is the current goal of the robot (not shown here; does not apply to the Find state)
+- the magenta arrow is the current goal of the robot (shown in blue in the picture, in the bottom right corner)
 - the green line is the local navigation plan
 - the yellow line is the global navigation plan
-- the blue segments and the green spheres (not shown here) are the elements used by the exploration algorithm (only applies to the Find state)
+- the blue segments and the green spheres are the elements used by the exploration algorithm (only applies to the Find state)
 - the three white squares are, in size-wise increasing order, the local costmap, the global costmap. and the currently comupted world map
 
 The computed world map is acquired by reading from the `/map` topic, which is published by the [gmapping](http://wiki.ros.org/gmapping) laser-based [SLAM](https://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping) algorithm. It relies on the laser scan data in order to chart the house walls.
@@ -111,11 +111,8 @@ Finally, here are the ROS parameters (well, only the ones strictly related to th
 - `new_ ball_detected`: parameter used to specify whether a new ball has been detected or not
 - `unknown_ball`: parameter used to identify which ball has to be looked for
 - `room_list`: list of the available rooms
-- `play_task_status`: parameter used to specify **Play** state progress
-  - A value of 0 means that the state is not active or at in initialization phase
-  - A 1 stands for it being in progress
-  - A value of 2 means that it has completed one iteration
-  - The last value is also used by the **Find** state, in case the location of the room asked by the human was not present in the robot's database
+- `play_task_ready`: parameter used to specify wheter the robot, during the **Play** state, is ready to take orders or not
+- `play_task_done`: parameter used to specify wheter the robot, during the **Play** state, has completed the request or not
 - `blue/x`: parameter used to specify the x coordinate of the blue ball, once discovered
 - `blue/y`: parameter used to specify the y coordinate of the blue ball, once discovered
 - `red/x`: parameter used to specify the x coordinate of the red ball, once discovered

@@ -78,7 +78,7 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.x = home_x
             # set target as the home position (y-axis)
             home_pos.target_pose.pose.position.y = home_y
-            rospy.loginfo('Dog: I am going to spleep!')
+            rospy.loginfo('Dog: I am going home to rest a little...')
             mb_sleep_client.send_goal(home_pos)
             while(mb_sleep_client.get_state() != 3):
                 self.rate.sleep
@@ -99,7 +99,7 @@ class Normal(smach.State):
     # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, outcomes=['go_play','go_sleep'])
+        smach.State.__init__(self, outcomes=['go_play', 'go_sleep'])
 
         ## subscribed topic, used to receive commands from the human.py node
         rospy.Subscriber('play_topic', String, self.play_req_callback)
@@ -128,7 +128,7 @@ class Normal(smach.State):
             stop_var = 0
             goal_pos.target_pose.header.stamp = rospy.Time.now()
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
-            goal_pos.target_pose.pose.position.y = random.randint(map_y_max, map_y_max)
+            goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)
             mb_normal_client.send_goal(goal_pos)
             rospy.loginfo('Dog: I am moving to %i %i', \
                           goal_pos.target_pose.pose.position.x, \
@@ -163,10 +163,11 @@ class Normal(smach.State):
     # has received a play request
     def play_req_callback(self, data):
         global playtime
-        rospy.loginfo('Dog: I have received a play request! Woof!')
-        mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        mb_normal_client.cancel_all_goals()
-        playtime = 1
+        if data.data == ('play'):
+            rospy.loginfo('Dog: I have received a play request! Woof!')
+            mb_normal_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+            mb_normal_client.cancel_all_goals()
+            playtime = 1
 
 
 ## Play state: the robot gets to the human, waits for a room order, then gets back
@@ -176,7 +177,7 @@ class Play(smach.State):
     # 'play_topic' topic, on which human.py publishes its commands
     def __init__(self):
         # initialisation function, it should not wait
-        smach.State.__init__(self, outcomes=['game_over','go_find'])
+        smach.State.__init__(self, outcomes=['game_over', 'go_find'])
 
         ## subscribed topic, used to receive commands from the human.py node                    
         rospy.Subscriber('play_topic', String, self.room_color_callback)
@@ -198,7 +199,8 @@ class Play(smach.State):
         # function called when exiting from the node, it can be blocking
         global room_name, energy_timer
         rospy.set_param('state', 'play')
-        rospy.set_param('play_task_status', 0)
+        rospy.set_param('play_task_ready', 0)
+        rospy.set_param('play_task_done', 0)
         ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## move_base client that is used both to reach home location and the
@@ -216,10 +218,12 @@ class Play(smach.State):
         while(mb_play_client.get_state() != 3):
             self.rate.sleep
         rospy.loginfo('Dog: I reached your position')
-        rospy.set_param('play_task_status', 1)
+        rospy.set_param('play_task_ready', 1)
         rospy.wait_for_message('play_topic', String)
+        rospy.set_param('play_task_ready', 0)
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                and rospy.get_param('state') == 'play'):
+            rospy.set_param('play_task_done', 0)
             while(room_name == 'none'):
                 self.rate.sleep
             ## Acquire the coordinates of the ball corresponding to
@@ -250,7 +254,7 @@ class Play(smach.State):
                 while(mb_play_client.get_state() != 3):
                     self.rate.sleep
                 rospy.loginfo('Dog: I am finally back to you')
-                rospy.set_param('play_task_status', 2)
+                rospy.set_param('play_task_done', 1)
                 energy_timer = energy_timer - 1
             else:
                 rospy.set_param('unknown_ball', room_dict[room_name])
@@ -273,8 +277,9 @@ class Play(smach.State):
     # either reached or searched by the robotic dog
     def room_color_callback(self, data):
         global room_name
-        room_name = data.data
-        rospy.loginfo('Dog: I will try to go to the %s', room_name)
+        if data.data != ('play'):
+            room_name = data.data
+            rospy.loginfo('Dog: I will try to go to the %s', room_name)
 
 
 
@@ -311,8 +316,8 @@ class Find(smach.State):
                and rospy.get_param('unknown_ball') != 'none'):
             self.rate.sleep
         rospy.loginfo('Dog: I found the room you asked for!')
-        rospy.set_param('play_task_status', 2)
         rospy.set_param('unknown_ball', 'none')
+        rospy.set_param('play_task_done', 1)
         return 'find_over'
 
 

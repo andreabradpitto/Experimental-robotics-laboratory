@@ -574,6 +574,10 @@ class image_feature:
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
                     blue_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'blue':
                         # this is the ball the robot had to find
@@ -642,6 +646,10 @@ class image_feature:
                     rospy.set_param('red/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the closet position (red ball)')
                     red_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'red':
                         # this is the ball the robot had to find
@@ -710,6 +718,10 @@ class image_feature:
                     rospy.set_param('green/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
                     green_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'green':
                         # this is the ball the robot had to find
@@ -778,6 +790,10 @@ class image_feature:
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
                     yellow_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'yellow':
                         # this is the ball the robot had to find
@@ -846,6 +862,10 @@ class image_feature:
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
                     magenta_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'magenta':
                         # this is the ball the robot had to find
@@ -914,6 +934,10 @@ class image_feature:
                     rospy.set_param('black/y', pos.pose.pose.position.y)
                     rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
                     black_solved = 2
+                    vel = Twist()
+                    vel.angular.x = 0
+                    vel.angular.z = 0
+                    self.vel_pub.publish(vel)
                     rospy.set_param('new_ball_detected', 0)
                     if rospy.get_param('unknown_ball') == 'black':
                         # this is the ball the robot had to find

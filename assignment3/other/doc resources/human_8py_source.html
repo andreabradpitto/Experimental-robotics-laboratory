@@ -104,28 +104,27 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="comment"># here I am assuming the human can see when the robot turns into the play state</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="comment"># (i.e. thanks to an external LED mounted on its back)</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;play&#39;</span>):</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_status&#39;</span>) ==  0):</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                rate.sleep()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            room_choice = random.choice(room_dict.keys())</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Human: Go to the %s&#39;</span>, room_choice)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            voice_pub.publish(room_choice)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="comment"># when &#39;play_task_status&#39; equals 2, the robot has completed its job</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_status&#39;</span>) ==  1):</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                rate.sleep()</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="comment"># this while is necessary in order to give dog_fsm.py the time to</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="comment"># transition from Find to Play</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_status&#39;</span>) != 0):</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                rate.sleep()</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            rate.sleep()</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Human: The robot has stopped playing&#39;</span>)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        time.sleep(random.randint(250, 300) / sim_scale)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        rate.sleep()</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">try</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="namespacehuman.html">human</a>()</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">except</span> rospy.ROSInterruptException:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">pass</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_ready&#39;</span>) == 0):</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;sleep&#39;</span>):</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                    <span class="keywordflow">break</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                rate.sleep()</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            room_choice = random.choice(room_dict.keys())</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            rospy.loginfo(<span class="stringliteral">&#39;Human: Go to the %s&#39;</span>, room_choice)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            voice_pub.publish(room_choice)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordflow">while</span> (rospy.get_param(<span class="stringliteral">&#39;play_task_done&#39;</span>) ==  0):</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                <span class="keywordflow">if</span> (rospy.get_param(<span class="stringliteral">&#39;state&#39;</span>) == <span class="stringliteral">&#39;sleep&#39;</span>):</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                    <span class="keywordflow">break</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                rate.sleep()</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            rate.sleep()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        rospy.loginfo(<span class="stringliteral">&#39;Human: The robot has stopped playing&#39;</span>)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        time.sleep(random.randint(250, 300) / sim_scale)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        rate.sleep()</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">try</span>:</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="namespacehuman.html">human</a>()</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">except</span> rospy.ROSInterruptException:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">pass</span></div>
 <div class="ttc" id="anamespacehuman_html"><div class="ttname"><a href="namespacehuman.html">human</a></div><div class="ttdoc">Emulates a human agent which randomly decides to play with the robotic dog.</div><div class="ttdef"><b>Definition:</b> <a href="human_8py_source.html#l00001">human.py:1</a></div></div>
 <div class="ttc" id="anamespacehuman_html_aafd7ef3bb2e481deba422bb8520d448b"><div class="ttname"><a href="namespacehuman.html#aafd7ef3bb2e481deba422bb8520d448b">human.human</a></div><div class="ttdeci">def human()</div><div class="ttdoc">After an initial pause, the human starts to check if the robot is prone to play.</div><div class="ttdef"><b>Definition:</b> <a href="human_8py_source.html#l00027">human.py:27</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
