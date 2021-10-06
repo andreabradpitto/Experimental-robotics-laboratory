@@ -13,13 +13,16 @@
 # Python library
 import sys
 
-# numpy
+# NumPy
 import numpy as np
 
-import imutils
+import random
+import time
 
 # OpenCV
 import cv2
+
+import imutils
 
 # Ros library
 import rospy
@@ -141,7 +144,8 @@ class image_feature:
     def callback(self, ros_data):
         global blue_solved, red_solved, green_solved, \
                yellow_solved, magenta_solved, black_solved, \
-               stuck_counter, previous_radius, STUCK_PATIENCE
+               stuck_counter, previous_radius, map_x_min, map_x_max, \
+               map_y_min, map_y_max, STUCK_PATIENCE
 
         ## Direct conversion to CV2
         np_arr = np.fromstring(ros_data.data, np.uint8)
@@ -200,24 +204,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        blue_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -266,24 +260,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        red_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -332,24 +316,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        green_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -398,24 +372,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        yellow_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -464,24 +428,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        magenta_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -530,24 +484,14 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        black_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -615,24 +559,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        blue_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -696,24 +629,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        red_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -777,24 +699,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        green_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -858,24 +769,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        yellow_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -939,24 +839,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        magenta_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates
@@ -1020,24 +909,13 @@ class image_feature:
                     self.vel_pub.publish(vel)
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself')
-                        old_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.position.x -
-                               new_pos.pose.pose.position.x < 1)):
-                            vel.linear.x = -0.4
-                            vel.angular.z = 0
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        while (abs(old_pos.pose.pose.orientation.z -
-                               new_pos.pose.pose.orientation.z < 0.5)):
-                            vel.linear.x = 0
-                            vel.angular.z = 0.4
-                            self.vel_pub.publish(vel)
-                            new_pos = rospy.wait_for_message('odom', Odometry, timeout = None)
-                        vel.linear.x = 0
-                        vel.angular.z = 0
+                        rospy.set_param('stuck', 1)
+                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
+                                      '(it might take a few attempts...)')
+                        vel.linear.x = -0.4
+                        vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        black_solved = 0
                         stuck_counter = 0
                 else:
                     # the robot reached the ball: store coordinates

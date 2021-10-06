@@ -55,7 +55,7 @@ def human():
                 rate.sleep()
             rate.sleep()
         rospy.loginfo('Human: The robot has stopped playing')
-        time.sleep(random.randint(250, 300) / sim_scale)
+        time.sleep(random.randint(250, 350) / sim_scale)
         rate.sleep()
 
 if __name__ == '__main__':

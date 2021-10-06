@@ -127,10 +127,13 @@ Variables</h2></td></tr>
 <tr class="memitem:acd61d2596faead01f1da1876fd719c20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">playtime</a> = 0</td></tr>
 <tr class="memdesc:acd61d2596faead01f1da1876fd719c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to state whether it is time to play or not  <a href="namespacedog__fsm.html#acd61d2596faead01f1da1876fd719c20">More...</a><br /></td></tr>
 <tr class="separator:acd61d2596faead01f1da1876fd719c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab38e0824d268134acf9daf5fb63f3fdc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#ab38e0824d268134acf9daf5fb63f3fdc">exploration_fail</a> = 0</td></tr>
+<tr class="memdesc:ab38e0824d268134acf9daf5fb63f3fdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable needed for the rare cases in which the explore algorithm does not succeed  <a href="namespacedog__fsm.html#ab38e0824d268134acf9daf5fb63f3fdc">More...</a><br /></td></tr>
+<tr class="separator:ab38e0824d268134acf9daf5fb63f3fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c291f7c64a1890ffa9ce7868db159f1"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a6c291f7c64a1890ffa9ce7868db159f1">room_name</a> = 'none'</td></tr>
 <tr class="memdesc:a6c291f7c64a1890ffa9ce7868db159f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state.  <a href="namespacedog__fsm.html#a6c291f7c64a1890ffa9ce7868db159f1">More...</a><br /></td></tr>
 <tr class="separator:a6c291f7c64a1890ffa9ce7868db159f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(4, 7)</td></tr>
+<tr class="memitem:a911ace87f83a3accfa7dce0146323822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">energy_timer</a> = random.randint(5, 10)</td></tr>
 <tr class="memdesc:a911ace87f83a3accfa7dce0146323822"><td class="mdescLeft">&#160;</td><td class="mdescRight">variable used to keep track of the robot's simulated battery charge  <a href="namespacedog__fsm.html#a911ace87f83a3accfa7dce0146323822">More...</a><br /></td></tr>
 <tr class="separator:a911ace87f83a3accfa7dce0146323822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -156,7 +159,7 @@ Variables</h2></td></tr>
 <p>Finite state machine's (fsm) main. </p>
 <p>It initializes the dog_fsm_node and setups a SMACH state machine along with all the 4 possible states </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00329">329</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00362">362</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -168,14 +171,32 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">dog_fsm.energy_timer = random.randint(4, 7)</td>
+          <td class="memname">dog_fsm.energy_timer = random.randint(5, 10)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>variable used to keep track of the robot's simulated battery charge </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00049">49</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00053">53</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+
+</div>
+</div>
+<a id="ab38e0824d268134acf9daf5fb63f3fdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab38e0824d268134acf9daf5fb63f3fdc">&#9670;&nbsp;</a></span>exploration_fail</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dog_fsm.exploration_fail = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>variable needed for the rare cases in which the explore algorithm does not succeed </p>
+
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00045">45</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -193,7 +214,7 @@ Variables</h2></td></tr>
 
 <p>variable used to let the fsm behave differently for the very first state only </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00038">38</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00039">39</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -211,7 +232,7 @@ Variables</h2></td></tr>
 
 <p>Acquire x-axis home position parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00027">27</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00028">28</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -229,7 +250,7 @@ Variables</h2></td></tr>
 
 <p>Acquire y-axis home position parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00029">29</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00030">30</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -247,7 +268,7 @@ Variables</h2></td></tr>
 
 <p>Acquire maximum x-axis parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00018">18</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00019">19</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -265,7 +286,7 @@ Variables</h2></td></tr>
 
 <p>Acquire minimum x-axis parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00022">22</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00023">23</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -283,7 +304,7 @@ Variables</h2></td></tr>
 
 <p>Acquire maximum y-axis parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00020">20</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00021">21</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -301,7 +322,7 @@ Variables</h2></td></tr>
 
 <p>Acquire minimum y-axis parameter from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00024">24</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00025">25</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -319,7 +340,7 @@ Variables</h2></td></tr>
 
 <p>variable used to state whether it is time to play or not </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00041">41</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00042">42</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -337,7 +358,7 @@ Variables</h2></td></tr>
 
 <p>Acquire the dictionary of the room and colored ball pairings from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00032">32</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00033">33</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -356,7 +377,7 @@ Variables</h2></td></tr>
 <p>variable needed to keep track of the requested room by the human during the <a class="el" href="classdog__fsm_1_1Play.html" title="Play state: the robot gets to the human, waits for a room order, then gets back to the human.">Play</a> state. </p>
 <p>When it equals 'none' it is set to its default value, and does not correspond to any room/ball pair </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00046">46</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00050">50</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>
@@ -374,7 +395,7 @@ Variables</h2></td></tr>
 
 <p>Acquire simulation speed scaling factor from launch file. </p>
 
-<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00035">35</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dog__fsm_8py_source.html#l00036">36</a> of file <a class="el" href="dog__fsm_8py_source.html">dog_fsm.py</a>.</p>
 
 </div>
 </div>

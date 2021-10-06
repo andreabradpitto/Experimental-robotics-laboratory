@@ -100,12 +100,15 @@
     <!-- parameter used to identify which ball has to be looked for -->
     <param name='unknown_ball' type='string' value='none'/>
     
-    <!-- parameter used to specify wheter the robot, during
+    <!-- parameter used to specify whether the robot, during
          the Play state, is ready to take orders or not     -->
     <param name='play_task_ready' type='int' value='0'/>
-    <!-- parameter used to specify wheter the robot, during
+    <!-- parameter used to specify whether the robot, during
          the Play state, has completed the request or not -->
     <param name='play_task_done' type='int' value='0'/>
+
+     <!-- parameter used to signal when the robot is stuck -->
+    <param name='stuck' type='int' value='0'/>   
 
     <!-- dictionary paring each room to the corresponding colored ball -->
     <rosparam param="room_dict">{'entrance': 'blue',

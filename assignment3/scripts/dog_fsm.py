@@ -13,6 +13,7 @@ import actionlib
 from std_msgs.msg import String
 from assignment3.srv import Explore
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from actionlib_msgs.msg import GoalStatusArray
 
 ## Acquire maximum x-axis parameter from launch file
 map_x_max = rospy.get_param('map/x_max')
@@ -40,13 +41,16 @@ first_iteration = 1
 ## variable used to state whether it is time to play or not
 playtime = 0
 
+## variable needed for the rare cases in which the explore algorithm does not succeed
+exploration_fail = 0
+
 ## variable needed to keep track of the requested room by the human during
 # the Play state. When it equals 'none' it is set to its default value,
 # and does not correspond to any room/ball pair
 room_name = 'none'
 
 ## variable used to keep track of the robot's simulated battery charge
-energy_timer = random.randint(4, 7)
+energy_timer = random.randint(5, 10)
 
 
 
@@ -78,7 +82,7 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.x = home_x
             # set target as the home position (y-axis)
             home_pos.target_pose.pose.position.y = home_y
-            rospy.loginfo('Dog: I am going home to rest a little...')
+            rospy.loginfo('Dog: I need to go back home to rest a little...')
             mb_sleep_client.send_goal(home_pos)
             while(mb_sleep_client.get_state() != 3):
                 self.rate.sleep
@@ -139,19 +143,19 @@ class Normal(smach.State):
                     while(rospy.get_param('new_ball_detected') == 1):
                         stop_var = 1
                         self.rate.sleep
-                elif (mb_normal_client.get_state() > 3):
-                    rospy.loginfo('Dog: I could not reach the last random target')
-                    break
+                if (rospy.get_param('stuck') == 1):
+                    rospy.set_param('stuck', 0)
+                    time.sleep(2 / sim_scale)
                 if(playtime == 1):
                     break
                 self.rate.sleep
             if(mb_normal_client.get_state() == 3):
-                rospy.loginfo('Dog: target position reached!')
+                rospy.loginfo('Dog: Target position reached!')
             mb_normal_client.cancel_all_goals()
             energy_timer = energy_timer - 1
             self.rate.sleep
 
-        if energy_timer == 0:
+        if energy_timer < 1:
             rospy.loginfo('Dog: I am going to sleep!')
             return 'go_sleep'
 
@@ -219,7 +223,8 @@ class Play(smach.State):
             self.rate.sleep
         rospy.loginfo('Dog: I reached your position')
         rospy.set_param('play_task_ready', 1)
-        rospy.wait_for_message('play_topic', String)
+        while(room_name == 'none'):
+            self.rate.sleep
         rospy.set_param('play_task_ready', 0)
         while ((not rospy.is_shutdown()) and energy_timer != 1 \
                and rospy.get_param('state') == 'play'):
@@ -235,7 +240,7 @@ class Play(smach.State):
             ## Check whether the ball location is known or not. The
             # if condition works thanks to the guidelines imposed in "sim.launch"
             if (ball_location_x < map_x_max):
-                rospy.loginfo('Dog: starting my journey towards the %s', room_name)
+                rospy.loginfo('Dog: Starting my journey towards the %s', room_name)
                 target_pos.target_pose.pose.orientation.w = 1.0
                 target_pos.target_pose.header.frame_id = "map"
                 target_pos.target_pose.header.stamp = rospy.Time.now()
@@ -264,7 +269,7 @@ class Play(smach.State):
             room_name = 'none'
             self.rate.sleep
 
-        if energy_timer == 1:
+        if energy_timer < 2:
             rospy.loginfo('Dog: I am too tired to play any longer: ' + \
                           'I will briefly go in Normal')
             return 'game_over'
@@ -292,6 +297,9 @@ class Find(smach.State):
         # initialisation function, it should not wait
         smach.State.__init__(self, outcomes=['find_over'])
 
+        ## subscribed topic, used to check if the exploration has failed                    
+        rospy.Subscriber('move_base/status', GoalStatusArray, self.exploration_check)
+
     ## Find state execution: in this state, the robotic dog looks for the goal ball,
     # determined in the Play state. In order to do so, this state relies on the
     # explore_lite algorithm; a service client sends a flag to the server, which
@@ -305,23 +313,48 @@ class Find(smach.State):
     # call the dog back to its position, and another Play state cycle can begin
     def execute(self, userdata):
         # function called when exiting from the node, it can be blocking
+        global exploration_fail, energy_timer
         rospy.set_param('state', 'find')
         ## define loop rate for the state
         self.rate = rospy.Rate(200)
         ## explore_lite service client that lets the algorithm start
         # exploring the robotic dog's surroundings
         rospy.wait_for_service('explore_start_service')
+        rospy.wait_for_service('explore_stop_service')  
         explore_start = rospy.ServiceProxy('explore_start_service', Explore)
+        explore_stop = rospy.ServiceProxy('explore_stop_service', Explore)
         explore_start(1)
         rospy.loginfo('Dog: Exploration started')
         while ((not rospy.is_shutdown()) and rospy.get_param('state') == 'find' \
                and rospy.get_param('unknown_ball') != 'none'):
+            if (exploration_fail == 1):
+                explore_stop(0)
+                break
+            if (rospy.get_param('stuck') == 1):
+                explore_stop(0)
+                time.sleep(2 / sim_scale)
+                break
             self.rate.sleep
-        rospy.loginfo('Dog: I found the room you asked for!')
+        if (exploration_fail == 0 and rospy.get_param('stuck') == 0):
+            rospy.loginfo('Dog: I found the room you asked for!')
         rospy.set_param('unknown_ball', 'none')
+        rospy.set_param('stuck', 0)
+        exploration_fail = 0
         rospy.set_param('play_task_done', 1)
+        energy_timer = energy_timer - 1
         return 'find_over'
 
+    ## Find state callback that is used to check if the exploration has
+    # run out of available plans to try. In this case the robot will
+    # go back to the Play state and hopefully once in Normal the dog
+    # will discover more accessible areas
+    def exploration_check(self, data):
+        global exploration_fail
+        if (rospy.get_param('state') == 'find' and data.status_list[0].status):
+            if data.status_list[0].status == 4:
+                exploration_fail = 1
+                rospy.loginfo('Dog: I could not find the room... ' \
+                              'But I actually may find it next time!')
 
 
 ## Finite state machine's (fsm) main. It initializes the dog_fsm_node and setups
