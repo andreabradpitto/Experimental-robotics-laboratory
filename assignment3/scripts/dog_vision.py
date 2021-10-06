@@ -80,6 +80,9 @@ magenta_solved = 0
 # (0 = not yet discovered; 1 = in progress; 2 = completed)
 black_solved = 0
 
+## Acquire simulation speed scaling factor from launch file
+sim_scale = rospy.get_param('sim_scale')
+
 ## variables used to try and trigger a predetermined procedure if the robot gets stuck
 stuck_counter = 0
 previous_radius = 0
@@ -211,6 +214,7 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         blue_solved = 0
                         stuck_counter = 0
                 else:
@@ -267,6 +271,7 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         red_solved = 0
                         stuck_counter = 0
                 else:
@@ -323,6 +328,8 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
+
                         green_solved = 0
                         stuck_counter = 0
                 else:
@@ -379,6 +386,7 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         yellow_solved = 0
                         stuck_counter = 0
                 else:
@@ -435,6 +443,7 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         magenta_solved = 0
                         stuck_counter = 0
                 else:
@@ -491,6 +500,7 @@ class image_feature:
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         black_solved = 0
                         stuck_counter = 0
                 else:
@@ -504,6 +514,28 @@ class image_feature:
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
 
+            elif(rospy.get_param('new_ball_detected', 1) and (len(blueCnts) + \
+                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \
+                                 len(magentaCnts) + len(blackCnts) == 0)):
+                stuck_counter = stuck_counter + 1
+                if (stuck_counter > STUCK_PATIENCE):
+                    rospy.loginfo('Dog: I have spotted a ball through a wall! Well, ' \
+                                  'this should not have happened...')
+                    rospy.set_param('new_ball_detected', 0)
+                    rospy.set_param('stuck', 1)
+                    stuck_counter = 0
+                    if(blue_solved == 1):
+                        blue_solved = 0
+                    if(red_solved == 1):
+                        red_solved = 0
+                    if(green_solved == 1):
+                        green_solved = 0
+                    if(yellow_solved == 1):
+                        yellow_solved = 0
+                    if(magenta_solved == 1):
+                        magenta_solved = 0
+                    if(black_solved == 1):
+                        black_solved = 0
 
 
         elif(rospy.get_param('state') == 'find'):
@@ -560,11 +592,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         blue_solved = 0
                         stuck_counter = 0
                 else:
@@ -630,11 +664,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         red_solved = 0
                         stuck_counter = 0
                 else:
@@ -700,11 +736,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         green_solved = 0
                         stuck_counter = 0
                 else:
@@ -770,11 +808,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         yellow_solved = 0
                         stuck_counter = 0
                 else:
@@ -840,11 +880,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         magenta_solved = 0
                         stuck_counter = 0
                 else:
@@ -910,11 +952,13 @@ class image_feature:
                     # try to free the robot
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
+                        rospy.set_param('new_ball_detected', 0)
                         rospy.loginfo('Dog: I am stuck. I will try to free myself' \
                                       '(it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
+                        time.sleep(5 / sim_scale)
                         black_solved = 0
                         stuck_counter = 0
                 else:
@@ -941,10 +985,35 @@ class image_feature:
                         explore_start(1)
                     stuck_counter = 0
 
+            elif(rospy.get_param('new_ball_detected', 1) and (len(blueCnts) + \
+                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \
+                                 len(magentaCnts) + len(blackCnts) == 0)):
+                stuck_counter = stuck_counter + 1
+                if (stuck_counter > STUCK_PATIENCE):
+                    rospy.loginfo('Dog: I have spotted a ball through a wall! Well, ' \
+                                  'this should not have happened...')
+                    rospy.set_param('new_ball_detected', 0)
+                    rospy.set_param('stuck', 1)
+                    stuck_counter = 0
+                    if(blue_solved == 1):
+                        blue_solved = 0
+                    if(red_solved == 1):
+                        red_solved = 0
+                    if(green_solved == 1):
+                        green_solved = 0
+                    if(yellow_solved == 1):
+                        yellow_solved = 0
+                    if(magenta_solved == 1):
+                        magenta_solved = 0
+                    if(black_solved == 1):
+                        black_solved = 0
 
 
         cv2.imshow('Dog camera', image_np)
         cv2.waitKey(2)
+
+
+
 
 ## Invokes the image_feature class and spins until interrupted by a keyboard command
 def main(args):

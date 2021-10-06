@@ -145,7 +145,7 @@ class Normal(smach.State):
                         self.rate.sleep
                 if (rospy.get_param('stuck') == 1):
                     rospy.set_param('stuck', 0)
-                    time.sleep(2 / sim_scale)
+                    time.sleep(5 / sim_scale)
                 if(playtime == 1):
                     break
                 self.rate.sleep
@@ -332,7 +332,7 @@ class Find(smach.State):
                 break
             if (rospy.get_param('stuck') == 1):
                 explore_stop(0)
-                time.sleep(2 / sim_scale)
+                time.sleep(5 / sim_scale)
                 break
             self.rate.sleep
         if (exploration_fail == 0 and rospy.get_param('stuck') == 0):

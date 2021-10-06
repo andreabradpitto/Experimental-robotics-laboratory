@@ -24,7 +24,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Laser scan
+    SyncSource: ""
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
