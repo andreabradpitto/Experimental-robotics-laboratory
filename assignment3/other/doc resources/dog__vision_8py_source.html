@@ -542,7 +542,7 @@ $(function() {
 <div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                    black_solved = 2</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;                    rospy.set_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>, 0)</div>
 <div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;                    stuck_counter = 0</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;            </div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160; </div>
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;            elif(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>, 1) <span class="keywordflow">and</span> (len(blueCnts) + \</div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \</div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;                                 len(magentaCnts) + len(blackCnts) == 0)):</div>
@@ -1001,7 +1001,7 @@ $(function() {
 <div class="line"><a name="l00984"></a><span class="lineno">  984</span>&#160;                        explore_start = rospy.ServiceProxy(<span class="stringliteral">&#39;explore_start_service&#39;</span>, Explore)</div>
 <div class="line"><a name="l00985"></a><span class="lineno">  985</span>&#160;                        explore_start(1)</div>
 <div class="line"><a name="l00986"></a><span class="lineno">  986</span>&#160;                    stuck_counter = 0</div>
-<div class="line"><a name="l00987"></a><span class="lineno">  987</span>&#160;            </div>
+<div class="line"><a name="l00987"></a><span class="lineno">  987</span>&#160; </div>
 <div class="line"><a name="l00988"></a><span class="lineno">  988</span>&#160;            elif(rospy.get_param(<span class="stringliteral">&#39;new_ball_detected&#39;</span>, 1) <span class="keywordflow">and</span> (len(blueCnts) + \</div>
 <div class="line"><a name="l00989"></a><span class="lineno">  989</span>&#160;                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \</div>
 <div class="line"><a name="l00990"></a><span class="lineno">  990</span>&#160;                                 len(magentaCnts) + len(blackCnts) == 0)):</div>
