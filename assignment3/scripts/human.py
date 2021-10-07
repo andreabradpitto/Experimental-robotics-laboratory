@@ -29,7 +29,7 @@ def human():
     rate = rospy.Rate(200)
     ## topic used to communicate orders to dog_fsm.py
     voice_pub = rospy.Publisher('play_topic', String, queue_size=10)
-    time.sleep(random.randint(80, 120) / sim_scale)
+    time.sleep(random.randint(240, 360) / sim_scale)
     while not rospy.is_shutdown():
         while (rospy.get_param('state') == 'sleep'):
             rate.sleep()
@@ -55,7 +55,7 @@ def human():
                 rate.sleep()
             rate.sleep()
         rospy.loginfo('Human: The robot has stopped playing')
-        time.sleep(random.randint(250, 350) / sim_scale)
+        time.sleep(random.randint(240, 360) / sim_scale)
         rate.sleep()
 
 if __name__ == '__main__':
