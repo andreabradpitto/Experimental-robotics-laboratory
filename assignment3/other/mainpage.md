@@ -68,7 +68,7 @@ Run the assignement to discover more phrases!
   
 This is the list of the components that have been coded for the assignment:
 
-- *Human*: it is implemented by [human.py](scripts/human.py), that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play; if so, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog gets tired. All the communications sent to the robot are carried out via a message publisher (over the `play_topic`), and all the orders are handled by [dog_fsm.py](scripts/dog_fsm.py)
+- *Human*: it is implemented by [human.py](scripts/human.py), that is used to simulate the dog owner, which randomly decides to play with the robotic dog. The human checks if the robot is able to play; if so, waits for it to come nearby, then orders it to move to a random room of the house, and finally waits for it come back. The game ends when the robotic dog gets tired. All the communications sent to the robot are carried out via a message publisher (over the `/play_topic`), and all the orders are handled by [dog_fsm.py](scripts/dog_fsm.py)
 - *Dog FSM*: it is implemented by [dog_fsm.py](scripts/dog_fsm.py), which is used to handle the robotic dog's FSM internal architecture
 - *Dog vision*: it is implemented by [dog_vision.py](scripts/dog_vision.py), and constitutes a vision module for the robotic dog that uses OpenCV in order to constantly scan the surroundings, looking for specific colored balls. This node is able to take control, when needed, of the robot movements, allowing it to reach a room when a corresponding new ball is discovered. It also stores the positions of the balls discovered, thus learning the displacement of the rooms inside the house as time passes. A simple algorithm has been added to the script in order to unstick the robotic dog as the ball chasing behavior may cause a collision with other entities in the house
 - *A modified version of the [explore_lite](http://wiki.ros.org/explore_lite) package*: it is implemented by [explore.cpp](src/explore.cpp), [costmap_client.cpp](src/costmap_client.cpp), and [frontier_search.cpp](src/frontier_search.cpp), along with their headers: [explore.h](include/explore.h), [costmap_client.h](include/costmap_client.h), [frontier_search.h](include/frontier_search.h), [costmap_tools.h](include/costmap_tools.h). It is the algorithm allowing the robot to explore the house during the **Find** state. I made some adjustments in order to let [dog_vision.py](scripts/dog_vision.py) and [dog_fsm.py](scripts/dog_fsm.py) send service calls in order to (re-)start or stop the exploration
@@ -82,7 +82,7 @@ In the **Normal** state, the robot wanders randomly, by feeding the move_base al
 
 In the **Play** state, using the move_base algorithm, the robotic dog gets back home (i.e., close to the human), then starts listening for the room request. Once received, it checks which is the corresponing ball color to reach. If the ball is not yet in the dog's database, it shifts into the Find state. If the ball had instead been seen before, the dog starts heading towards the chosen room, while still relying on move_base. After reaching that position, it comes back to the user, once again using move_base: whenever this process is completed, a portion of battery is consumed. Furthermore, I assumed that a single cycle of this state consumes slightly more battery, on average, than one of the **Normal** state; for this reason, the threshold of remaining battery before going back to the **Normal** state is higher than in the previous case (i.e., from **Normal** to **Sleep**): this also allows me to make sure that the robot can always go to sleep before completely depleting its battery.  
 
-Lastly, in the **Find** state, the robotic dog looks for the goal ball determined in the **Play** state. In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. Indeed, the core of the algorithm, which is contained inside the Explore class (see [explore.cpp](src/explore.cpp)), has been adjusted with the inclusion of a method able to handle requests incoming from the `dog_fsm_node` node (see [dog_fsm.py](scripts/dog_fsm.py)). The exploration algorithm keeps running until [dog_vision.py](scripts/dog_vision.py) stops its execution, i.e., a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the **Play** state. The robot will then head over to the human position, and another **Play** state cycle can begin.  
+Lastly, in the **Find** state, the robotic dog looks for the goal ball determined in the **Play** state. In order to do so, this state relies on the explore_lite algorithm; a service client sends a flag to the server, which corresponds to the signal the server itself is waiting it order to run the above mentioned algorithm. Indeed, the core of the algorithm, which is contained inside the Explore class (see [explore.cpp](src/explore.cpp)), has been adjusted with the inclusion of a method able to handle requests incoming from the `/dog_fsm_node` node (see [dog_fsm.py](scripts/dog_fsm.py)). The exploration algorithm keeps running until [dog_vision.py](scripts/dog_vision.py) stops its execution, i.e., a new ball has been found. If the new ball is indeed the goal one, the robot eventually gets back to the **Play** state. The robot will then head over to the human position, and another **Play** state cycle can begin.  
   
 The usage of [rqt_graph](http://wiki.ros.org/rqt_graph) shows all the nodes, topics and namespaces involved in the package execution:
 
@@ -92,7 +92,7 @@ The usage of [rqt_graph](http://wiki.ros.org/rqt_graph) shows all the nodes, top
 
 There is only a single topic directly generated by this package:
 
-- `play_topic`: it is used by the `human_node` node (see [human.py](scripts/human.py) in order to communicate the willingness to play, and then also the room the robot should reach. The finite state machine node (`dog_fsm_node`) subscribes to this topic, and so it is the one handling human requests.  
+- `/play_topic`: it is used by the `/human_node` node (see [human.py](scripts/human.py) in order to communicate the willingness to play, and then also the room the robot should reach. The finite state machine node (`/dog_fsm_node`) subscribes to this topic, and so it is the one handling human requests.  
   
 The custom [ROS messages](http://wiki.ros.org/Messages) implemented are:
 
@@ -106,31 +106,31 @@ The custom [ROS services](http://wiki.ros.org/Services) implemented are:
   
 Finally, here are the ROS parameters (well, only the ones strictly related to the robotic dog) loaded in the [ROS parameter server](http://wiki.ros.org/Parameter%20Server) at the beginnning of the package execution:
 
-- `state`: parameter specifying robot current state
-- `map/x_max`: parameter specifying the maximum x-axis value for the map
-- `map/y_max`: parameter specifying the maximum y-axis value for the map
-- `map/x_min`: parameter specifying the minimum x-axis value for the map
-- `map/y_min`: parameter specifying the minimum y-axis value for the map
-- `home/x`: parameter specifying robot home position (x coordinate)
-- `home/y`: parameter specifying robot home position (y coordinate)
-- `sim_scale`: parameter used to scale simulation velocity
-- `new_ ball_detected`: parameter used to specify whether a new ball has been detected or not
-- `unknown_ball`: parameter used to identify which ball has to be looked for
-- `room_list`: list of the available rooms
-- `play_task_ready`: parameter used to specify whether the robot, during the **Play** state, is ready to take orders or not
-- `play_task_done`: parameter used to specify whether the robot, during the **Play** state, has completed the request or not
-- `blue/x`: parameter used to specify the x coordinate of the blue ball, once discovered
-- `blue/y`: parameter used to specify the y coordinate of the blue ball, once discovered
-- `red/x`: parameter used to specify the x coordinate of the red ball, once discovered
-- `red/y`: parameter used to specify the y coordinate of the red ball, once discovered
-- `green/x`: parameter used to specify the x coordinate of the green ball, once discovered
-- `green/y`: parameter used to specify the y coordinate of the green ball, once discovered
-- `yellow/x`: parameter used to specify the x coordinate of the yellow ball, once discovered
-- `yellow/y`: parameter used to specify the y coordinate of the yellow ball, once discovered
-- `magenta/x`: parameter used to specify the x coordinate of the magenta ball, once discovered
-- `magenta/y`: parameter used to specify the y coordinate of the magenta ball, once discovered
-- `black/x`: parameter used to specify the x coordinate of the black ball, once discovered
-- `black/y`: parameter used to specify the y coordinate of the black ball, once discovered
+- `/state`: parameter specifying robot current state
+- `/map/x_max`: parameter specifying the maximum x-axis value for the map
+- `/map/y_max`: parameter specifying the maximum y-axis value for the map
+- `/map/x_min`: parameter specifying the minimum x-axis value for the map
+- `/map/y_min`: parameter specifying the minimum y-axis value for the map
+- `/home/x`: parameter specifying robot home position (x coordinate)
+- `/home/y`: parameter specifying robot home position (y coordinate)
+- `/sim_scale`: parameter used to scale simulation velocity
+- `/new_ball_detected`: parameter used to specify whether a new ball has been detected or not
+- `/unknown_ball`: parameter used to identify which ball has to be looked for
+- `/room_list`: list of the available rooms
+- `/play_task_ready`: parameter used to specify whether the robot, during the **Play** state, is ready to take orders or not
+- `/play_task_done`: parameter used to specify whether the robot, during the **Play** state, has completed the request or not
+- `/blue/x`: parameter used to specify the x coordinate of the blue ball, once discovered
+- `/blue/y`: parameter used to specify the y coordinate of the blue ball, once discovered
+- `/red/x`: parameter used to specify the x coordinate of the red ball, once discovered
+- `/red/y`: parameter used to specify the y coordinate of the red ball, once discovered
+- `/green/x`: parameter used to specify the x coordinate of the green ball, once discovered
+- `/green/y`: parameter used to specify the y coordinate of the green ball, once discovered
+- `/yellow/x`: parameter used to specify the x coordinate of the yellow ball, once discovered
+- `/yellow/y`: parameter used to specify the y coordinate of the yellow ball, once discovered
+- `/magenta/x`: parameter used to specify the x coordinate of the magenta ball, once discovered
+- `/magenta/y`: parameter used to specify the y coordinate of the magenta ball, once discovered
+- `/black/x`: parameter used to specify the x coordinate of the black ball, once discovered
+- `/black/y`: parameter used to specify the y coordinate of the black ball, once discovered
 
 All of these, as already pointed out, can be adjusted before runtime. Please notice that, as a general rule I applied, the value 100 for any of the above parameters always represents missing data or an undefined/default value for that specific parameter.  
 Finally, here is the list of all the files and folders featured in this package (up to depth level 2, in order to skip the inclusion of additional [Doxygen](https://www.doxygen.nl/index.html) resources):
