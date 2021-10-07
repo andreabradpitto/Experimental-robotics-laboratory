@@ -82,7 +82,7 @@ class Sleep(smach.State):
             home_pos.target_pose.pose.position.x = home_x
             # set target as the home position (y-axis)
             home_pos.target_pose.pose.position.y = home_y
-            rospy.loginfo('Dog: I need to go back home to rest a little...')
+            rospy.loginfo('Dog: I am going back home to rest a little...')
             mb_sleep_client.send_goal(home_pos)
             while(mb_sleep_client.get_state() != 3):
                 self.rate.sleep
@@ -109,7 +109,7 @@ class Normal(smach.State):
         rospy.Subscriber('play_topic', String, self.play_req_callback)
     
     ## Normal state execution: the robot wanders randomly, by feeding
-    # the move_base algorithm with randomly generated positions. If, while moving around,
+    # the move_base algorithm with randomly generated positions. If, while going around,
     # the robot detects a new room/ball, it reaches it and stores the corresponding
     # position. At any time, a play command can be received by the human: if so happens,
     # the robotic dog transitions to the Play state. Every newly detected room,
@@ -134,7 +134,7 @@ class Normal(smach.State):
             goal_pos.target_pose.pose.position.x = random.randint(map_x_min, map_x_max)
             goal_pos.target_pose.pose.position.y = random.randint(map_y_min, map_y_max)
             mb_normal_client.send_goal(goal_pos)
-            rospy.loginfo('Dog: I am moving to %i %i', \
+            rospy.loginfo('Dog: I am heading towards (%i, %i)', \
                           goal_pos.target_pose.pose.position.x, \
                           goal_pos.target_pose.pose.position.y)
             while (mb_normal_client.get_state() != 3 and stop_var != 1):
@@ -156,7 +156,8 @@ class Normal(smach.State):
             self.rate.sleep
 
         if energy_timer < 1:
-            rospy.loginfo('Dog: I am going to sleep!')
+            rospy.loginfo('Dog: I am really tired now, I don\'t feel' \
+                          'like wandering around anymore!')
             return 'go_sleep'
 
         elif playtime == 1:
@@ -191,8 +192,8 @@ class Play(smach.State):
     # room request. Once received, it checks via a service implemented in ball_server.py
     # which are the corresponing ball coordinates to reach. If the ball is not yet in the
     # dog's database, it shifts to the Find state. If the ball has been seen before,
-    # the dog starts moving to the chosen room, still relying on move_base. After
-    # reaching that position, it comes back to the user, again via move_base:
+    # the dog starts heading towards the chosen room, still relying on move_base.
+    # After reaching that position, it comes back to the user, again via move_base:
     # whenever this process is completed, some battery is consumed. Furthermore,
     # I assumed that a single cycle of this state consumes slightly more battery,
     # on average, than one of the Normal state; for this reason, the threshold of
@@ -271,7 +272,7 @@ class Play(smach.State):
 
         if energy_timer < 2:
             rospy.loginfo('Dog: I am too tired to play any longer: ' + \
-                          'I will briefly go in Normal')
+                          'I will soon need to rest a little...')
             return 'game_over'
 
         elif rospy.get_param('unknown_ball') != 'none':

@@ -23,7 +23,7 @@ Costmap2DClient::Costmap2DClient(ros::NodeHandle& param_nh,
   param_nh.param("costmap_updates_topic", costmap_updates_topic,
                  std::string("costmap_updates"));
   param_nh.param("robot_base_frame", robot_base_frame_,
-                 std::string("base_link"));
+                 std::string("link_chassis"));
   // transform tolerance is used for all tf transforms here
   param_nh.param("transform_tolerance", transform_tolerance_, 0.3);
 
