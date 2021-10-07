@@ -41,7 +41,7 @@ def human():
             rate.sleep()
         # here I am assuming the human can see when the robot turns into the play state
         # (i.e. thanks to an external LED mounted on its back)
-        while (rospy.get_param('state') == 'play'):
+        while (rospy.get_param('state') == 'play' or rospy.get_param('state') == 'find'):
             while (rospy.get_param('play_task_ready') == 0):
                 if (rospy.get_param('state') == 'sleep'):
                     break

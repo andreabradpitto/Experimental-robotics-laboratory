@@ -223,7 +223,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
+                    rospy.loginfo('Dog: I have stored the entrance position (' \
+                                  + tcolors.BLUE + 'blue ball' + tcolors.ENDC + ')')
                     blue_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
@@ -280,7 +281,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the closet position (red ball)')
+                    rospy.loginfo('Dog: I have stored the closet position (' \
+                                  + tcolors.RED + 'red ball' + tcolors.ENDC + ')')
                     red_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
@@ -338,7 +340,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
+                    rospy.loginfo('Dog: I have stored the livingroom position (' \
+                                  + tcolors.GREEN + 'green ball' + tcolors.ENDC + ')')
                     green_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
@@ -395,7 +398,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
+                    rospy.loginfo('Dog: I have stored the kitchen position (' \
+                                  + tcolors.YELLOW + 'yellow ball' + tcolors.ENDC + ')')
                     yellow_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
@@ -452,7 +456,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
+                    rospy.loginfo('Dog: I have stored the bathroom position (' \
+                                  + tcolors.MAGENTA + 'magenta ball' + tcolors.ENDC + ')')
                     magenta_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
@@ -509,14 +514,13 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
+                    rospy.loginfo('Dog: I have stored the bedroom position (' \
+                                  + tcolors.WHITE + 'black ball' + tcolors.ENDC + ')')
                     black_solved = 2
                     rospy.set_param('new_ball_detected', 0)
                     stuck_counter = 0
 
-            elif(rospy.get_param('new_ball_detected', 1) and (len(blueCnts) + \
-                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \
-                                 len(magentaCnts) + len(blackCnts) == 0)):
+            elif(rospy.get_param('new_ball_detected', 1)):
                 stuck_counter = stuck_counter + 1
                 if (stuck_counter > STUCK_PATIENCE):
                     rospy.loginfo('Dog: I have spotted a ball through a wall! Well, ' \
@@ -607,7 +611,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('blue/x', pos.pose.pose.position.x)
                     rospy.set_param('blue/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the entrance position (blue ball)')
+                    rospy.loginfo('Dog: I have stored the entrance position (' \
+                                  + tcolors.BLUE + 'blue ball' + tcolors.ENDC + ')')
                     blue_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -679,7 +684,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('red/x', pos.pose.pose.position.x)
                     rospy.set_param('red/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the closet position (red ball)')
+                    rospy.loginfo('Dog: I have stored the closet position (' \
+                                  + tcolors.RED + 'red ball' + tcolors.ENDC + ')')
                     red_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -751,7 +757,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('green/x', pos.pose.pose.position.x)
                     rospy.set_param('green/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the livingroom position (green ball)')
+                    rospy.loginfo('Dog: I have stored the livingroom position (' \
+                                  + tcolors.GREEN + 'green ball' + tcolors.ENDC + ')')
                     green_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -823,7 +830,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('yellow/x', pos.pose.pose.position.x)
                     rospy.set_param('yellow/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the kitchen position (yellow ball)')
+                    rospy.loginfo('Dog: I have stored the kitchen position (' \
+                                  + tcolors.YELLOW + 'yellow ball' + tcolors.ENDC + ')')
                     yellow_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -895,7 +903,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('magenta/x', pos.pose.pose.position.x)
                     rospy.set_param('magenta/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the bathroom position (magenta ball)')
+                    rospy.loginfo('Dog: I have stored the bathroom position (' \
+                                  + tcolors.MAGENTA + 'magenta ball' + tcolors.ENDC + ')')
                     magenta_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -967,7 +976,8 @@ class image_feature:
                     pos = rospy.wait_for_message('odom', Odometry, timeout = None)
                     rospy.set_param('black/x', pos.pose.pose.position.x)
                     rospy.set_param('black/y', pos.pose.pose.position.y)
-                    rospy.loginfo('Dog: I have stored the bedroom position (black ball)')
+                    rospy.loginfo('Dog: I have stored the bedroom position (' \
+                                  + tcolors.WHITE + 'black ball' + tcolors.ENDC + ')')
                     black_solved = 2
                     vel = Twist()
                     vel.linear.x = 0
@@ -985,9 +995,7 @@ class image_feature:
                         explore_start(1)
                     stuck_counter = 0
 
-            elif(rospy.get_param('new_ball_detected', 1) and (len(blueCnts) + \
-                                 len(redCnts) + len(greenCnts) + len(yellowCnts) + \
-                                 len(magentaCnts) + len(blackCnts) == 0)):
+            elif(rospy.get_param('new_ball_detected', 1)):
                 stuck_counter = stuck_counter + 1
                 if (stuck_counter > STUCK_PATIENCE):
                     rospy.loginfo('Dog: I have spotted a ball through a wall! Well, ' \
@@ -1013,6 +1021,16 @@ class image_feature:
         cv2.waitKey(2)
 
 
+## Class used to define terminal colors for the balls
+class tcolors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    ENDC = '\033[0m'
 
 
 ## Invokes the image_feature class and spins until interrupted by a keyboard command
