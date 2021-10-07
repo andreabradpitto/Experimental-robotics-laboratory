@@ -209,8 +209,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -267,8 +267,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -325,13 +325,12 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
                         time.sleep(5 / sim_scale)
-
                         green_solved = 0
                         stuck_counter = 0
                 else:
@@ -384,8 +383,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -442,8 +441,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -500,8 +499,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -597,8 +596,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -670,8 +669,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -743,8 +742,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -816,8 +815,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -889,8 +888,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
@@ -962,8 +961,8 @@ class image_feature:
                     if stuck_counter > STUCK_PATIENCE:
                         rospy.set_param('stuck', 1)
                         rospy.set_param('new_ball_detected', 0)
-                        rospy.loginfo('Dog: I am stuck. I will try to free myself' \
-                                      '(it might take a few attempts...)')
+                        rospy.loginfo('Dog: I am stuck! I will try to free myself' \
+                                      ' (it might take a few attempts...)')
                         vel.linear.x = -0.4
                         vel.angular.z = random.randint(-4, 4) / 10.0
                         self.vel_pub.publish(vel)
